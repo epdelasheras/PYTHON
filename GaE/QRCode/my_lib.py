@@ -2,19 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import pyqrcode
 from fpdf import FPDF
-from pandas import read_excel
 import xlrd
-
-#qrGen: Generate QR code from parameters
-def qrGen(param1, param2, param3, param4, param5, param6, param7):
-    param = param1 + param2 + param3 + param4 + param5
-    if param6 != "\n":
-        param = param + param6
-    if param7 != "\n":
-        param = param + param7
-    qr_code = pyqrcode.create(param)
-    qr_code.png('qrcode.png', scale=1)
-    print(qr_code.terminal(quiet_zone=1))
 
 # Check Free SN => Which cell sheet is not in RED color?
 def checkFreeSn(workbook, worksheet, row, column):
@@ -31,7 +19,8 @@ def checkFreeSn(workbook, worksheet, row, column):
 
 
 #commandImport: Import excel file to fill the entries
-def commandImport():
+def commandImport(socEntry, s4dEntry, ctrlEntry):
+
     # Open Excel File
     wb = xlrd.open_workbook('MAC&CCU_SN.xls', formatting_info=True)
     # Open Sheets
@@ -41,31 +30,31 @@ def commandImport():
     # Check free SN on CCU_SoC worksheet + fill entries
     socRow=checkFreeSn(wb, wsSoC, 2, 0) #skiip the two first lines because they are titles.
     socGpTxt = str(wsSoC.cell_value(socRow, 0)) #ws.cell_value(row, column)
-    socGpEntry.set(socGpTxt)
+    socEntry[0].set(socGpTxt) # socGpEntry
     socRevTxt = str(wsSoC.cell_value(socRow, 1))
-    socRevEntry.set(socRevTxt)
+    socEntry[1].set(socRevTxt) # socRevEntry
     socSnTxt = str(wsSoC.cell_value(socRow, 2))
-    socSnEntry.set(socSnTxt)
+    socEntry[2].set(socSnTxt) #soCSnEntry
     # Check free SN on CCU_S4d_Adapt worksheet + fill entries
     s4dRow=checkFreeSn(wb, wsS4d, 2, 0)
     s4dGpTxt = str(wsS4d.cell_value(s4dRow, 0))
-    s4dGpEntry.set(s4dGpTxt)
+    s4dEntry[0].set(s4dGpTxt) # s4dGpEntry
     s4dRevTxt = str(wsS4d.cell_value(s4dRow, 1))
-    s4dRevEntry.set(s4dRevTxt)
+    s4dEntry[1].set(s4dRevTxt) # s4dRevEntry
     s4dSnTxt = str(wsS4d.cell_value(s4dRow, 2))
-    s4dSnEntry.set(s4dSnTxt)
+    s4dEntry[2].set(s4dSnTxt) #s4dSnEntry
     # Check free SN on CCU_S4d_Adapt worksheet + fill entries
     ctrlRow = checkFreeSn(wb, wsS4d, 2, 0)
     CtrlGpTxt = str(wsCtrl.cell_value(ctrlRow, 0))
-    ctrlGpEntry.set(CtrlGpTxt)
+    ctrlEntry[0].set(CtrlGpTxt) #ctrlEntry[0]
     CtrlRevTxt = str(wsCtrl.cell_value(ctrlRow, 1))
-    ctrlRevEntry.set(CtrlRevTxt)
+    ctrlEntry[1].set(CtrlRevTxt) # ctrlRevEntry
     CtrlSnTxt = str(wsCtrl.cell_value(ctrlRow, 2))
-    ctrlSnEntry.set(CtrlSnTxt)
+    ctrlEntry[2].set(CtrlSnTxt) # ctrlSnEntry
     CtrlMac1Txt = str(wsCtrl.cell_value(ctrlRow, 3))
-    ctrlMac1Entry.set(CtrlMac1Txt)
+    ctrlEntry[3].set(CtrlMac1Txt) # ctrlMac1Entry
     CtrlMac2Txt = str(wsCtrl.cell_value(ctrlRow, 4))
-    ctrlMac2Entry.set(CtrlMac2Txt)
+    ctrlEntry[4].set(CtrlMac2Txt) # ctrlMac2Entry
 
 #commandExport: Export to PDF QR codes
 def commandExport():
@@ -74,26 +63,55 @@ def commandExport():
     pdf.image('qrcode.png', x=10,  y=1, w=10, h=10)
     pdf.output("QRPdf.pdf", "F")
     pdf.close
-
 #commandPrint: Print QR codes
-def commandPrint():
-    texto = "a"
+def commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry):
+
+    #************* CCU_SoC_Ctrl QR generation ************
+    qrparam1 = 'Gamesa Electric\n'
+    qrparam2 = 'CCU_SoC_Ctrl\n'
+    qrparam3 = "GP: " + ctrlEntry[0].get() +"\n" # ctrlGpEntry
+    qrparam4 = "Rev.: " + ctrlEntry[1].get() + "\n" # ctrlRevGpEntry
+    qrparam5 = "SN: " + ctrlEntry[2].get() + "\n" # ctrlSnEntry
+    qrparam6 = "MAC ETH1: " + ctrlEntry[3].get() + "\n" # ctrlMac1Entry
+    qrparam7 = "MAC ETH2: " + ctrlEntry[4].get() + "\n" # ctrlMac2Entry
+    # Generate QR code
+    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5 + qrparam6 + qrparam7)
+    qr_code.png('qrcode_ctrl.png', scale=1)
+    # Refreash QR image
+    image_new = PhotoImage(file='./qrcode_ctrl.png')
+    labelQr[0].configure(image=image_new) # labelQr[0] = labelCtrlQr
+    labelQr[0].photo = image_new
+
+    #************* CCU_S4d_Adapt QR generation ************
+    qrparam1 = 'Gamesa Electric\n'
+    qrparam2 = 'CCU_s4d_Adapt\n'
+    qrparam3 = "GP: " + s4dEntry[0].get() + "\n" # s4dGpEntry
+    qrparam4 = "Rev.: " + s4dEntry[1].get() + "\n" # s4dRevEntry
+    qrparam5 = "SN: " + s4dEntry[2].get() + "\n" # s4dSnEntry
+    # Generate QR code
+    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
+    qr_code.png('qrcode_s4d.png', scale=1)
+    # Refreash QR image
+    image_new = PhotoImage(file='./qrcode_s4d.png')
+    labelQr[2].configure(image=image_new) # labelQr[1] = labelSocQr
+    labelQr[2].photo = image_new
+
+    #************* CCU_SoC QR generation ************
+    qrparam1 = 'Gamesa Electric\n'
+    qrparam2 = 'CCU_SoC\n'
+    qrparam3 = "GP: " + socEntry[0].get() + "\n" # socGpEntry
+    qrparam4 = "Rev.: " + socEntry[1].get() + "\n" # socRevEntry
+    qrparam5 = "SN: " + socEntry[2].get() + "\n" # socSnEntry
+    # Generate QR code
+    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
+    qr_code.png('qrcode_soc.png', scale=1)
+    # Refreash QR image
+    image_new = PhotoImage(file='./qrcode_soc.png')
+    labelQr[1].configure(image=image_new) # labelQr[2] = labelS4dQr
+    labelQr[1].photo = image_new
 
 #GUI Design: Create frames, entries, buttons, and load images for the QR generator app.
 def gui():
-
-    # Declaring global variables for GUI entries
-    global socGpEntry
-    global socRevEntry
-    global socSnEntry
-    global s4dGpEntry
-    global s4dRevEntry
-    global s4dSnEntry
-    global ctrlGpEntry
-    global ctrlRevEntry
-    global ctrlSnEntry
-    global ctrlMac1Entry
-    global ctrlMac2Entry
 
     # Create window + title
     root = Tk()
@@ -129,8 +147,9 @@ def gui():
     ctrlMac2Entry = StringVar()
     entryCtrlMac2 = Entry(frame1, textvariable=ctrlMac2Entry)
     entryCtrlMac2.grid(row=5, column=1)
-    image1 = PhotoImage(file='./qrcode.png')
-    Label(frame2, image=image1).grid()
+    imgCtrlQrInit = PhotoImage(file='./QrCodeInit.png')
+    labelCtrlQr = Label(frame2, image=imgCtrlQrInit)
+    labelCtrlQr.grid()
 
     # Create Labels + Entries + QR Images for Frame2
     Label(frame3, text="CCU_S4d_Adapt").grid(row=0, columnspa=2)
@@ -146,8 +165,9 @@ def gui():
     s4dSnEntry = StringVar()
     entryS4dSn = Entry(frame3, textvariable=s4dSnEntry)
     entryS4dSn.grid(row=3, column=1)
-    image2 = PhotoImage(file='./qrcode.png')
-    Label(frame4, image=image2).grid()
+    imgS4dQrInit = PhotoImage(file='./QrCodeInit.png')
+    labelS4dQr = Label(frame4, image=imgS4dQrInit)
+    labelS4dQr.grid()
 
     # Create Labels + Entries + QR Images for Frame3
     Label(frame5, text="CCU_SoC").grid(row=0, columnspa=2)
@@ -163,29 +183,33 @@ def gui():
     socSnEntry = StringVar()
     entrySocSn = Entry(frame5, textvariable=socSnEntry)
     entrySocSn.grid(row=3, column=1)
-    image3 = PhotoImage(file='./qrcode.png')
-    Label(frame6, image=image3).grid()
+    imgSoCQrInit = PhotoImage(file='./QrCodeInit.png')
+    labelSocQr = Label(frame6, image=imgSoCQrInit)
+    labelSocQr.grid()
 
     # Positioning frames on the window + separators
     ttk.Separator(root, orient=VERTICAL).grid(row=0, rowspan=5, column=1, sticky="ns", padx=20)  # ns = north to south
     frame1.grid(row=0, column=0)
     frame2.grid(row=0, column=2)
     ttk.Separator(root, orient=HORIZONTAL).grid(row=1, columnspa=3, sticky="ew", pady=10)  # ew = east to west
-
     frame3.grid(row=2, column=0)
     frame4.grid(row=2, column=2)
     ttk.Separator(root, orient=HORIZONTAL).grid(row=3, columnspa=3, sticky="ew", pady=10)
-
     frame5.grid(row=4, column=0)
     frame6.grid(row=4, column=2)
     ttk.Separator(root, orient=HORIZONTAL).grid(row=5, columnspa=3, sticky="ew", pady=10)
 
     # Create and position buttons
-    button_print = Button(root, text="Import", command=commandImport)
+    socEntry = [socGpEntry, socRevEntry, socSnEntry]
+    s4dEntry = [s4dGpEntry, s4dRevEntry, s4dSnEntry]
+    ctrlEntry = [ctrlGpEntry, ctrlRevEntry, ctrlSnEntry, ctrlMac1Entry, ctrlMac2Entry]
+    button_print = Button(root, text="Import", command=lambda:commandImport(socEntry, s4dEntry, ctrlEntry))
     button_print.grid(row=6, column=0)
-    button_print = Button(root, text="Export to PDF", command=commandExport)
-    button_print.grid(row=6, column=1)
-    button_print = Button(root, text="Print", command=commandPrint)
-    button_print.grid(row=6, column=2)
+    labelQr = [labelCtrlQr, labelS4dQr, labelSocQr]
+    button_qrgen = Button(root, text="Generate QR code", command=lambda:commandQrgen(labelQr, ctrlEntry, s4dEntry,
+                                                                                     socEntry))
+    button_qrgen.grid(row=6, column=1)
+    button_export = Button(root, text="Export to PDF", command=commandExport)
+    button_export.grid(row=6, column=2)
 
     root.mainloop()
