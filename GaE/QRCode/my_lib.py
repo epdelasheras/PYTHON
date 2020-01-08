@@ -60,9 +60,26 @@ def commandImport(socEntry, s4dEntry, ctrlEntry):
 def commandExport():
     pdf = FPDF()
     pdf.add_page()
-    pdf.image('qrcode.png', x=10,  y=1, w=10, h=10)
+
+    # Set font type and line width for pdf titles and drawings
+    pdf.set_font("Arial", size=15)
+    pdf.set_line_width(1)
+    # printing QR codes for CCU_SoC_Ctrl
+    pdf.text(x=20, y=10, txt="CCU_SoC_Ctrl")
+    pdf.image('qrcode_ctrl.png', x=25,  y=20, w=10, h=10)
+    pdf.image('qrcode_ctrl.png', x=45, y=20, w=10, h=10)
+    pdf.line(x1=70, y1=5, x2=70, y2=40)
+    # printing QR codes for CCU_s4d_adapt
+    pdf.text(x=85, y=10, txt="CCU_s4d_adapt")
+    pdf.image('qrcode_s4d.png', x=100,  y=20, w=10, h=10)
+    pdf.line(x1=135, y1=5, x2=135, y2=40)
+    # printing QR codes for CCU_SoC
+    pdf.text(x=155, y=10, txt="CCU_SoC")
+    pdf.image('qrcode_soc.png', x=160,  y=20, w=10, h=10)
+
     pdf.output("QRPdf.pdf", "F")
     pdf.close
+
 #commandPrint: Print QR codes
 def commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry):
 
@@ -84,7 +101,7 @@ def commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry):
 
     #************* CCU_S4d_Adapt QR generation ************
     qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_s4d_Adapt\n'
+    qrparam2 = 'CCU_S4d_Adapt\n'
     qrparam3 = "GP: " + s4dEntry[0].get() + "\n" # s4dGpEntry
     qrparam4 = "Rev.: " + s4dEntry[1].get() + "\n" # s4dRevEntry
     qrparam5 = "SN: " + s4dEntry[2].get() + "\n" # s4dSnEntry
@@ -93,8 +110,8 @@ def commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry):
     qr_code.png('qrcode_s4d.png', scale=1)
     # Refreash QR image
     image_new = PhotoImage(file='./qrcode_s4d.png')
-    labelQr[2].configure(image=image_new) # labelQr[1] = labelSocQr
-    labelQr[2].photo = image_new
+    labelQr[1].configure(image=image_new) # labelQr[1] = labelS4dQr
+    labelQr[1].photo = image_new
 
     #************* CCU_SoC QR generation ************
     qrparam1 = 'Gamesa Electric\n'
@@ -107,8 +124,8 @@ def commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry):
     qr_code.png('qrcode_soc.png', scale=1)
     # Refreash QR image
     image_new = PhotoImage(file='./qrcode_soc.png')
-    labelQr[1].configure(image=image_new) # labelQr[2] = labelS4dQr
-    labelQr[1].photo = image_new
+    labelQr[2].configure(image=image_new) # labelQr[2] = labelSocQr
+    labelQr[2].photo = image_new
 
 #GUI Design: Create frames, entries, buttons, and load images for the QR generator app.
 def gui():
@@ -203,8 +220,8 @@ def gui():
     socEntry = [socGpEntry, socRevEntry, socSnEntry]
     s4dEntry = [s4dGpEntry, s4dRevEntry, s4dSnEntry]
     ctrlEntry = [ctrlGpEntry, ctrlRevEntry, ctrlSnEntry, ctrlMac1Entry, ctrlMac2Entry]
-    button_print = Button(root, text="Import", command=lambda:commandImport(socEntry, s4dEntry, ctrlEntry))
-    button_print.grid(row=6, column=0)
+    button_import = Button(root, text="Import", command=lambda:commandImport(socEntry, s4dEntry, ctrlEntry))
+    button_import.grid(row=6, column=0)
     labelQr = [labelCtrlQr, labelS4dQr, labelSocQr]
     button_qrgen = Button(root, text="Generate QR code", command=lambda:commandQrgen(labelQr, ctrlEntry, s4dEntry,
                                                                                      socEntry))
