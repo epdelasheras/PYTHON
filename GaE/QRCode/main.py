@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 from my_lib import *
 
 #gui();
@@ -59,17 +58,23 @@ socSnEntry = StringVar()
 entrySocSn = Entry(mainFrame, textvariable=socSnEntry).place(x=630, y=275)
 
 # Load default QR codes:
-imgCtrlQrInit = PhotoImage(file='./QrCodeInit.png')
-labelCtrlQr = Label(mainFrame, image=imgCtrlQrInit, bd=5, relief="groove").place(x=120, y=350)
-imgS4dQrInit = PhotoImage(file='./QrCodeInit.png')
-labelS4dQr = Label(mainFrame, image=imgS4dQrInit, bd=5, relief="groove").place(x=400, y=350)
-imgSoCQrInit = PhotoImage(file='./QrCodeInit.png')
-labelSocQr = Label(mainFrame, image=imgSoCQrInit, bd=5, relief="groove").place(x=620, y=350)
+labelCtrlQr = Label(mainFrame)
+labelCtrlQr.place(x=120, y=350)
+labelS4dQr = Label(mainFrame)
+labelS4dQr.place(x=400, y=350)
+labelSocQr = Label(mainFrame)
+labelSocQr.place(x=620, y=350)
 
 # Create buttons
-Button(root, text="Import Excel file", font=("Arial", 12)).place(x=50, y=165)
-Button(root, text="Generate QR", font=("Arial", 12)).place(x=210, y=165)
-Button(root, text="Export to PDF", font=("Arial", 12)).place(x=355, y=165)
+socEntry = [socGpEntry, socRevEntry, socSnEntry]
+s4dEntry = [s4dGpEntry, s4dRevEntry, s4dSnEntry]
+ctrlEntry = [ctrlGpEntry, ctrlRevEntry, ctrlSnEntry, ctrlMac1Entry, ctrlMac2Entry]
+labelQr = [labelCtrlQr, labelS4dQr, labelSocQr]
+Button(root, text="Import Excel file", font=("Arial", 10), command=lambda:commandImport(socEntry, s4dEntry, ctrlEntry))\
+       .place(x=50, y=165)
+Button(root, text="Generate QR", font=("Arial", 10), command=lambda:commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry))\
+        .place(x=210, y=165)
+Button(root, text="Export to PDF", font=("Arial", 10), command=commandExport).place(x=355, y=165)
 
 
 root.mainloop()
