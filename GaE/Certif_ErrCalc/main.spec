@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=[],
+             pathex=['d:\\Trabajo\\GitHub\\PYTHON\\GaE\\Certif_ErrCalc'],
              binaries=[],
-             datas=[('zynqAdcLog.txt','.')],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

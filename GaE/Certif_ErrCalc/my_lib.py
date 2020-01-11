@@ -25,12 +25,14 @@ def data_filter(name_txt, name_length, name_cmp,cur_phy_txt, rms_txt):
 # estimate absolute error
 def error_absolute(lst, real_value):
     lst_rounded = [round(lst, 3) for lst in lst]
+    average = sum(lst_rounded)/len(lst_rounded)
+    average_rounded = round(average, 3)
     ea_lst=[]
     for i in range(len(lst_rounded)):
         ea_lst.append(abs(lst_rounded[i])-abs(real_value))
     ea_lst_abs=[abs(ea_lst) for ea_lst in ea_lst]
 
-    return round(sum(ea_lst_abs)/len(ea_lst_abs),4)
+    return round(sum(ea_lst_abs)/len(ea_lst_abs),4), average_rounded
 
 # estimate relative error
 def error_relative(ea_mean, real_value):
