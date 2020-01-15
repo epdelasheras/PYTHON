@@ -4,7 +4,6 @@ import pyqrcode
 from fpdf import FPDF
 from tkinter import filedialog
 from tkinter import messagebox
-import xlrd
 import openpyxl
 from openpyxl.styles import PatternFill
 
