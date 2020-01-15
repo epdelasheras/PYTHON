@@ -4,65 +4,74 @@ import pyqrcode
 from fpdf import FPDF
 from tkinter import filedialog
 from tkinter import messagebox
-import xlrd
+import openpyxl
+from openpyxl.styles import PatternFill
+
 
 # Check Free SN => Which cell sheet is not in RED color?
-def checkFreeSn(workbook, worksheet, row, column):
-    for i in range(row, worksheet.nrows): #Skiip row 0 and row 1 of the excel sheet because they are titles..
-        xfx = worksheet.cell_xf_index(i, column)
-        xf = workbook.xf_list[xfx]
-        bgx = xf.background.pattern_colour_index
-        pattern_colour = workbook.colour_map[bgx]
-        #print(pattern_colour)
-        if pattern_colour == None: # white cells are "None" color. The first None color => Free SN to import
-            #print(worksheet.cell(i, 0))
+def checkFreeSn(worksheet, row):
+    for i in range(row, worksheet.max_row):
+        cell_color = worksheet["A"+str(i)].fill.start_color.rgb # get cell color
+        #print(cell_color)
+        if cell_color == "00000000":
+            #print(worksheet["A"+str(i)].value)
             break
     return i
+
+'''
+    wb = openpyxl.load_workbook('MAC&CCU_SN.xlsx')
+    #ws = wb.active
+    ws = wb["CCU_SoC"]
+    redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
+    i = 8
+    ws["A"+str(i)].fill = redFill
+    wb.save('test.xlsx')
+'''
 
 
 #commandImport: Import excel file to fill the entries
 def commandImport(socEntry, s4dEntry, ctrlEntry):
 
     # Open excel file
-    fileExcel = filedialog.askopenfilename(title="Abrir", initialdir="./", filetypes=(("Ficheros de Excel", "*.xls"),
+    fileExcel = filedialog.askopenfilename(title="Abrir", initialdir="./", filetypes=(("Ficheros de Excel", "*.xlsx"),
                                         ("Todos los ficheros", "*.*")))
 
     if not fileExcel: # handle cancel button filedialog.askopenfilename
         return
 
     # Open Excel File
-    wb = xlrd.open_workbook(fileExcel, formatting_info=True)
+    wb = openpyxl.load_workbook(fileExcel, data_only=True) # data_only=True to read the cell data instead of the formula
     # Open Sheets
-    wsSoC = wb.sheet_by_name('CCU_SoC')
-    wsS4d = wb.sheet_by_name('CCU_S4d_Adapt')
-    wsCtrl = wb.sheet_by_name('CCU_SoC_Ctrl & MAC')
+    wsSoC = wb['CCU_SoC']
+    wsS4d = wb['CCU_S4d_Adapt']
+    wsCtrl = wb['CCU_SoC_Ctrl & MAC']
     # Check free SN on CCU_SoC worksheet + fill entries
-    socRow=checkFreeSn(wb, wsSoC, 2, 0) #skiip the two first lines because they are titles.
-    socGpTxt = str(wsSoC.cell_value(socRow, 0)) #ws.cell_value(row, column)
+    socRow = checkFreeSn(wsSoC, 3)  # skiip the two first lines because they are titles.
+    socGpTxt = str(wsSoC["A"+str(socRow)].value)
     socEntry[0].set(socGpTxt) # socGpEntry
-    socRevTxt = str(wsSoC.cell_value(socRow, 1))
+    socRevTxt = str(wsSoC["B"+str(socRow)].value)
     socEntry[1].set(socRevTxt) # socRevEntry
-    socSnTxt = str(wsSoC.cell_value(socRow, 2))
+    socSnTxt = str(wsSoC["C"+str(socRow)].value)
     socEntry[2].set(socSnTxt) #soCSnEntry
     # Check free SN on CCU_S4d_Adapt worksheet + fill entries
-    s4dRow=checkFreeSn(wb, wsS4d, 2, 0)
-    s4dGpTxt = str(wsS4d.cell_value(s4dRow, 0))
+    s4dRow=checkFreeSn(wsS4d, 3)
+    s4dGpTxt = str(wsS4d["A"+str(s4dRow)].value)
     s4dEntry[0].set(s4dGpTxt) # s4dGpEntry
-    s4dRevTxt = str(wsS4d.cell_value(s4dRow, 1))
+    s4dRevTxt = str(wsS4d["B"+str(s4dRow)].value)
     s4dEntry[1].set(s4dRevTxt) # s4dRevEntry
-    s4dSnTxt = str(wsS4d.cell_value(s4dRow, 2))
+    s4dSnTxt = str(wsS4d["C"+str(s4dRow)].value)
     s4dEntry[2].set(s4dSnTxt) #s4dSnEntry
     # Check free SN on CCU_S4d_Adapt worksheet + fill entries
-    ctrlRow = checkFreeSn(wb, wsS4d, 2, 0)
-    CtrlGpTxt = str(wsCtrl.cell_value(ctrlRow, 0))
+    ctrlRow = checkFreeSn(wsCtrl, 3)
+    CtrlGpTxt = str(wsCtrl["A"+str(ctrlRow)].value)
     ctrlEntry[0].set(CtrlGpTxt) #ctrlEntry[0]
-    CtrlRevTxt = str(wsCtrl.cell_value(ctrlRow, 1))
+    CtrlRevTxt = str(wsCtrl["B"+str(ctrlRow)].value)
     ctrlEntry[1].set(CtrlRevTxt) # ctrlRevEntry
-    CtrlSnTxt = str(wsCtrl.cell_value(ctrlRow, 2))
+    CtrlSnTxt = str(wsCtrl["C"+str(ctrlRow)].value)
     ctrlEntry[2].set(CtrlSnTxt) # ctrlSnEntry
-    CtrlMac1Txt = str(wsCtrl.cell_value(ctrlRow, 3))
+    CtrlMac1Txt = str(wsCtrl["D"+str(ctrlRow)].value)
     ctrlEntry[3].set(CtrlMac1Txt) # ctrlMac1Entry
-    CtrlMac2Txt = str(wsCtrl.cell_value(ctrlRow, 4))
+    CtrlMac2Txt = str(wsCtrl["E"+str(ctrlRow)].value)
     ctrlEntry[4].set(CtrlMac2Txt) # ctrlMac2Entry
 
 #commandExport: Export to PDF QR codes
