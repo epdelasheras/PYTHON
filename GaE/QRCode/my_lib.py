@@ -1,5 +1,6 @@
 from tkinter import *
-from tkinter import ttk
+import os
+import shutil
 import pyqrcode
 from fpdf import FPDF
 from tkinter import filedialog
@@ -7,16 +8,65 @@ from tkinter import messagebox
 import openpyxl
 from openpyxl.styles import PatternFill
 
-
 # Check Free SN => Which cell sheet is not in RED color?
-def checkFreeSn(worksheet, row):
-    for i in range(row, worksheet.max_row):
+def checkFreeSn(worksheet, listbox):
+    listbox.delete(0, 'end')
+    Gp = []
+    Rev = []
+    Sn = []
+    Mac1 = []
+    Mac2 = []
+    list_cnt = 0 # to count the number of QR codes added to the listbox
+    row_init = 3; # skiip the three first lines because they are titles.
+    for i in range(row_init, worksheet.max_row):
         cell_color = worksheet["A"+str(i)].fill.start_color.rgb # get cell color
         #print(cell_color)
-        if cell_color == "00000000":
+        if (cell_color == "00000000" and worksheet["A"+str(i)].value is None):
             #print(worksheet["A"+str(i)].value)
             break
-    return i
+        elif cell_color == "00000000":
+            #Gp.append(str(worksheet["A" + str(i)].value))
+            Gp.append(str(worksheet["A" + str(i)].value))
+            Rev.append(str(worksheet["B" + str(i)].value))
+            Sn.append(str(worksheet["C" + str(i)].value))
+            if str(worksheet) == '<Worksheet "CCU_SoC_Ctrl & MAC">':
+                Mac1.append(str(worksheet["D" + str(i)].value))
+                Mac2.append(str(worksheet["E" + str(i)].value))
+                # insert item to the CCU_SoC_Ctrl listbox
+                listbox.insert(END, "QR" + str(list_cnt+1) + "=> " + Gp[list_cnt] + "; Rev.: " + Rev[list_cnt] +
+                              "; Sn: " + Sn[list_cnt] + "; MAC1: " + Mac1[list_cnt] + "; MAC2: " +
+                               Mac2[list_cnt])
+                #generate temp png images for qr codes
+                qrparam1 = 'Gamesa Electric\n'
+                qrparam2 = 'CCU_SoC_Ctrl\n'
+                qrparam3 = "GP: " + Gp[list_cnt] + "\n"  # ctrlG
+                qrparam4 = "Rev.: " + Rev[list_cnt] + "\n"  # ctrlRev
+                qrparam5 = "SN: " + Sn[list_cnt] + "\n"  # ctrlSn
+                qrparam6 = "MAC ETH1: " + Mac1[list_cnt] + "\n"  # ctrlMac1
+                qrparam7 = "MAC ETH2: " + Mac2[list_cnt] + "\n"  # ctrlMac2
+                qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5 + qrparam6 + qrparam7)
+                qr_code.png('./temp/qrcode_ctrl{}.png'.format(list_cnt), scale=2)
+            else:
+                listbox.insert(END, "QR" + str(list_cnt+1) + "=> " + Gp[list_cnt] + "; Rev.: " + Rev[list_cnt] +
+                               " ; Sn: " + Sn[list_cnt])
+                # generate temp png images for qr codes
+                if str(worksheet) == '<Worksheet "CCU_S4d_Adapt">':
+                    qrparam1 = 'Gamesa Electric\n'
+                    qrparam2 = 'CCU_S4d_Adapt\n'
+                    qrparam3 = "GP: " + Gp[list_cnt] + "\n"  # s4dGp
+                    qrparam4 = "Rev.: " + Rev[list_cnt] + "\n"  # s4dRev
+                    qrparam5 = "SN: " + Sn[list_cnt] + "\n"  # s4dSn
+                    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
+                    qr_code.png('./temp/qrcode_s4d{}.png'.format(list_cnt), scale=2)
+                else:
+                    qrparam1 = 'Gamesa Electric\n'
+                    qrparam2 = 'CCU_SoC\n'
+                    qrparam3 = "GP: " + Gp[list_cnt] + "\n"  # s4dGp
+                    qrparam4 = "Rev.: " + Rev[list_cnt] + "\n"  # s4dRev
+                    qrparam5 = "SN: " + Sn[list_cnt] + "\n"  # s4dSn
+                    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
+                    qr_code.png('./temp/qrcode_soc{}.png'.format(list_cnt), scale=2)
+            list_cnt += 1
 
 '''
     wb = openpyxl.load_workbook('MAC&CCU_SN.xlsx')
@@ -30,8 +80,7 @@ def checkFreeSn(worksheet, row):
 
 
 #commandImport: Import excel file to fill the entries
-def commandImport(socEntry, s4dEntry, ctrlEntry):
-
+def commandImport(ctrlList, s4dList, socList):
     # Open excel file
     fileExcel = filedialog.askopenfilename(title="Abrir", initialdir="./", filetypes=(("Ficheros de Excel", "*.xlsx"),
                                         ("Todos los ficheros", "*.*")))
@@ -45,34 +94,66 @@ def commandImport(socEntry, s4dEntry, ctrlEntry):
     wsSoC = wb['CCU_SoC']
     wsS4d = wb['CCU_S4d_Adapt']
     wsCtrl = wb['CCU_SoC_Ctrl & MAC']
-    # Check free SN on CCU_SoC worksheet + fill entries
-    socRow = checkFreeSn(wsSoC, 3)  # skiip the two first lines because they are titles.
-    socGpTxt = str(wsSoC["A"+str(socRow)].value)
-    socEntry[0].set(socGpTxt) # socGpEntry
-    socRevTxt = str(wsSoC["B"+str(socRow)].value)
-    socEntry[1].set(socRevTxt) # socRevEntry
-    socSnTxt = str(wsSoC["C"+str(socRow)].value)
-    socEntry[2].set(socSnTxt) #soCSnEntry
-    # Check free SN on CCU_S4d_Adapt worksheet + fill entries
-    s4dRow=checkFreeSn(wsS4d, 3)
-    s4dGpTxt = str(wsS4d["A"+str(s4dRow)].value)
-    s4dEntry[0].set(s4dGpTxt) # s4dGpEntry
-    s4dRevTxt = str(wsS4d["B"+str(s4dRow)].value)
-    s4dEntry[1].set(s4dRevTxt) # s4dRevEntry
-    s4dSnTxt = str(wsS4d["C"+str(s4dRow)].value)
-    s4dEntry[2].set(s4dSnTxt) #s4dSnEntry
-    # Check free SN on CCU_S4d_Adapt worksheet + fill entries
-    ctrlRow = checkFreeSn(wsCtrl, 3)
-    CtrlGpTxt = str(wsCtrl["A"+str(ctrlRow)].value)
-    ctrlEntry[0].set(CtrlGpTxt) #ctrlEntry[0]
-    CtrlRevTxt = str(wsCtrl["B"+str(ctrlRow)].value)
-    ctrlEntry[1].set(CtrlRevTxt) # ctrlRevEntry
-    CtrlSnTxt = str(wsCtrl["C"+str(ctrlRow)].value)
-    ctrlEntry[2].set(CtrlSnTxt) # ctrlSnEntry
-    CtrlMac1Txt = str(wsCtrl["D"+str(ctrlRow)].value)
-    ctrlEntry[3].set(CtrlMac1Txt) # ctrlMac1Entry
-    CtrlMac2Txt = str(wsCtrl["E"+str(ctrlRow)].value)
-    ctrlEntry[4].set(CtrlMac2Txt) # ctrlMac2Entry
+    # Check free SN + fill listbox
+    checkFreeSn(wsCtrl, ctrlList)
+    checkFreeSn(wsS4d, s4dList)
+    checkFreeSn(wsSoC, socList)
+
+#commandPrint: Print Ctrl QR codes on the screen
+def commandQrgenCtrl(event, labelQr):
+    widget = event.widget
+    selection = widget.curselection()
+    value = widget.get(selection[0]) # get the string from the item selected on the listbox
+    qrparam1 = 'Gamesa Electric\n'
+    qrparam2 = 'CCU_SoC_Ctrl\n'
+    qrparam3 = "GP: " + value[6:-70] + "\n"  # ctrlGp
+    qrparam4 = "Rev.: " + value[22:-58] + "\n"  # ctrlRev
+    qrparam5 = "SN: " + value[32:-40] + "\n"  # ctrlSn
+    qrparam6 = "MAC ETH1: " + value[52:-20] + "\n"  # ctrlMac1
+    qrparam7 = "MAC ETH2: " + value[72:] + "\n"  # ctrlMac2
+    # Generate QR code
+    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5 + qrparam6 + qrparam7)
+    qr_code.png('./temp/qrcode_ctrl_lb.png', scale=2)
+    # Refresh QR image
+    image_new = PhotoImage(file='./temp/qrcode_ctrl_lb.png')
+    labelQr.configure(image=image_new, bd=5, relief="groove")
+    labelQr.photo = image_new
+
+#commandPrint: Print S4d QR codes on the screen
+def commandQrgenS4d(event, labelQr):
+    widget = event.widget
+    selection = widget.curselection()
+    value = widget.get(selection[0]) # get the string from the item selected on the listbox
+    qrparam1 = 'Gamesa Electric\n'
+    qrparam2 = 'CCU_S4d_Adapt\n'
+    qrparam3 = "GP: " + value[6:-30] + "\n"  # s4dGp
+    qrparam4 = "Rev.: " + value[22:-18] + "\n"  # s4dRev
+    qrparam5 = "SN: " + value[32:] + "\n"  # s4dSn
+    # Generate QR code
+    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
+    qr_code.png('./temp/qrcode_s4d_lb.png', scale=2)
+    # Refresh QR image
+    image_new = PhotoImage(file='./temp/qrcode_s4d_lb.png')
+    labelQr.configure(image=image_new, bd=5, relief="groove")
+    labelQr.photo = image_new
+
+#commandPrint: Print S4d QR codes on the screen
+def commandQrgenSoc(event, labelQr):
+    widget = event.widget
+    selection = widget.curselection()
+    value = widget.get(selection[0]) # get the string from the item selected on the listbox
+    qrparam1 = 'Gamesa Electric\n'
+    qrparam2 = 'CCU_SoC\n'
+    qrparam3 = "GP: " + value[6:-30] + "\n"  # socGp
+    qrparam4 = "Rev.: " + value[22:-18] + "\n"  # socRev
+    qrparam5 = "SN: " + value[32:] + "\n"  # socSn
+    # Generate QR code
+    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
+    qr_code.png('./temp/qrcode_soc_lb.png', scale=2)
+    # Refresh QR image
+    image_new = PhotoImage(file='./temp/qrcode_soc_lb.png')
+    labelQr.configure(image=image_new, bd=5, relief="groove")
+    labelQr.photo = image_new
 
 #commandExport: Export to PDF QR codes
 def commandExport():
@@ -80,78 +161,41 @@ def commandExport():
     pdf.add_page()
 
     # Set font type and line width for pdf titles and drawings
-    pdf.set_font("Arial", size=15)
+    pdf.set_font("Arial", size=12)
     pdf.set_line_width(1)
-    # printing QR codes for CCU_SoC_Ctrl
-    pdf.text(x=20, y=10, txt="CCU_SoC_Ctrl")
-    pdf.image('qrcode_ctrl.png', x=25,  y=20, w=10, h=10)
-    pdf.image('qrcode_ctrl.png', x=45, y=20, w=10, h=10)
-    pdf.line(x1=70, y1=5, x2=70, y2=40)
-    # printing QR codes for CCU_s4d_adapt
-    pdf.text(x=85, y=10, txt="CCU_s4d_adapt")
-    pdf.image('qrcode_s4d.png', x=100,  y=20, w=10, h=10)
-    pdf.line(x1=135, y1=5, x2=135, y2=40)
-    # printing QR codes for CCU_SoC
-    pdf.text(x=155, y=10, txt="CCU_SoC")
-    pdf.image('qrcode_soc.png', x=160,  y=20, w=10, h=10)
+    #  printing vertical lines
+    pdf.line(x1=70, y1=5, x2=70, y2=290)
+    pdf.line(x1=135, y1=5, x2=135, y2=290)
+
+    ygap = 0 # gap between QR code lines
+    for i in range(5): # maximum 5 qr codes can be printed in one page
+        # priting horizontal lines
+        if i < 4: # dont print last horizontal line
+            pdf.line(x1=5, y1=50+ygap, x2=200, y2=50+ygap)
+        # printing page headers
+        pdf.text(x=20, y=5+ygap, txt="CCU_SoC_ctrl (QR{})".format(i+1))
+        pdf.text(x=85, y=5+ygap, txt="CCU_s4d_adapt (QR{})".format(i+1))
+        pdf.text(x=155, y=5+ygap, txt="CCU_SoC (QR{})".format(i+1))
+        #CCU_SoC_ctrl
+        pdf.image('./temp/qrcode_ctrl{}.png'.format(i), x=25,  y=20+ygap, w=10, h=10)
+        pdf.image('./temp/qrcode_ctrl{}.png'.format(i), x=45, y=20+ygap, w=10, h=10)
+        # CCU_s4d_adapt
+        pdf.image('./temp/qrcode_s4d{}.png'.format(i), x=100,  y=20+ygap, w=10, h=10)
+        # CCU_SoC
+        pdf.image('./temp/qrcode_soc{}.png'.format(i), x=160,  y=20+ygap, w=10, h=10)
+        ygap += 60
 
     filePdf = filedialog.asksaveasfile(mode="w", defaultextension=".pdf", filetypes=[("Ficheros PDF", "*.pdf")])
 
     if filePdf is None: # asksaveasfile return `None` if dialog closed with "cancel".
-            return
+        return
 
     pdf.output(filePdf.name, "F")
     pdf.close
 
     messagebox.showinfo("GaE windows messagebox", "Fichero con codigos QR generado con exito")
 
-
-
-#commandPrint: Print QR codes
-def commandQrgen(labelQr, ctrlEntry, s4dEntry, socEntry):
-
-    #************* CCU_SoC_Ctrl QR generation ************
-    qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_SoC_Ctrl\n'
-    qrparam3 = "GP: " + ctrlEntry[0].get() +"\n" # ctrlGpEntry
-    qrparam4 = "Rev.: " + ctrlEntry[1].get() + "\n" # ctrlRevGpEntry
-    qrparam5 = "SN: " + ctrlEntry[2].get() + "\n" # ctrlSnEntry
-    qrparam6 = "MAC ETH1: " + ctrlEntry[3].get() + "\n" # ctrlMac1Entry
-    qrparam7 = "MAC ETH2: " + ctrlEntry[4].get() + "\n" # ctrlMac2Entry
-    # Generate QR code
-    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5 + qrparam6 + qrparam7)
-    qr_code.png('qrcode_ctrl.png', scale=1)
-    # Refreash QR image
-    image_new = PhotoImage(file='./qrcode_ctrl.png')
-    labelQr[0].configure(image=image_new, bd=5, relief="groove") # labelQr[0] = labelCtrlQr
-    labelQr[0].photo = image_new
-
-    #************* CCU_S4d_Adapt QR generation ************
-    qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_S4d_Adapt\n'
-    qrparam3 = "GP: " + s4dEntry[0].get() + "\n" # s4dGpEntry
-    qrparam4 = "Rev.: " + s4dEntry[1].get() + "\n" # s4dRevEntry
-    qrparam5 = "SN: " + s4dEntry[2].get() + "\n" # s4dSnEntry
-    # Generate QR code
-    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
-    qr_code.png('qrcode_s4d.png', scale=1)
-    # Refreash QR image
-    image_new = PhotoImage(file='./qrcode_s4d.png')
-    labelQr[1].configure(image=image_new, bd=5, relief="groove") # labelQr[1] = labelS4dQr
-    labelQr[1].photo = image_new
-
-    #************* CCU_SoC QR generation ************
-    qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_SoC\n'
-    qrparam3 = "GP: " + socEntry[0].get() + "\n" # socGpEntry
-    qrparam4 = "Rev.: " + socEntry[1].get() + "\n" # socRevEntry
-    qrparam5 = "SN: " + socEntry[2].get() + "\n" # socSnEntry
-    # Generate QR code
-    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
-    qr_code.png('qrcode_soc.png', scale=1)
-    # Refreash QR image
-    image_new = PhotoImage(file='./qrcode_soc.png')
-    labelQr[2].configure(image=image_new, bd=5, relief="groove") # labelQr[2] = labelSocQr
-    labelQr[2].photo = image_new
-
-    messagebox.showinfo("GaE windows messagebox", "Códigos QR generados con éxito")
+# Define an action whhen the program is closed
+def on_closing(root):
+    shutil.rmtree("./temp")
+    root.destroy()

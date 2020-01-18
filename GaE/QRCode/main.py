@@ -1,30 +1,66 @@
 from tkinter import *
 from my_lib import *
+import os
 
-#gui();
+# Create temp folder
+os.mkdir("temp")
 
 # Create window + title
 root = Tk()
+
 root.title('GaE QR CCU Code Generator')
 root.resizable(False, False)
 
-mainFrame=Frame(root, width=800, height=450)
+mainFrame=Frame(root, width=1105, height=520)
 mainFrame.pack()
 
 # Create title frame
 Label(mainFrame, text="WELCOME TO CCU QR CODE GENERATOR (GaE)", font=("Arial Black", 18), bd=5, relief="solid").\
-     place(x=80, y=20)
+     place(x=200, y=20)
 
 # Create user instructions
 Label(mainFrame, text="Please follow the next steps to generate CCU QR codes:\n"
-                      "1) Press 'Import Excel file' button to load serial numbers from the excel file\n"
-                      "2) Press 'Generate QR' button to generate QR codes\n"
-                      "3) Press 'Export to PDF' to generate a PDF file with QR codes", font=("Arial", 10),
-                     justify="left").place(x=25, y=80)
+                      "1) Press 'Import Excel file' button to load serial numbers from the excel file (maximum 5)\n"
+                      "2) Preview the QR codes clicking on list box items\n"
+                      "3) Press 'Export to PDF' to generate a PDF file with QR codes listed on the list boxes"
+               , font=("Arial", 10), justify="left").place(x=25, y=80)
 
 # Create Labels and entries for CCU_SoC_Ctrl
-Label(mainFrame, text="                 CCU_SoC_Ctrl \n\n"
-      "GP Code: \n""REV.: \n""SN: \n""MAC ETH1: \n""MAC ETH2: \n", font=("Arial", 10),justify="left").place(x=30, y=210)
+Label(mainFrame, text="CCU_SoC_Ctrl\n", font=("Arial", 10),justify="left").place(x=200, y=210)
+ctrlList = Listbox(mainFrame, width=80, heigh=5, font=("Arial", 8),
+                   exportselection=False) # exportselection is false to allow click on multiple tables.
+ctrlList.place(x=30,y=245)
+labelCtrlQr = Label(mainFrame) # load default qr code
+labelCtrlQr.place(x=205, y=360)
+ctrlList.bind("<<ListboxSelect>>", lambda event: commandQrgenCtrl(event, labelCtrlQr)) # bind to a func listbox item
+
+
+Label(mainFrame, text="CCU_s4d_Adapt\n", font=("Arial", 10),justify="left").place(x=625, y=210)
+s4dList = Listbox(mainFrame, width=40, heigh=5, font=("Arial", 8), exportselection=False)
+s4dList.place(x=550,y=245)
+labelS4dQr = Label(mainFrame) # load default qr code
+labelS4dQr.place(x=620, y=360)
+s4dList.bind("<<ListboxSelect>>", lambda event: commandQrgenS4d(event, labelS4dQr)) # bind to a func listbox item
+
+
+Label(mainFrame, text="CCU_SoC\n", font=("Arial", 10),justify="left").place(x=920, y=210)
+socList = Listbox(mainFrame, width=40, heigh=5, font=("Arial", 8), exportselection=False)
+socList.place(x=830,y=245)
+labelSocQr = Label(mainFrame) # load default qr code
+labelSocQr.place(x=915, y=360)
+socList.bind("<<ListboxSelect>>", lambda event: commandQrgenSoc(event, labelSocQr)) # bind to a func listbox item
+
+# Create buttons
+Button(root, text="Import Excel file", font=("Arial", 10), command=lambda:commandImport(ctrlList, s4dList, socList))\
+      .place(x=50, y=165)
+
+Button(root, text="Export to PDF", font=("Arial", 10), command=commandExport).place(x=190, y=165)
+
+root.protocol("WM_DELETE_WINDOW", lambda mainWindow=root: on_closing(mainWindow))
+
+root.mainloop()
+
+'''
 ctrlGpEntry = StringVar()
 entryCtrlGp = Entry(mainFrame, textvariable=ctrlGpEntry).place(x=120, y=245)
 ctrlRevEntry = StringVar()
@@ -35,6 +71,7 @@ ctrlMac1Entry = StringVar()
 entryCtrlMac1 = Entry(mainFrame, textvariable=ctrlMac1Entry).place(x=120, y=290)
 ctrlMac2Entry = StringVar()
 entryCtrlMac2 = Entry(mainFrame, textvariable=ctrlMac2Entry).place(x=120, y=305)
+
 
 # Create Labels and entries for CCU_S4D_ADAPT
 Label(mainFrame, text="                 CCU_S4d_Adapt \n\n"
@@ -76,5 +113,6 @@ Button(root, text="Generate QR", font=("Arial", 10), command=lambda:commandQrgen
         .place(x=210, y=165)
 Button(root, text="Export to PDF", font=("Arial", 10), command=commandExport).place(x=355, y=165)
 
-
 root.mainloop()
+
+'''
