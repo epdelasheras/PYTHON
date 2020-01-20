@@ -1,5 +1,4 @@
 from tkinter import *
-import os
 import shutil
 import pyqrcode
 from fpdf import FPDF
@@ -68,19 +67,18 @@ def checkFreeSn(worksheet, listbox):
                     qr_code.png('./temp/qrcode_soc{}.png'.format(list_cnt), scale=2)
             list_cnt += 1
 
-'''
-    wb = openpyxl.load_workbook('MAC&CCU_SN.xlsx')
-    #ws = wb.active
-    ws = wb["CCU_SoC"]
-    redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
-    i = 8
-    ws["A"+str(i)].fill = redFill
-    wb.save('test.xlsx')
-'''
-
+    return list_cnt
 
 #commandImport: Import excel file to fill the entries
 def commandImport(ctrlList, s4dList, socList):
+
+    # Global var used to store the excel file in a temp memory
+    global fileExcel
+    # Global vars to count the number of Sn printed
+    global SnCntFree_SoC
+    global SnCntFree_Ctrl
+    global SnCntFree_S4d
+
     # Open excel file
     fileExcel = filedialog.askopenfilename(title="Abrir", initialdir="./", filetypes=(("Ficheros de Excel", "*.xlsx"),
                                         ("Todos los ficheros", "*.*")))
@@ -95,9 +93,26 @@ def commandImport(ctrlList, s4dList, socList):
     wsS4d = wb['CCU_S4d_Adapt']
     wsCtrl = wb['CCU_SoC_Ctrl & MAC']
     # Check free SN + fill listbox
-    checkFreeSn(wsCtrl, ctrlList)
-    checkFreeSn(wsS4d, s4dList)
-    checkFreeSn(wsSoC, socList)
+    SnCntFree_Ctrl = checkFreeSn(wsCtrl, ctrlList)
+    SnCntFree_S4d = checkFreeSn(wsS4d, s4dList)
+    SnCntFree_SoC = checkFreeSn(wsSoC, socList)
+
+    # check the number of SN read.
+    if SnCntFree_SoC > 5:
+        messagebox.showwarning("Warning Info", "The number of SN in CCU_SoC excel tab > 5."
+                                               "lease edit the Excel file to assure SN <= 5")
+    if SnCntFree_Ctrl > 5:
+        messagebox.showwarning("Warning Info", "The number of SN in CCU_SoC_Ctrl excel tab > 5."
+                                               "lease edit the Excel file to assure SN <= 5")
+    if SnCntFree_S4d > 5:
+        messagebox.showwarning("Warning Info", "The number of SN in CCU_S4d_Adapt excel tab > 5."
+                                               "lease edit the Excel file to assure SN <= 5")
+
+    if SnCntFree_SoC != SnCntFree_Ctrl != SnCntFree_S4d:
+        messagebox.showwarning("Warning Info", "There are different number of SN in the excel tabs."
+                                               " Every tab must have the same number of SN."
+                                                " Please edit the excel file to assure it.")
+
 
 #commandPrint: Print Ctrl QR codes on the screen
 def commandQrgenCtrl(event, labelQr):
@@ -168,7 +183,7 @@ def commandExport():
     pdf.line(x1=135, y1=5, x2=135, y2=290)
 
     ygap = 0 # gap between QR code lines
-    for i in range(5): # maximum 5 qr codes can be printed in one page
+    for i in range(SnCntFree_SoC): # maximum 5 qr codes can be printed in one page
         # priting horizontal lines
         if i < 4: # dont print last horizontal line
             pdf.line(x1=5, y1=50+ygap, x2=200, y2=50+ygap)
@@ -193,9 +208,64 @@ def commandExport():
     pdf.output(filePdf.name, "F")
     pdf.close
 
+    fillRedXls()
+
     messagebox.showinfo("GaE windows messagebox", "Fichero con codigos QR generado con exito")
 
 # Define an action whhen the program is closed
 def on_closing(root):
     shutil.rmtree("./temp")
     root.destroy()
+
+def fillRedXls():
+    # Open Excel File
+    wb = openpyxl.load_workbook(fileExcel, data_only=True)  # data_only=True to read the cell data instead of the formula
+    # Open Sheets
+    wsSoC = wb['CCU_SoC']
+    wsS4d = wb['CCU_S4d_Adapt']
+    wsCtrl = wb['CCU_SoC_Ctrl & MAC']
+    row_init=3 # the three first rows of the excel file are tittles.
+    for i in range(row_init, wsSoC.max_row):
+        cell_color = wsSoC["A"+str(i)].fill.start_color.rgb # get cell color
+        if (cell_color == "00000000" and wsSoC["A"+str(i)].value is None): #check if the cell is empty
+            #print(worksheet["A"+str(i)].value)
+            break
+        elif cell_color == "00000000": #check the background color of the cell (check cell white color)
+            redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
+            # Red fill CCU_SoC excel tab
+            wsSoC["A" + str(i)].fill = redFill
+            wsSoC["B" + str(i)].fill = redFill
+            wsSoC["C" + str(i)].fill = redFill
+            # Red fill CCU_S4d_Adapt excel tab
+            wsS4d["A" + str(i)].fill = redFill
+            wsS4d["B" + str(i)].fill = redFill
+            wsS4d["C" + str(i)].fill = redFill
+            # Red fill CCU_S4d_Adapt excel tab
+            wsCtrl["A" + str(i)].fill = redFill
+            wsCtrl["B" + str(i)].fill = redFill
+            wsCtrl["C" + str(i)].fill = redFill
+            wsCtrl["D" + str(i)].fill = redFill
+            wsCtrl["E" + str(i)].fill = redFill
+
+    wb.save('MAC&CCU_SN_Mod.xlsx')
+
+
+'''
+    row_init=3
+    for i in range(row_init, worksheet.max_row):
+        cell_color = worksheet["A"+str(i)].fill.start_color.rgb # get cell color
+        #print(cell_color)
+        if (cell_color == "00000000" and worksheet["A"+str(i)].value is None):
+            #print(worksheet["A"+str(i)].value)
+            break
+        elif cell_color == "00000000":
+
+
+    wb = openpyxl.load_workbook('MAC&CCU_SN.xlsx')
+    #ws = wb.active
+    ws = wb["CCU_SoC"]
+    redFill = PatternFill(start_color='FFFF0000', end_color='FFFF0000', fill_type='solid')
+    i = 8
+    ws["A"+str(i)].fill = redFill
+    wb.save('test.xlsx')    
+'''
