@@ -36,33 +36,33 @@ def checkFreeSn(worksheet, listbox):
                               "; Sn: " + Sn[list_cnt] + "; MAC1: " + Mac1[list_cnt] + "; MAC2: " +
                                Mac2[list_cnt])
                 #generate temp png images for qr codes
-                qrparam1 = 'Gamesa Electric\n'
-                qrparam2 = 'CCU_SoC_Ctrl\n'
-                qrparam3 = "GP: " + Gp[list_cnt] + "\n"  # ctrlG
-                qrparam4 = "Rev.: " + Rev[list_cnt] + "\n"  # ctrlRev
-                qrparam5 = "SN: " + Sn[list_cnt] + "\n"  # ctrlSn
-                qrparam6 = "MAC ETH1: " + Mac1[list_cnt] + "\n"  # ctrlMac1
-                qrparam7 = "MAC ETH2: " + Mac2[list_cnt] + "\n"  # ctrlMac2
+                qrparam1 = 'Gamesa Electric\n\r'
+                qrparam2 = 'CCU_SoC_Ctrl\n\r'
+                qrparam3 = "GP: " + Gp[list_cnt] + "\n\r"  # ctrlG
+                qrparam4 = "Rev.: " + Rev[list_cnt] + "\n\r"  # ctrlRev
+                qrparam5 = "SN: " + Sn[list_cnt] + "\n\r"  # ctrlSn
+                qrparam6 = "MAC ETH1: " + Mac1[list_cnt] + "\n\r"  # ctrlMac1
+                qrparam7 = "MAC ETH2: " + Mac2[list_cnt] + "\n\r"  # ctrlMac2
                 qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5 + qrparam6 + qrparam7)
                 qr_code.png('./temp/qrcode_ctrl{}.png'.format(list_cnt), scale=2)
             else:
                 listbox.insert(END, "QR" + str(list_cnt+1) + "=> " + Gp[list_cnt] + "; Rev.: " + Rev[list_cnt] +
-                               " ; Sn: " + Sn[list_cnt])
+                               "; Sn: " + Sn[list_cnt])
                 # generate temp png images for qr codes
                 if str(worksheet) == '<Worksheet "CCU_S4d_Adapt">':
-                    qrparam1 = 'Gamesa Electric\n'
-                    qrparam2 = 'CCU_S4d_Adapt\n'
-                    qrparam3 = "GP: " + Gp[list_cnt] + "\n"  # s4dGp
-                    qrparam4 = "Rev.: " + Rev[list_cnt] + "\n"  # s4dRev
-                    qrparam5 = "SN: " + Sn[list_cnt] + "\n"  # s4dSn
+                    qrparam1 = 'Gamesa Electric\n\r'
+                    qrparam2 = 'CCU_S4d_Adapt\n\r'
+                    qrparam3 = "GP: " + Gp[list_cnt] + "\n\r"  # s4dGp
+                    qrparam4 = "Rev.: " + Rev[list_cnt] + "\n\r"  # s4dRev
+                    qrparam5 = "SN: " + Sn[list_cnt] + "\n\r"  # s4dSn
                     qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
                     qr_code.png('./temp/qrcode_s4d{}.png'.format(list_cnt), scale=2)
                 else:
-                    qrparam1 = 'Gamesa Electric\n'
-                    qrparam2 = 'CCU_SoC\n'
-                    qrparam3 = "GP: " + Gp[list_cnt] + "\n"  # s4dGp
-                    qrparam4 = "Rev.: " + Rev[list_cnt] + "\n"  # s4dRev
-                    qrparam5 = "SN: " + Sn[list_cnt] + "\n"  # s4dSn
+                    qrparam1 = 'Gamesa Electric\n\r'
+                    qrparam2 = 'CCU_SoC\n\r'
+                    qrparam3 = "GP: " + Gp[list_cnt] + "\n\r"  # s4dGp
+                    qrparam4 = "Rev.: " + Rev[list_cnt] + "\n\r"  # s4dRev
+                    qrparam5 = "SN: " + Sn[list_cnt] + "\n\r"  # s4dSn
                     qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
                     qr_code.png('./temp/qrcode_soc{}.png'.format(list_cnt), scale=2)
             list_cnt += 1
@@ -118,19 +118,8 @@ def commandImport(ctrlList, s4dList, socList):
 def commandQrgenCtrl(event, labelQr):
     widget = event.widget
     selection = widget.curselection()
-    value = widget.get(selection[0]) # get the string from the item selected on the listbox
-    qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_SoC_Ctrl\n'
-    qrparam3 = "GP: " + value[6:-70] + "\n"  # ctrlGp
-    qrparam4 = "Rev.: " + value[22:-58] + "\n"  # ctrlRev
-    qrparam5 = "SN: " + value[32:-40] + "\n"  # ctrlSn
-    qrparam6 = "MAC ETH1: " + value[52:-20] + "\n"  # ctrlMac1
-    qrparam7 = "MAC ETH2: " + value[72:] + "\n"  # ctrlMac2
-    # Generate QR code
-    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5 + qrparam6 + qrparam7)
-    qr_code.png('./temp/qrcode_ctrl_lb.png', scale=2)
     # Refresh QR image
-    image_new = PhotoImage(file='./temp/qrcode_ctrl_lb.png')
+    image_new = PhotoImage(file='./temp/qrcode_ctrl{}.png'.format(selection[0])) #selection[0] convert tuple to int
     labelQr.configure(image=image_new, bd=5, relief="groove")
     labelQr.photo = image_new
 
@@ -138,17 +127,8 @@ def commandQrgenCtrl(event, labelQr):
 def commandQrgenS4d(event, labelQr):
     widget = event.widget
     selection = widget.curselection()
-    value = widget.get(selection[0]) # get the string from the item selected on the listbox
-    qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_S4d_Adapt\n'
-    qrparam3 = "GP: " + value[6:-30] + "\n"  # s4dGp
-    qrparam4 = "Rev.: " + value[22:-18] + "\n"  # s4dRev
-    qrparam5 = "SN: " + value[32:] + "\n"  # s4dSn
-    # Generate QR code
-    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
-    qr_code.png('./temp/qrcode_s4d_lb.png', scale=2)
     # Refresh QR image
-    image_new = PhotoImage(file='./temp/qrcode_s4d_lb.png')
+    image_new = PhotoImage(file='./temp/qrcode_s4d{}.png'.format(selection[0]))
     labelQr.configure(image=image_new, bd=5, relief="groove")
     labelQr.photo = image_new
 
@@ -156,17 +136,8 @@ def commandQrgenS4d(event, labelQr):
 def commandQrgenSoc(event, labelQr):
     widget = event.widget
     selection = widget.curselection()
-    value = widget.get(selection[0]) # get the string from the item selected on the listbox
-    qrparam1 = 'Gamesa Electric\n'
-    qrparam2 = 'CCU_SoC\n'
-    qrparam3 = "GP: " + value[6:-30] + "\n"  # socGp
-    qrparam4 = "Rev.: " + value[22:-18] + "\n"  # socRev
-    qrparam5 = "SN: " + value[32:] + "\n"  # socSn
-    # Generate QR code
-    qr_code = pyqrcode.create(qrparam1 + qrparam2 + qrparam3 + qrparam4 + qrparam5)
-    qr_code.png('./temp/qrcode_soc_lb.png', scale=2)
     # Refresh QR image
-    image_new = PhotoImage(file='./temp/qrcode_soc_lb.png')
+    image_new = PhotoImage(file='./temp/qrcode_soc{}.png'.format(selection[0]))
     labelQr.configure(image=image_new, bd=5, relief="groove")
     labelQr.photo = image_new
 

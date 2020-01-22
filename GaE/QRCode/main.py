@@ -26,21 +26,21 @@ Label(mainFrame, text="Please follow the next steps to generate CCU QR codes:\n"
                       "3) Press 'Export to PDF' to generate a PDF file with QR codes listed on the list boxes"
                , font=("Arial", 10), justify="left").place(x=25, y=70)
 
-# Create Labels and entries for CCU_SoC_Ctrl
+# Create Labels and listboxes
 Label(mainFrame, text="CCU_SoC_Ctrl\n", font=("Arial", 10),justify="left").place(x=200, y=210)
-ctrlList = Listbox(mainFrame, width=80, heigh=5, font=("Arial", 8),
+ctrlList = Listbox(mainFrame, width=85, heigh=5, font=("Arial", 8),
                    exportselection=False) # exportselection is false to allow click on multiple tables.
 ctrlList.place(x=30,y=245)
 labelCtrlQr = Label(mainFrame) # load default qr code
-labelCtrlQr.place(x=205, y=360)
+labelCtrlQr.place(x=225, y=360)
 ctrlList.bind("<<ListboxSelect>>", lambda event: commandQrgenCtrl(event, labelCtrlQr)) # bind to a func listbox item
 
 
 Label(mainFrame, text="CCU_s4d_Adapt\n", font=("Arial", 10),justify="left").place(x=625, y=210)
 s4dList = Listbox(mainFrame, width=40, heigh=5, font=("Arial", 8), exportselection=False)
-s4dList.place(x=550,y=245)
+s4dList.place(x=559,y=245)
 labelS4dQr = Label(mainFrame) # load default qr code
-labelS4dQr.place(x=620, y=360)
+labelS4dQr.place(x=640, y=360)
 s4dList.bind("<<ListboxSelect>>", lambda event: commandQrgenS4d(event, labelS4dQr)) # bind to a func listbox item
 
 
