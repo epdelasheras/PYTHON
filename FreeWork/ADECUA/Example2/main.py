@@ -12,20 +12,13 @@ class Application(ttk.Frame):
         self.treeview = ttk.Treeview(self)
 
         # Creating new tree labels
-        self.treeview.tag_bind("mytag", "<<TreeviewSelect>>",
-                               self.item_selected)
+        self.treeview.tag_bind("mytag", "<<TreeviewSelect>>", self.item_selected)
 
         # adding elements to the tree. The previous tree label is indicated
         # to have an event response
-        item = self.treeview.insert("", END, text="Elemento 1",
-                                    tags=("mytag",))
-        self.treeview.insert(item, END, text="Subelemento 1",
-                             tags=("mytag",))
-        self.treeview.insert(item, END, text="Subelemento 2",
-
-
-                             tags=("mytag",))
-
+        item = self.treeview.insert("", END, text="Elemento 1", tags=("mytag",))
+        self.treeview.insert(item, END, text="Subelemento 1", tags=("mytag",))
+        self.treeview.insert(item, END, text="Subelemento 2", tags=("mytag",))
 
         self.treeview.pack()
 
