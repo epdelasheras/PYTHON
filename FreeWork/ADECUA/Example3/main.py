@@ -1,3 +1,4 @@
+#Create a listbox and 2 images disable one of image when the other is clicked on.
 from tkinter import *
 
 class Application():

@@ -1,7 +1,7 @@
+# Import an image and draw a rectangle over the image according to the mouse position.
 from tkinter import *
 import cv2
 from PIL import Image, ImageTk
-import numpy as np
 
 class Application():
     def __init__(self):

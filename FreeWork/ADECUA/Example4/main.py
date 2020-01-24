@@ -1,3 +1,4 @@
+# Expand/Collapse a treeview depending on a selected item of the listbox.
 from tkinter import *
 from py_lib import *
 
