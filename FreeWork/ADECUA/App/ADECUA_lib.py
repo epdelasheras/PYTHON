@@ -13,3 +13,14 @@ def createTreeview(Frame):
     treeview.pack()
 
     return treeview
+
+def addItemListbox(ListBox):
+
+    ListBox.insert(0, "Subelemento 1")
+    ListBox.insert(1, "Subelemento 2")
+    ListBox.insert(2, "Subelemento 3")
+    ListBox.insert(3, "Subelemento 4")
+    ListBox.insert(4, "Subelemento 5")
+    ListBox.insert(5, "Subelemento 6")
+
+    #return listbox
