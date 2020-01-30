@@ -10,8 +10,6 @@ def createTreeview(Frame):
     treeview.insert("Main", END, text="Subelemento 1", iid="Sub1", tags=("mytag",))
     treeview.insert("Main", END, text="Subelemento 2", iid="Sub2", tags=("mytag",))
 
-    treeview.pack()
-
     return treeview
 
 def addItemListbox(ListBox):
