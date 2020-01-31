@@ -1,5 +1,7 @@
-from tkinter import *
 from ADECUA_lib import *
+from tkinter import *
+from PIL import Image, ImageTk
+
 
 class App():
     def __init__(self):
@@ -9,42 +11,60 @@ class App():
         self.root.iconbitmap(r'.\pics\ADECUA.ico') #Config the icon window
         self.root.state("zoomed") #Execute program with maxmize window
 
-        # Create and configure label frames
-        self.lfTreeview = LabelFrame(self.root, text="Treeview Selection", labelanchor=N)
-        self.lfTreeview.place(x=20, y=80)
-        self.lfFlatview = LabelFrame(self.root, text="Flatview", labelanchor=N)
-        self.lfFlatview.place(x=500, y=200)
-        self.lfFloorview = LabelFrame(self.root, text="Floorview", labelanchor=N)
-        self.lfFloorview.place(x=1300, y=200, relx=0)
-        self.lfListbox = LabelFrame(self.root, text="Listbox", labelanchor=N)
-        self.lfListbox.place(x=1300, y=600)
+        #self.w, self.h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
+        self.root.bind("<Configure>", lambda event: self.resize_handler(event))  # bind the function to resize window
 
+        self.mainWindow = Frame()
+        self.mainWindow.grid(row=0, column=0)
+        self.mainWindow.columnconfigure(0, weight=1)
+        self.mainWindow.rowconfigure(1, weight=1)
+
+        # Create and configure label frames
+        self.lfTreeview = LabelFrame(self.mainWindow, text="Treeview Selection", labelanchor=N)
+        self.lfTreeview.grid(row=0, column=0, sticky="N", padx=20, pady=20)
+        self.lfFlatview = LabelFrame(self.mainWindow, text="Flatview", labelanchor=N)
+        self.lfFlatview.grid(row=0, column=1, sticky="N", padx=20, pady=200)
+        self.lfFloorview = LabelFrame(self.mainWindow, text="Floorview", labelanchor=N)
+        self.lfFloorview.grid(row=0, column=2, sticky="N", padx=20)
+        self.lfListbox = LabelFrame(self.mainWindow, text="Listbox", labelanchor=N)
+        self.lfListbox.grid(row=0, column=2, sticky="S", padx=40, pady=300)
+
+        self.lfTreeview.columnconfigure(0, weight=1)
+        self.lfTreeview.rowconfigure(0, weight=1)
+        self.lfFlatview.columnconfigure(0, weight=1)
+        self.lfFlatview.rowconfigure(0, weight=1)
+        self.lfFloorview.columnconfigure(0, weight=1)
+        self.lfFloorview.rowconfigure(0, weight=1)
+        self.lfListbox.columnconfigure(0, weight=1)
+        self.lfListbox.rowconfigure(0, weight=1)
 
         # Creating TreeView and bind selected item event
         self.treeData = createTreeview(self.lfTreeview)
         self.treeData.tag_bind("mytag", "<<TreeviewSelect>>", self.treeItemSelected)
-        self.treeData.pack()
+        self.treeData.grid(row=0, column=0, sticky="NEWS")
 
         # Add default images
-        self.Dormitorio1_V4 = PhotoImage(file="./pics/flatviews/Dormitorio1_V4.png")
-        self.lFlatview = Label(self.lfFlatview, image=self.Dormitorio1_V4)
-        self.lFlatview.pack()
+        self.flatPic = Image.open("./pics/flatviews/Dormitorio1_V4.png")
+        self.flatPicTk = ImageTk.PhotoImage(image=self.flatPic)
+        self.lFlatview = Label(self.lfFlatview, image=self.flatPicTk)
+        self.lFlatview.grid(row=0, column=0, sticky="NEWS")
 
-        self.PlantaBaja = PhotoImage(file="./pics/floorviews/PlantaBaja.png")
-        self.lFloorview = Label(self.lfFloorview, image=self.PlantaBaja)
-        self.lFloorview.pack()
+        self.floorPic = Image.open("./pics/floorviews/PlantaBaja.png")
+        self.floorPicTk = ImageTk.PhotoImage(image=self.floorPic)
+        self.lFloorview = Label(self.lfFloorview, image=self.floorPicTk)
+        self.lFloorview.grid(row=0, column=0, sticky="NEWS")
+
 
 
         # Creating listbox and bind clickOptionlist event
         self.listData = Listbox(self.lfListbox, height=4) # Creating listbox
-        self.listData.pack(side=LEFT)
+        self.listData.grid(row=0,column=0, sticky="NEWS")
         self.yscroll = Scrollbar(self.lfListbox) # Creating vertical scroll
-        self.yscroll.pack(side=RIGHT, fill=Y)
+        self.yscroll.grid(row=0,column=1, sticky="NS")
         self.listData.config(yscrollcommand=self.yscroll.set) # Enable yscroll on the listbox
         self.yscroll.config(command=self.listData.yview)
         addItemListbox(self.listData)
         self.listData.bind("<<ListboxSelect>>",lambda event: self.clickOptionlist(event))
-
 
         self.root.mainloop()
 
@@ -65,6 +85,22 @@ class App():
         elif str(value) == "Subelemento 2":
             self.treeData.item("Main", open=True)
             self.treeData.selection_set("Sub2")
+
+    def resize_handler(self, event):
+        windowHeight = event.height
+        windowWidth = event.width
+        print("Window size is: {}x{}".format(windowWidth, windowHeight))
+        flatPicWidth, flatPicheight = self.flatPic.size
+        print("Image size es: {}x{}".format(flatPicWidth, flatPicheight))
+
+        resizePicWidth = abs(windowWidth - flatPicWidth)
+        resizePicHeight = abs(windowHeight - flatPicheight)
+
+        print("New image size is: {}x{}".format(resizePicWidth, resizePicHeight))
+
+        self.flatPicResize = self.flatPic.resize((resizePicWidth, resizePicHeight), Image.ANTIALIAS)
+        self.flatPicResizeTk = ImageTk.PhotoImage(image=self.flatPicResize)
+        self.lFlatview.configure(image=self.flatPicResizeTk)
 
 
 App()
