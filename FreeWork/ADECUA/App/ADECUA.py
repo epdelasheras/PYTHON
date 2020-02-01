@@ -2,17 +2,13 @@ from ADECUA_lib import *
 from tkinter import *
 from PIL import Image, ImageTk
 
-
 class App():
     def __init__(self):
         #Create and configure the window
         self.root = Tk()
+        self.root.geometry("800x600")
         self.root.title("ADECUA") #Config window title
         self.root.iconbitmap(r'.\pics\ADECUA.ico') #Config the icon window
-        self.root.state("zoomed") #Execute program with maxmize window
-
-        #self.w, self.h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
-        self.root.bind("<Configure>", lambda event: self.resize_handler(event))  # bind the function to resize window
 
         self.mainWindow = Frame()
         self.mainWindow.grid(row=0, column=0)
@@ -45,6 +41,7 @@ class App():
 
         # Add default images
         self.flatPic = Image.open("./pics/flatviews/Dormitorio1_V4.png")
+        self.flatPicCopy = self.flatPic.copy()
         self.flatPicTk = ImageTk.PhotoImage(image=self.flatPic)
         self.lFlatview = Label(self.lfFlatview, image=self.flatPicTk)
         self.lFlatview.grid(row=0, column=0, sticky="NEWS")
@@ -53,8 +50,6 @@ class App():
         self.floorPicTk = ImageTk.PhotoImage(image=self.floorPic)
         self.lFloorview = Label(self.lfFloorview, image=self.floorPicTk)
         self.lFloorview.grid(row=0, column=0, sticky="NEWS")
-
-
 
         # Creating listbox and bind clickOptionlist event
         self.listData = Listbox(self.lfListbox, height=4) # Creating listbox
@@ -65,6 +60,8 @@ class App():
         self.yscroll.config(command=self.listData.yview)
         addItemListbox(self.listData)
         self.listData.bind("<<ListboxSelect>>",lambda event: self.clickOptionlist(event))
+
+        self.root.bind("<Configure>", self.resize_handler)  # bind the function to resize window
 
         self.root.mainloop()
 
@@ -87,20 +84,31 @@ class App():
             self.treeData.selection_set("Sub2")
 
     def resize_handler(self, event):
-        windowHeight = event.height
-        windowWidth = event.width
-        print("Window size is: {}x{}".format(windowWidth, windowHeight))
-        flatPicWidth, flatPicheight = self.flatPic.size
-        print("Image size es: {}x{}".format(flatPicWidth, flatPicheight))
+        # determine the ratio of old width/height to new width/height
+        hWindow = self.root.winfo_screenheight()
+        wWindow = self.root.winfo_screenwidth()
+        wEvent = event.width
+        hEvent = event.height
 
-        resizePicWidth = abs(windowWidth - flatPicWidth)
-        resizePicHeight = abs(windowHeight - flatPicheight)
 
-        print("New image size is: {}x{}".format(resizePicWidth, resizePicHeight))
-
-        self.flatPicResize = self.flatPic.resize((resizePicWidth, resizePicHeight), Image.ANTIALIAS)
-        self.flatPicResizeTk = ImageTk.PhotoImage(image=self.flatPicResize)
-        self.lFlatview.configure(image=self.flatPicResizeTk)
-
+        if self.root.state() == "zoomed":
+            if hWindow > hEvent:
+                wPicSize = 800
+                hPicSize = 300
+                print("Window size es: {}x{}".format(wWindow, hWindow))
+                print("Event size es: {}x{}".format(wEvent, hEvent))
+                print("Pic size es: {}x{}".format(wPicSize, hPicSize))
+                self.flatPic = self.flatPicCopy.resize((wPicSize, hPicSize), Image.ANTIALIAS)
+                self.flatPicTk = ImageTk.PhotoImage(image=self.flatPic)
+                self.lFlatview.configure(image=self.flatPicTk)
+        else:
+            wPicSize = 400
+            hPicSize = 300
+            print("Window size es: {}x{}".format(wWindow, hWindow))
+            print("Event size es: {}x{}".format(wEvent, hEvent))
+            print("Pic size es: {}x{}".format(wPicSize, hPicSize))
+            self.flatPic = self.flatPicCopy.resize((wPicSize, hPicSize), Image.ANTIALIAS)
+            self.flatPicTk = ImageTk.PhotoImage(image=self.flatPic)
+            self.lFlatview.configure(image=self.flatPicTk)
 
 App()
