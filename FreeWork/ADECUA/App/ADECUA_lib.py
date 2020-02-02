@@ -16,6 +16,13 @@ HEIGHT_FLATPIC_ZOOM = 400
 WIDTH_FLOORPIC_ZOOM = 380
 HEIGHT_FLOORPIC_ZOOM = 400
 
+# labelFloorLeftClick
+WIDTH_LABELFLOOR = 900
+BLK1_X1 = 20
+BLK1_X2 = 60
+BLK1_Y1 = 60
+BLK1_Y2 = 80
+
 
 # Treeview + Listbox
 TL_BLK_IID = ["blk1", "blk2", "blk3"]
@@ -186,17 +193,18 @@ def addItemsTreeview(Treeview):
             Treeview.insert(TL_FLAT_IID[i], END, text=TL_FLAT_VAR[j], iid=TL_FLAT_VAR_IID[k], tags=("mytag",))
             k += 1
 
-def addItemsListbox(ListBox):
+def addItemsListbox(list_box, l_coodrs):
     # Adding elements to the listbox
 
-    ListBox.insert(0, "1DVar1")
-    ListBox.insert(1, "1DVar2")
-    ListBox.insert(2, "1DVar3")
-    ListBox.insert(3, "2DVar1")
-    ListBox.insert(4, "2DVar2")
-    ListBox.insert(5, "2DVar3")
-    ListBox.insert(6, "3DVar1")
-    ListBox.insert(7, "3DVar2")
-    ListBox.insert(8, "3DVar3")
+    if l_coords[0] == 1: #block 1 selected
+    list_box.insert(0, "1DVar1")
+    list_box.insert(1, "1DVar2")
+    list_box.insert(2, "1DVar3")
+    list_box.insert(3, "2DVar1")
+    list_box.insert(4, "2DVar2")
+    list_box.insert(5, "2DVar3")
+    list_box.insert(6, "3DVar1")
+    list_box.insert(7, "3DVar2")
+    list_box.insert(8, "3DVar3")
 
 
