@@ -5,6 +5,18 @@ WIN_SIZE = "800x600"
 WIN_TITLE = "ADECUA"
 WIN_ICO_PATH = ".\pics\ADECUA.ico"
 
+# rootResize
+WIDTH_FLATPIC_DEFAULT = 350
+HEIGHT_FLATPIC_DEFAULT = 300
+WIDTH_FLOORPIC_DEFAULT = 190
+HEIGHT_FLOORPIC_DEFAULT = 200
+
+WIDTH_FLATPIC_ZOOM = 600
+HEIGHT_FLATPIC_ZOOM = 400
+WIDTH_FLOORPIC_ZOOM = 380
+HEIGHT_FLOORPIC_ZOOM = 400
+
+
 # Treeview + Listbox
 TL_BLK_IID = ["blk1", "blk2", "blk3"]
 TL_FLOOR_IID = ["blk1_floor_0", "blk1_floor_1", "blk1_floor_2", "blk1_floor_3",
@@ -165,18 +177,26 @@ def addItemsTreeview(Treeview):
             #print("i={}, j={}, k={}".format(i, j, k))
             Treeview.insert(TL_FLOOR_IID[i], END, text=TL_FLAT[j], iid=TL_FLAT_IID[k], tags=("mytag",))
             k += 1
-
     # Roms variants
     k = 0
-    print(len(TL_FLAT_VAR_IID))
+    #print(len(TL_FLAT_VAR_IID))
     for i in range(len(TL_FLAT_IID)):
         for j in range(len(TL_FLAT_VAR)):
-            print("i={}, j={}, k={}".format(i, j, k))
+            #print("i={}, j={}, k={}".format(i, j, k))
             Treeview.insert(TL_FLAT_IID[i], END, text=TL_FLAT_VAR[j], iid=TL_FLAT_VAR_IID[k], tags=("mytag",))
             k += 1
 
 def addItemsListbox(ListBox):
+    # Adding elements to the listbox
 
     ListBox.insert(0, "1DVar1")
-    ListBox.insert(1, "1DVar1")
-    ListBox.insert(2, "1DVar1")
+    ListBox.insert(1, "1DVar2")
+    ListBox.insert(2, "1DVar3")
+    ListBox.insert(3, "2DVar1")
+    ListBox.insert(4, "2DVar2")
+    ListBox.insert(5, "2DVar3")
+    ListBox.insert(6, "3DVar1")
+    ListBox.insert(7, "3DVar2")
+    ListBox.insert(8, "3DVar3")
+
+
