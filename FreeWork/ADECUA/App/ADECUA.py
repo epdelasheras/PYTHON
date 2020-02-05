@@ -11,6 +11,7 @@ class App():
         self.root.geometry(WIN_SIZE)
         self.root.title(WIN_TITLE) #Config window title
         self.root.iconbitmap(WIN_ICO_PATH) #Config the icon window
+        self.root.resizable(0, 0)
 
         # Create main frame to place all the widgets inside
         self.main_window = Frame()
@@ -54,7 +55,7 @@ class App():
         self.list_box.bind("<<ListboxSelect>>", lambda event: self.listboxItemSel(event))
 
         # Create label with flat images
-        self.flat_pic = Image.open("./pics/flatviews/Dormitorio1_V4.png")
+        self.flat_pic = Image.open("./pics/flatviews/1DVar1.png")
         self.flat_picCopy = self.flat_pic.copy()
         self.flat_picTk = ImageTk.PhotoImage(image=self.flat_pic)
         self.label_flat = Label(self.lf_flatview, image=self.flat_picTk)
@@ -111,6 +112,7 @@ class App():
         tree_item = self.tree_view.identify('item', *tree_coords)
         print(tree_item)
 
+
     # Method used to identify an item selected on the Listbox.
     def listboxItemSel(self, event):
         list = event.widget
@@ -126,6 +128,11 @@ class App():
         self.tree_view.item(tv_iid_split[0]+"_"+tv_iid_split[1]+"_"+tv_iid_split[2], open=True)# open block + floor + flat
         self.tree_view.selection_set(tv_iid)
 
+        self.flat_pic = Image.open("./pics/flatviews/"+tv_iid_split[3]+".png")
+        self.flat_picCopy = self.flat_pic.copy()
+        self.flat_pic_resize = self.flat_picCopy.resize((WIDTH_FLATPIC_ZOOM, HEIGHT_FLATPIC_ZOOM), Image.ANTIALIAS)
+        self.flat_picTk = ImageTk.PhotoImage(image=self.flat_pic_resize)
+        self.label_flat.configure(image=self.flat_picTk)
 
     # method to adjust pic sizes according main window size
     def rootResize(self, event):
@@ -134,6 +141,7 @@ class App():
         wWindow = self.root.winfo_screenwidth()
         wEvent = event.width
         hEvent = event.height
+        print(self.root.state())
         if self.root.state() == "zoomed":
             if hWindow > hEvent:
                 # Resize flat pic
@@ -145,13 +153,18 @@ class App():
                 self.floor_picTk = ImageTk.PhotoImage(image=self.floor_pic)
                 self.label_floor.configure(image=self.floor_picTk)
         else:
-            # Resize flat pic
+            self.root.state('zoomed')
+
+            '''
+            Resize flat pic
             self.flat_pic = self.flat_picCopy.resize((WIDTH_FLATPIC_DEFAULT, HEIGHT_FLATPIC_DEFAULT), Image.ANTIALIAS)
             self.flat_picTk = ImageTk.PhotoImage(image=self.flat_pic)
             self.label_flat.configure(image=self.flat_picTk)
             # Resize floor pic
-            self.floor_pic = self.floor_picCopy.resize((WIDTH_FLOORPIC_DEFAULT, HEIGHT_FLOORPIC_DEFAULT), Image.ANTIALIAS)
+            self.floor_pic = self.floor_picCopy.resize((WIDTH_FLOORPIC_DEFAULT, HEIGHT_FLOORPIC_DEFAULT),
+                                                       Image.ANTIALIAS)
             self.floor_picTk = ImageTk.PhotoImage(image=self.floor_pic)
             self.label_floor.configure(image=self.floor_picTk)
+            '''
 
 App()
