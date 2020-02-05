@@ -26,7 +26,7 @@ class App():
         self.lf_floorview = LabelFrame(self.main_window, text="Floorview", labelanchor=N)
         self.lf_floorview.grid(row=0, column=2, sticky="N", padx=20)
         self.lf_listbox = LabelFrame(self.main_window, text="Listbox", labelanchor=N)
-        #self.lf_listbox.grid(row=0, column=2, sticky="S", padx=40, pady=300)
+        self.lf_listbox.grid(row=0, column=2, sticky="S", padx=40, pady=300)
         self.lf_treeview.columnconfigure(0, weight=1)
         self.lf_treeview.rowconfigure(0, weight=1)
         self.lf_flatview.columnconfigure(0, weight=1)
@@ -41,7 +41,7 @@ class App():
         self.tree_view.heading("#0", text="Treeview")
         self.tree_view.column("#0", minwidth=0, width=130, stretch=NO)
         addItemsTreeview(self.tree_view)
-        self.tree_view.tag_bind("mytag", "<<TreeviewSelect>>", self.treeItemSelected)
+        self.tree_view.tag_bind("mytag", "<<TreeviewSelect>>", self.treeItemSel)
         self.tree_view.grid(row=0, column=0, sticky="NEWS")
 
         # Creating listbox and bind clickOptionlist event
@@ -51,7 +51,7 @@ class App():
         self.list_box_yscroll.grid(row=0,column=1, sticky="NS")
         self.list_box.config(yscrollcommand=self.list_box_yscroll.set) # Enable listbox_yscroll on the listbox
         self.list_box_yscroll.config(command=self.list_box.yview)
-        self.list_box.bind("<<ListboxSelect>>",lambda event: self.listboxItemSel(event))
+        self.list_box.bind("<<ListboxSelect>>", lambda event: self.listboxItemSel(event))
 
         # Create label with flat images
         self.flat_pic = Image.open("./pics/flatviews/Dormitorio1_V4.png")
@@ -67,13 +67,14 @@ class App():
         self.label_floor = Label(self.lf_floorview, image=self.floor_picTk)
         self.label_floor.grid(row=0, column=0, sticky="NEWS")
         self.label_floor.bind("<Motion>", self.labelFloorMotion) # bind mouse movement on pic
-        self.label_floor.bind("<Button-1>",lambda event: self.labelFloorLeftClick(event, # bind leftmouse clickon pic
+        self.label_floor.bind("<Button-1>", lambda event: self.labelFloorLeftClick(event, # bind leftmouse clickon pic
                                                          self.lf_listbox, self.list_box))
 
         # bind to resize window items
         self.root.bind("<Configure>", self.rootResize)  # bind to windows sizing event
         self.root.mainloop()
 
+    # Method executed when the user makes left clik on an specific part of the floor picture
     def labelFloorLeftClick(self, event, lf_listbox, list_box):
         floor_width_ratio = float(WIDTH_FLOORPIC_ZOOM/WIDTH_FLOORPIC_DEFAULT)
         floor_height_ratio = float(HEIGHT_FLOORPIC_ZOOM/HEIGHT_FLOORPIC_DEFAULT)
@@ -82,28 +83,26 @@ class App():
                 int((self.label_floor_x)/floor_width_ratio) < BLK1_X2 and
                 int((self.label_floor_y)/floor_height_ratio) > BLK1_Y1 and
                 int((self.label_floor_y)/floor_height_ratio) < BLK1_Y2):
-                # show listbox and specific items when the user makes click on the floorpic
-                l_coords = [1, 0, "1d"] #[block number, floor number, rooms number]
-                addItemsListbox(list_box, l_coords)
-                lf_listbox.grid(row=0, column=2, sticky="S", padx=40, pady=300)
-                print("Portal1, Vivienda A, zoom")
+                # show listbox and specific items
+                addItemsListbox(list_box, TL_BLOCK[0], TL_FLOOR[0], TL_FLAT[0])
+                self.tl_iid = TL_FLAT_IID[0] # used in treeview to expand the item
         else:
             if (self.label_floor_x > BLK1_X1 and
                 self.label_floor_x < BLK1_X2 and
                 self.label_floor_y > BLK1_Y1 and
                 self.label_floor_y < BLK1_Y2):
-                addItemsListbox(list_box)
-                lf_listbox.grid(row=0, column=2, sticky="S", padx=40, pady=300)
-                print("Portal1, Vivienda A, default")
+                # show listbox and specific items
+                addItemsListbox(list_box, TL_BLOCK[0], TL_FLOOR[0], TL_FLAT[0])
+                self.tl_iid = TL_FLAT_IID[0]  # used in treeview to expand the item
 
+    # Method which return the coordenates of the mouse over the floor pic.
     def labelFloorMotion(self, event):
         self.label_floor_x = event.x
         self.label_floor_y = event.y
         #print('{}, {}'.format(self.label_floor_x, self.label_floor_y))
 
-    # TreeView method to identify item selected
-    def treeItemSelected(self, event):
-        """Item from tree_view selected."""
+    # Method used to identify item selected on the Treeview.
+    def treeItemSel(self, event):
         #selected_items = self.tree_view.selection()
         #print(self.tree_view.item(selected_items)["text"])
         #print(self.tree_view.item(selected_items)["text"])
@@ -112,12 +111,20 @@ class App():
         tree_item = self.tree_view.identify('item', *tree_coords)
         print(tree_item)
 
-
-    # ListBox method to identify the item selected
+    # Method used to identify an item selected on the Listbox.
     def listboxItemSel(self, event):
         list = event.widget
-        selection = list.curselection()
-        value = list.get(selection[0])  # get the string from the item selected on the listbox
+        cur_selection = list.curselection()
+        item_selected = list.get(cur_selection[0])  # get the string from the item selected on the listbox
+        print(item_selected)
+        tv_iid = str(self.tl_iid) + "_" + str(item_selected)
+
+        tv_iid_split = tv_iid.split("_")
+
+        self.tree_view.item(tv_iid_split[0], open=True)# open block
+        self.tree_view.item(tv_iid_split[0]+"_"+tv_iid_split[1], open=True)# open block + floor
+        self.tree_view.item(tv_iid_split[0]+"_"+tv_iid_split[1]+"_"+tv_iid_split[2], open=True)# open block + floor + flat
+        self.tree_view.selection_set(tv_iid)
 
 
     # method to adjust pic sizes according main window size
