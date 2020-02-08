@@ -1,7 +1,6 @@
 from ADECUA_lib import *
 from tkinter import *
 from tkinter import ttk
-import cv2
 from PIL import Image, ImageTk
 
 class App():
@@ -118,35 +117,12 @@ class App():
         self.tree_view.selection_set(tv_iid)
 
         # change label flat picture
-        self.flat_pic = Image.open("./pics/flatviews/"+tv_iid_split[3]+".png")
-        self.flat_picCopy = self.flat_pic.copy()
-        self.flat_pic_resize = self.flat_picCopy.resize((WIDTH_FLATPIC_ZOOM, HEIGHT_FLATPIC_ZOOM), Image.ANTIALIAS)
-        self.flat_picTk = ImageTk.PhotoImage(image=self.flat_pic_resize)
+        self.flat_picTk = loadNewFlatPic(tv_iid_split)
         self.label_flat.configure(image=self.flat_picTk)
 
-        # make a rectangle on the floor image
-        self.floor_picCv2 = cv2.imread(self.floor_pic) # load image in open cv format
-        self.floor_picCv2Copy = self.floor_picCv2.copy() # create a copy of the previous image
-        # draw a rectangle oover the co
-        x, y, w, h = 10, 10, 10, 10  # Rectangle parameters
-        cv2.rectangle(self.floor_picCv2Copy, (x, y), (x + w, y + h), (0, 200, 0), -1)  # A filled rectangle
-        alpha = 0.4  # Transparency factor.
-        self.floor_picCv2Mod = cv2.addWeighted(self.floor_picCv2Copy, alpha,
-                                            self.floor_picCv2, 1 - alpha, 0) # image with the rectangle
-
-        # OpenCV represents images in BGR order; however PIL represents
-        # images in RGB order, so we need to swap the channels
-        b, g, r = cv2.split(self.floor_picCv2Mod)
-        self.floor_picCv2_RGB = cv2.merge((r, g, b))
-
-        # Convert the Image object into a TkPhoto object
-        self.floor_picTk1 = Image.fromarray(self.floor_picCv2_RGB)
-        self.floor_picTk2 = ImageTk.PhotoImage(image=self.floor_picTk1)
-        self.label_floor.configure(image=self.floor_picTk2)
-
-
-
-
+        # highlight specific area on the floor pic
+        self.floor_picTk = highlightArea(self.label_floor)
+        self.label_floor.configure(image=self.floor_picTk)
 
     # Method used to identify item selected on the Treeview.
     def treeItemSel(self, event):

@@ -1,4 +1,6 @@
 from tkinter import *
+import cv2
+from PIL import Image, ImageTk
 
 # root window
 WIN_SIZE = "800x600"
@@ -211,3 +213,38 @@ def addItemsListbox(list_box, block, floor, flat):
                 list_box.insert(6, "3DVar1")
                 list_box.insert(7, "3DVar2")
                 list_box.insert(8, "3DVar3")
+
+def loadNewFlatPic(tv_iid_split):
+	flat_pic = Image.open("./pics/flatviews/" + tv_iid_split[3] + ".png")
+	flat_picCopy = flat_pic.copy()
+	flat_pic_resize = flat_picCopy.resize((WIDTH_FLATPIC_ZOOM, HEIGHT_FLATPIC_ZOOM), Image.ANTIALIAS)
+	flat_picTk = ImageTk.PhotoImage(image=flat_pic_resize)
+	return flat_picTk
+
+
+
+# make a rectangle on the floor image
+def highlightArea(label_floor):
+	floor_picCv2 = cv2.imread("./pics/floorviews/PlantaBaja.png") # load image in open cv format
+	floor_picCv2Copy = floor_picCv2.copy() # create a copy of the previous image
+    # draw a rectangle over the image
+	x, y, w, h = 10, 10, 10, 10  # Rectangle parameters
+	cv2.rectangle(floor_picCv2Copy, (x, y), (x + w, y + h), (0, 200, 0), -1)  # A filled rectangle
+	alpha = 0.4  # Transparency factor.
+	floor_picCv2Mod = cv2.addWeighted(floor_picCv2Copy, alpha, floor_picCv2, 1 - alpha, 0)  # image with the rectangle
+
+    # OpenCV represents images in BGR order; however PIL represents
+    # images in RGB order, so we need to swap the channels
+	b, g, r = cv2.split(floor_picCv2Mod)
+	floor_picCv2_RGB = cv2.merge((r, g, b))
+
+	# Convert the Image object into a TkPhoto object
+	floor_pic = Image.fromarray(floor_picCv2_RGB)
+
+	floor_picCopy = floor_pic.copy()
+	floor_pic_resize = floor_picCopy.resize((WIDTH_FLATPIC_ZOOM, HEIGHT_FLATPIC_ZOOM), Image.ANTIALIAS)
+	floor_picTk = ImageTk.PhotoImage(image=floor_pic_resize)
+	return floor_picTk
+
+
+
