@@ -23,7 +23,6 @@ BLK1_X2 = 60
 BLK1_Y1 = 60
 BLK1_Y2 = 80
 
-
 # Treeview + Listbox
 TL_BLK_IID = ["blk1", "blk2", "blk3"]
 TL_FLOOR_IID = ["blk1_floor0", "blk1_floor1", "blk1_floor2", "blk1_floor3",
