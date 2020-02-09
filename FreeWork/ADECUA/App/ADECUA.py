@@ -165,16 +165,4 @@ class App():
         else:
             self.root.state('zoomed')
 
-            '''
-            Resize flat pic
-            self.flat_pic = self.flat_picCopy.resize((WIDTH_FLATPIC_DEFAULT, HEIGHT_FLATPIC_DEFAULT), Image.ANTIALIAS)
-            self.flat_picTk = ImageTk.PhotoImage(image=self.flat_pic)
-            self.label_flat.configure(image=self.flat_picTk)
-            # Resize floor pic
-            self.floor_pic = self.floor_picCopy.resize((WIDTH_FLOORPIC_DEFAULT, HEIGHT_FLOORPIC_DEFAULT),
-                                                       Image.ANTIALIAS)
-            self.floor_picTk = ImageTk.PhotoImage(image=self.floor_pic)
-            self.label_floor.configure(image=self.floor_picTk)
-            '''
-
 App()
