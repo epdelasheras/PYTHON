@@ -65,10 +65,11 @@ class App():
     # Method executed when the user makes left clik on an specific part of the floor picture
     def labelFloorLeftClick(self, event, list_box):
         self.floor_area_id = areaId(self.label_floor_x, self.label_floor_y)
-        if self.floor_area_id == AREA3:
-            # show listbox and specific items
-            addItemsListbox(list_box, TL_BLOCK[0], TL_FLOOR[0], TL_FLAT[0])
-            self.tl_iid = TL_FLAT_IID[0]  # used in treeview to expand the item
+        if list_box.size() != 0: # delete listbox items before adding new ones.
+            list_box.delete(0,"end")
+        if self.floor_area_id == AREA_ID[0]: # Add to the listbox specific variants
+            addItemsListbox(list_box, AREA_ID[0])
+            self.tl_iid = TL_FLAT_IID[0]  # expand the treeview with the variants
 
     # Method which return the coordenates of the mouse over the floor pic.
     def labelFloorMotion(self, event):
