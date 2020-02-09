@@ -3,7 +3,7 @@ import cv2
 from PIL import Image, ImageTk
 
 # root window
-WIN_SIZE = "800x600"
+WIN_SIZE = "1366x768"
 WIN_TITLE = "ADECUA"
 WIN_ICO_PATH = ".\pics\ADECUA.ico"
 
