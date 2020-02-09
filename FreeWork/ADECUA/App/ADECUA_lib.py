@@ -2,28 +2,26 @@ from tkinter import *
 import cv2
 from PIL import Image, ImageTk
 
-# root window
+# root window attributes
 WIN_SIZE = "1366x768"
 WIN_TITLE = "ADECUA"
 WIN_ICO_PATH = ".\pics\ADECUA.ico"
 
-# rootResize
-WIDTH_FLATPIC_DEFAULT = 350
-HEIGHT_FLATPIC_DEFAULT = 300
-WIDTH_FLOORPIC_DEFAULT = 190
-HEIGHT_FLOORPIC_DEFAULT = 200
+# Pic sizes
+WIDTH_FLATPIC = 700
+HEIGHT_FLATPIC = 500
+WIDTH_FLOORPIC = 380
+HEIGHT_FLOORPIC = 380
 
-WIDTH_FLATPIC_ZOOM = 600
-HEIGHT_FLATPIC_ZOOM = 400
-WIDTH_FLOORPIC_ZOOM = 380
-HEIGHT_FLOORPIC_ZOOM = 400
+# Floor pic areas
+BLK1_X1 = 40
+BLK1_X2 = 125
+BLK1_Y1 = 115
+BLK1_Y2 = 135
 
-# labelFloorLeftClick
-WIDTH_LABELFLOOR = 900
-BLK1_X1 = 20
-BLK1_X2 = 60
-BLK1_Y1 = 60
-BLK1_Y2 = 80
+# Floor Area ids
+AREA3 = "1DVar"
+
 
 # Treeview + Listbox
 TL_BLK_IID = ["blk1", "blk2", "blk3"]
@@ -217,14 +215,22 @@ def addItemsListbox(list_box, block, floor, flat):
 def loadNewFlatPic(tv_iid_split):
 	flat_pic = Image.open("./pics/flatviews/" + tv_iid_split[3] + ".png")
 	flat_picCopy = flat_pic.copy()
-	flat_pic_resize = flat_picCopy.resize((WIDTH_FLATPIC_ZOOM, HEIGHT_FLATPIC_ZOOM), Image.ANTIALIAS)
+	flat_pic_resize = flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC), Image.ANTIALIAS)
 	flat_picTk = ImageTk.PhotoImage(image=flat_pic_resize)
 	return flat_picTk
 
 
+# to identify the area selected on the Floor pic.
+def areaId(label_floor_x, label_floor_y)
+	if (label_floor_x > BLK1_X1 and
+		label_floor_x < BLK1_X2 and
+		label_floor_y > BLK1_Y1 and
+		label_floor_y < BLK1_Y2):
+	return AREA3
+
 
 # make a rectangle on the floor image
-def highlightArea(label_floor):
+def highlightArea(label_floor_x, label_floor_y):
 	floor_picCv2 = cv2.imread("./pics/floorviews/PlantaBaja.png") # load image in open cv format
 	floor_picCv2Copy = floor_picCv2.copy() # create a copy of the previous image
     # draw a rectangle over the image
@@ -242,8 +248,8 @@ def highlightArea(label_floor):
 	floor_pic = Image.fromarray(floor_picCv2_RGB)
 
 	floor_picCopy = floor_pic.copy()
-	floor_pic_resize = floor_picCopy.resize((WIDTH_FLATPIC_ZOOM, HEIGHT_FLATPIC_ZOOM), Image.ANTIALIAS)
-	floor_picTk = ImageTk.PhotoImage(image=floor_pic_resize)
+	floor_picCopyResize = floor_picCopy.resize((WIDTH_FLOORPIC, HEIGHT_FLOORPIC), Image.ANTIALIAS)
+	floor_picTk = ImageTk.PhotoImage(image=floor_picCopyResize)
 	return floor_picTk
 
 
