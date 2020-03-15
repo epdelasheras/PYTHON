@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 
 class App():
     def __init__(self):
+
         #Create and configure the window
         self.root = Tk()
         self.root.geometry(WIN_SIZE)
@@ -60,6 +61,7 @@ class App():
         self.label_floor.bind("<Motion>", self.labelFloorMotion) # bind mouse movement on pic
         self.label_floor.bind("<Button-1>", lambda event: self.labelFloorLeftClick(event, # bind leftmouse clickon pic
                                                           self.list_box))
+
         self.root.mainloop()
 
     # Method executed when the user makes left clik on an specific part of the floor picture
