@@ -257,7 +257,7 @@ def addItemsTreeview(Treeview):
 					cnt_floor += 1
 			lst_cnt_floor.append(cnt_floor)
 
-		cnt_room = 0
+		cnt_room = 0 # counter to follow the type of rooms in the excel file.
 		for i in range(len(lst_cnt_floor)):
 			lst_room = []
 			for j in range(lst_cnt_floor[i]):
