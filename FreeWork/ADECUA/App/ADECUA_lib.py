@@ -247,6 +247,7 @@ def addItemsTreeview(Treeview):
 			Treeview.insert(lst_blk[sheet], END, text="Planta " + str(i),
 							iid=lst_blk[sheet] + lst_floor_mod[i], tags=("mytag",))
 
+
 		# Adding rooms to the treeview
 		lst_cnt_floor = []
 		for i in range(len(lst_floor_mod)):
@@ -256,16 +257,21 @@ def addItemsTreeview(Treeview):
 					cnt_floor += 1
 			lst_cnt_floor.append(cnt_floor)
 
-		print(lst_cnt_floor)
+		cnt_room = 0
 		for i in range(len(lst_cnt_floor)):
 			lst_room = []
 			for j in range(lst_cnt_floor[i]):
-				lst_room.append(str(ws["B" + str(j+2)].value))
+				lst_room.append(str(ws["B" + str(j+2+cnt_room)].value))
+			cnt_room = cnt_room + j + 1
 			lst_room_mod = list(set(lst_room))  # remove duplicate items
 			lst_room_mod.sort()  # sort list items
-			print(lst_room)
-			print(lst_room_mod)
-			for i in range(len(lst_floor_mod)):
+			for k in range(len(lst_room_mod)):
+				n_room = lst_room_mod[k]
+				print(n_room[4:5]) #Get the number of room from the excel.
+				Treeview.insert(lst_blk[sheet] + lst_floor_mod[i], END, text=n_room[4:5] + " Habitacion/es",
+								iid=lst_blk[sheet] + lst_floor_mod[i] + lst_room_mod[k], tags=("mytag",))
+
+
 
 
 
