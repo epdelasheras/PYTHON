@@ -266,64 +266,21 @@ def addItemsTreeview(Treeview):
 			lst_room_mod = list(set(lst_room))  # remove duplicate items
 			lst_room_mod.sort()  # sort list items
 			for k in range(len(lst_room_mod)):
-				n_room = lst_room_mod[k]
-				print(n_room[4:5]) #Get the number of room from the excel.
+				n_room = lst_room_mod[k] #Get the number of room from the excel.
+				#print(n_room[4:5])
 				Treeview.insert(lst_blk[sheet] + lst_floor_mod[i], END, text=n_room[4:5] + " Habitacion/es",
 								iid=lst_blk[sheet] + lst_floor_mod[i] + lst_room_mod[k], tags=("mytag",))
 
-
-
-
-
-
-'''
-	# Create Block tree items
-	list_blk = []
-	for i in range(2, ws.max_row): # read the block column and skiip the first row
-		list_blk.append(str(ws["A"+str(i)].value))
-	list_blk_mod = list(set(list_blk)) #remove duplicate items
-	list_blk_mod.sort() # sort list items
-	for i in range(len(list_blk_mod)): #fill tree view with items
-		Treeview.insert("", END, text="Bloque "+str(i+1), iid=list_blk_mod[i], tags=("mytag",))
-
-	# Create Floor tree items
-	list_floor = []
-	for i in range(2, ws.max_row): # read the block column and skiip the first row
-		list_floor.append(str(ws["B"+str(i)].value))
-	for i in range(len(list_blk_mod)): # fill tree view with items
-		for j in range(len(list_blk)):
-			if list_blk_mod[i] == list_blk[j]:
-				list_floor_mod = list(set(list_floor))  # create list with items for every block
-
-		list_floor_mod.sort()  # sort list items
-		for k in range(len(list_floor_mod)):
-			Treeview.insert(list_blk_mod[i], END, text="Planta " + str(i),
-							iid=list_blk_mod[i] + list_floor_mod[k], tags=("mytag",))
-							
-	# Create room tree items
-	list_room = []
-	for i in range(2, ws.max_row): # read the block column and skiip the first row
-		list_room.append(str(ws["C"+str(i)].value))
-	list_room_mod = list(set(list_room)) #remove duplicate items
-	list_room_mod.sort() # sort list items
-	for k in range(len(list_blk_mod)): #fill tree view with items
-		for j in range(len(list_floor_mod)):
-			for i in range(len(list_room_mod)):
-				Treeview.insert(list_blk_mod[k]+list_floor_mod[j], END, text=str(i)+" habitacion/es ",
-							    iid=list_blk_mod[k]+list_floor_mod[j]+list_room_mod[i],
-							    tags=("mytag",))
-
-	# Create variants tree items
-	list_var = []
-	for i in range(2, ws.max_row): # read the block column and skiip the first row
-		list_var.append(str(ws["D"+str(i)].value))
-	list_var_mod = list(set(list_var)) #remove duplicate items
-	list_var_mod.sort() # sort list items
-	for l in range(len(list_blk_mod)): #fill tree view with items
-		for k in range(len(list_floor_mod)):
-			for j in range(len(list_room_mod)):
-				for i in range(len(list_var_mod)):
-					Treeview.insert(list_blk_mod[l]+list_floor_mod[k]+list_room_mod[j], END, text="var "+str(i),
-									iid=list_blk_mod[l]+list_floor_mod[k]+list_room_mod[j]+list_var_mod[i],
-								    tags=("mytag",))
-'''
+		# Adding variants to the treeview
+		cnt_room = 0
+		cnt_var = 0
+		print("Bloque: " + str(lst_blk[sheet]))
+		lst_var = []
+		lst_flat = []
+		for i in range(2, ws.max_row + 1):
+			lst_var.append(str(ws["C" + str(i)].value))
+			lst_flat.append(str(ws["B" + str(i)].value))
+		for i in range(len(lst_var)):
+			print(lst_blk[sheet] + lst_floor[i] + lst_flat[i] + lst_var[i])
+			Treeview.insert(lst_blk[sheet] + lst_floor[i] + lst_flat[i], END, text=lst_var[i],
+								iid=lst_blk[sheet] + lst_floor[i] + lst_flat[i] + lst_var[i], tags=("mytag",))
