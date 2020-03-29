@@ -27,12 +27,13 @@ class App():
         self.lf_listbox.grid(row=0, column=2, sticky="S", padx=40, pady=300)
 
         # Creating TreeView and bind selected item event
-        self.tree_view = ttk.Treeview(self.lf_treeview)
+        self.tree_view = ttk.Treeview(self.lf_treeview, height=35)
         self.tree_view.heading("#0", text="Treeview")
-        self.tree_view.column("#0", minwidth=0, width=130, stretch=NO)
+        self.tree_view.column("#0", minwidth=0, width=150, stretch=NO)
         addItemsTreeview(self.tree_view)
         self.tree_view.tag_bind("mytag", "<<TreeviewSelect>>", self.treeItemSel)
         self.tree_view.grid(row=0, column=0, sticky="NEWS")
+
 
         # Creating listbox and bind clickOptionlist event
         self.list_box = Listbox(self.lf_listbox, height=4) # Creating listbox

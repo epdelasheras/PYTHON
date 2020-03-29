@@ -272,15 +272,11 @@ def addItemsTreeview(Treeview):
 								iid=lst_blk[sheet] + lst_floor_mod[i] + lst_room_mod[k], tags=("mytag",))
 
 		# Adding variants to the treeview
-		cnt_room = 0
-		cnt_var = 0
-		print("Bloque: " + str(lst_blk[sheet]))
 		lst_var = []
 		lst_flat = []
 		for i in range(2, ws.max_row + 1):
 			lst_var.append(str(ws["C" + str(i)].value))
 			lst_flat.append(str(ws["B" + str(i)].value))
 		for i in range(len(lst_var)):
-			print(lst_blk[sheet] + lst_floor[i] + lst_flat[i] + lst_var[i])
 			Treeview.insert(lst_blk[sheet] + lst_floor[i] + lst_flat[i], END, text=lst_var[i],
 								iid=lst_blk[sheet] + lst_floor[i] + lst_flat[i] + lst_var[i], tags=("mytag",))
