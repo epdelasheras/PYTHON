@@ -14,183 +14,17 @@ HEIGHT_FLATPIC = 500
 WIDTH_FLOORPIC = 380
 HEIGHT_FLOORPIC = 380
 
+# Tree items
+NAMEBLOCK = "Portal "
+NAMEFLOOR = "Planta "
+NAMEROOM = " Habitacion/es"
+NAMEVAR = "Variante "
+
 # Floor pic areas
 BLK1_X1 = 40
 BLK1_X2 = 125
 BLK1_Y1 = 115
 BLK1_Y2 = 135
-
-# Treeview + Listbox
-TL_BLK_IID = ["blk1", "blk2", "blk3"]
-TL_FLOOR_IID = ["blk1_floor0", "blk1_floor1", "blk1_floor2", "blk1_floor3",
-                "blk2_floor0", "blk2_floor1", "blk2_floor2", "blk2_floor3",
-                "blk3_floor0", "blk3_floor1", "blk3_floor2", "blk3_floor3"
-               ]
-TL_FLAT_IID = ["blk1_floor0_flat1r", "blk1_floor0_flat2r", "blk1_floor0_flat3r",
-               "blk1_floor1_flat1r", "blk1_floor1_flat2r", "blk1_floor1_flat3r",
-               "blk1_floor2_flat1r", "blk1_floor2_flat2r", "blk1_floor2_flat3r",
-               "blk1_floor3_flat1r", "blk1_floor3_flat2r", "blk1_floor3_flat3r",
-
-               "blk2_floor0_flat1r", "blk2_floor0_flat2r", "blk2_floor0_flat3r",
-               "blk2_floor1_flat1r", "blk2_floor1_flat2r", "blk2_floor1_flat3r",
-               "blk2_floor2_flat1r", "blk2_floor2_flat2r", "blk2_floor2_flat3r",
-               "blk2_floor3_flat1r", "blk2_floor3_flat2r", "blk2_floor3_flat3r",
-
-               "blk3_floor0_flat1r", "blk3_floor0_flat2r", "blk3_floor0_flat3r",
-               "blk3_floor1_flat1r", "blk3_floor1_flat2r", "blk3_floor1_flat3r",
-               "blk3_floor2_flat1r", "blk3_floor2_flat2r", "blk3_floor2_flat3r",
-               "blk3_floor3_flat1r", "blk3_floor3_flat2r", "blk3_floor3_flat3r",
-               ]
-
-TL_FLAT_VAR_IID = ["blk1_floor0_flat1r_1DVar1", "blk1_floor0_flat1r_1DVar2", "blk1_floor0_flat1r_1DVar3",
-				   "blk1_floor0_flat1r_2DVar1", "blk1_floor0_flat1r_2DVar2", "blk1_floor0_flat1r_2DVar3",
-				   "blk1_floor0_flat1r_3DVar1", "blk1_floor0_flat1r_3DVar2", "blk1_floor0_flat1r_3DVar3",
-				   "blk1_floor0_flat2r_1DVar1", "blk1_floor0_flat2r_1DVar2", "blk1_floor0_flat2r_1DVar3",
-				   "blk1_floor0_flat2r_2DVar1", "blk1_floor0_flat2r_2DVar2", "blk1_floor0_flat2r_2DVar3",
-				   "blk1_floor0_flat2r_3DVar1", "blk1_floor0_flat2r_3DVar2", "blk1_floor0_flat2r_3DVar3",
-				   "blk1_floor0_flat3r_1DVar1", "blk1_floor0_flat3r_1DVar2", "blk1_floor0_flat3r_1DVar3",
-				   "blk1_floor0_flat3r_2DVar1", "blk1_floor0_flat3r_2DVar2", "blk1_floor0_flat3r_2DVar3",
-				   "blk1_floor0_flat3r_3DVar1", "blk1_floor0_flat3r_3DVar2", "blk1_floor0_flat3r_3DVar3",
-				   "blk1_floor1_flat1r_1DVar1", "blk1_floor1_flat1r_1DVar2", "blk1_floor1_flat1r_1DVar3",
-				   "blk1_floor1_flat1r_2DVar1", "blk1_floor1_flat1r_2DVar2", "blk1_floor1_flat1r_2DVar3",
-				   "blk1_floor1_flat1r_3DVar1", "blk1_floor1_flat1r_3DVar2", "blk1_floor1_flat1r_3DVar3",
-				   "blk1_floor1_flat2r_1DVar1", "blk1_floor1_flat2r_1DVar2", "blk1_floor1_flat2r_1DVar3",
-				   "blk1_floor1_flat2r_2DVar1", "blk1_floor1_flat2r_2DVar2", "blk1_floor1_flat2r_2DVar3",
-				   "blk1_floor1_flat2r_3DVar1", "blk1_floor1_flat2r_3DVar2", "blk1_floor1_flat2r_3DVar3",
-				   "blk1_floor1_flat3r_1DVar1", "blk1_floor1_flat3r_1DVar2", "blk1_floor1_flat3r_1DVar3",
-				   "blk1_floor1_flat3r_2DVar1", "blk1_floor1_flat3r_2DVar2", "blk1_floor1_flat3r_2DVar3",
-				   "blk1_floor1_flat3r_3DVar1", "blk1_floor1_flat3r_3DVar2", "blk1_floor1_flat3r_3DVar3",
-				   "blk1_floor2_flat1r_1DVar1", "blk1_floor2_flat1r_1DVar2", "blk1_floor2_flat1r_1DVar3",
-				   "blk1_floor2_flat1r_2DVar1", "blk1_floor2_flat1r_2DVar2", "blk1_floor2_flat1r_2DVar3",
-				   "blk1_floor2_flat1r_3DVar1", "blk1_floor2_flat1r_3DVar2", "blk1_floor2_flat1r_3DVar3",
-				   "blk1_floor2_flat2r_1DVar1", "blk1_floor2_flat2r_1DVar2", "blk1_floor2_flat2r_1DVar3",
-				   "blk1_floor2_flat2r_2DVar1", "blk1_floor2_flat2r_2DVar2", "blk1_floor2_flat2r_2DVar3",
-				   "blk1_floor2_flat2r_3DVar1", "blk1_floor2_flat2r_3DVar2", "blk1_floor2_flat2r_3DVar3",
-				   "blk1_floor2_flat3r_1DVar1", "blk1_floor2_flat3r_1DVar2", "blk1_floor2_flat3r_1DVar3",
-				   "blk1_floor2_flat3r_2DVar1", "blk1_floor2_flat3r_2DVar2", "blk1_floor2_flat3r_2DVar3",
-				   "blk1_floor2_flat3r_3DVar1", "blk1_floor2_flat3r_3DVar2", "blk1_floor2_flat3r_3DVar3",
-				   "blk1_floor3_flat1r_1DVar1", "blk1_floor3_flat1r_1DVar2", "blk1_floor3_flat1r_1DVar3",
-				   "blk1_floor3_flat1r_2DVar1", "blk1_floor3_flat1r_2DVar2", "blk1_floor3_flat1r_2DVar3",
-				   "blk1_floor3_flat1r_3DVar1", "blk1_floor3_flat1r_3DVar2", "blk1_floor3_flat1r_3DVar3",
-				   "blk1_floor3_flat2r_1DVar1", "blk1_floor3_flat2r_1DVar2", "blk1_floor3_flat2r_1DVar3",
-				   "blk1_floor3_flat2r_2DVar1", "blk1_floor3_flat2r_2DVar2", "blk1_floor3_flat2r_2DVar3",
-				   "blk1_floor3_flat2r_3DVar1", "blk1_floor3_flat2r_3DVar2", "blk1_floor3_flat2r_3DVar3",
-				   "blk1_floor3_flat3r_1DVar1", "blk1_floor3_flat3r_1DVar2", "blk1_floor3_flat3r_1DVar3",
-				   "blk1_floor3_flat3r_2DVar1", "blk1_floor3_flat3r_2DVar2", "blk1_floor3_flat3r_2DVar3",
-				   "blk1_floor3_flat3r_3DVar1", "blk1_floor3_flat3r_3DVar2", "blk1_floor3_flat3r_3DVar3",
-
-				   "blk2_floor0_flat1r_1DVar1", "blk2_floor0_flat1r_1DVar2", "blk2_floor0_flat1r_1DVar3",
-				   "blk2_floor0_flat1r_2DVar1", "blk2_floor0_flat1r_2DVar2", "blk2_floor0_flat1r_2DVar3",
-				   "blk2_floor0_flat1r_3DVar1", "blk2_floor0_flat1r_3DVar2", "blk2_floor0_flat1r_3DVar3",
-				   "blk2_floor0_flat2r_1DVar1", "blk2_floor0_flat2r_1DVar2", "blk2_floor0_flat2r_1DVar3",
-				   "blk2_floor0_flat2r_2DVar1", "blk2_floor0_flat2r_2DVar2", "blk2_floor0_flat2r_2DVar3",
-				   "blk2_floor0_flat2r_3DVar1", "blk2_floor0_flat2r_3DVar2", "blk2_floor0_flat2r_3DVar3",
-				   "blk2_floor0_flat3r_1DVar1", "blk2_floor0_flat3r_1DVar2", "blk2_floor0_flat3r_1DVar3",
-				   "blk2_floor0_flat3r_2DVar1", "blk2_floor0_flat3r_2DVar2", "blk2_floor0_flat3r_2DVar3",
-				   "blk2_floor0_flat3r_3DVar1", "blk2_floor0_flat3r_3DVar2", "blk2_floor0_flat3r_3DVar3",
-				   "blk2_floor1_flat1r_1DVar1", "blk2_floor1_flat1r_1DVar2", "blk2_floor1_flat1r_1DVar3",
-				   "blk2_floor1_flat1r_2DVar1", "blk2_floor1_flat1r_2DVar2", "blk2_floor1_flat1r_2DVar3",
-				   "blk2_floor1_flat1r_3DVar1", "blk2_floor1_flat1r_3DVar2", "blk2_floor1_flat1r_3DVar3",
-				   "blk2_floor1_flat2r_1DVar1", "blk2_floor1_flat2r_1DVar2", "blk2_floor1_flat2r_1DVar3",
-				   "blk2_floor1_flat2r_2DVar1", "blk2_floor1_flat2r_2DVar2", "blk2_floor1_flat2r_2DVar3",
-				   "blk2_floor1_flat2r_3DVar1", "blk2_floor1_flat2r_3DVar2", "blk2_floor1_flat2r_3DVar3",
-				   "blk2_floor1_flat3r_1DVar1", "blk2_floor1_flat3r_1DVar2", "blk2_floor1_flat3r_1DVar3",
-				   "blk2_floor1_flat3r_2DVar1", "blk2_floor1_flat3r_2DVar2", "blk2_floor1_flat3r_2DVar3",
-				   "blk2_floor1_flat3r_3DVar1", "blk2_floor1_flat3r_3DVar2", "blk2_floor1_flat3r_3DVar3",
-				   "blk2_floor2_flat1r_1DVar1", "blk2_floor2_flat1r_1DVar2", "blk2_floor2_flat1r_1DVar3",
-				   "blk2_floor2_flat1r_2DVar1", "blk2_floor2_flat1r_2DVar2", "blk2_floor2_flat1r_2DVar3",
-				   "blk2_floor2_flat1r_3DVar1", "blk2_floor2_flat1r_3DVar2", "blk2_floor2_flat1r_3DVar3",
-				   "blk2_floor2_flat2r_1DVar1", "blk2_floor2_flat2r_1DVar2", "blk2_floor2_flat2r_1DVar3",
-				   "blk2_floor2_flat2r_2DVar1", "blk2_floor2_flat2r_2DVar2", "blk2_floor2_flat2r_2DVar3",
-				   "blk2_floor2_flat2r_3DVar1", "blk2_floor2_flat2r_3DVar2", "blk2_floor2_flat2r_3DVar3",
-				   "blk2_floor2_flat3r_1DVar1", "blk2_floor2_flat3r_1DVar2", "blk2_floor2_flat3r_1DVar3",
-				   "blk2_floor2_flat3r_2DVar1", "blk2_floor2_flat3r_2DVar2", "blk2_floor2_flat3r_2DVar3",
-				   "blk2_floor2_flat3r_3DVar1", "blk2_floor2_flat3r_3DVar2", "blk2_floor2_flat3r_3DVar3",
-				   "blk2_floor3_flat1r_1DVar1", "blk2_floor3_flat1r_1DVar2", "blk2_floor3_flat1r_1DVar3",
-				   "blk2_floor3_flat1r_2DVar1", "blk2_floor3_flat1r_2DVar2", "blk2_floor3_flat1r_2DVar3",
-				   "blk2_floor3_flat1r_3DVar1", "blk2_floor3_flat1r_3DVar2", "blk2_floor3_flat1r_3DVar3",
-				   "blk2_floor3_flat2r_1DVar1", "blk2_floor3_flat2r_1DVar2", "blk2_floor3_flat2r_1DVar3",
-				   "blk2_floor3_flat2r_2DVar1", "blk2_floor3_flat2r_2DVar2", "blk2_floor3_flat2r_2DVar3",
-				   "blk2_floor3_flat2r_3DVar1", "blk2_floor3_flat2r_3DVar2", "blk2_floor3_flat2r_3DVar3",
-				   "blk2_floor3_flat3r_1DVar1", "blk2_floor3_flat3r_1DVar2", "blk2_floor3_flat3r_1DVar3",
-				   "blk2_floor3_flat3r_2DVar1", "blk2_floor3_flat3r_2DVar2", "blk2_floor3_flat3r_2DVar3",
-				   "blk2_floor3_flat3r_3DVar1", "blk2_floor3_flat3r_3DVar2", "blk2_floor3_flat3r_3DVar3",
-
-				   "blk3_floor0_flat1r_1DVar1", "blk3_floor0_flat1r_1DVar2", "blk3_floor0_flat1r_1DVar3",
-				   "blk3_floor0_flat1r_2DVar1", "blk3_floor0_flat1r_2DVar2", "blk3_floor0_flat1r_2DVar3",
-				   "blk3_floor0_flat1r_3DVar1", "blk3_floor0_flat1r_3DVar2", "blk3_floor0_flat1r_3DVar3",
-				   "blk3_floor0_flat2r_1DVar1", "blk3_floor0_flat2r_1DVar2", "blk3_floor0_flat2r_1DVar3",
-				   "blk3_floor0_flat2r_2DVar1", "blk3_floor0_flat2r_2DVar2", "blk3_floor0_flat2r_2DVar3",
-				   "blk3_floor0_flat2r_3DVar1", "blk3_floor0_flat2r_3DVar2", "blk3_floor0_flat2r_3DVar3",
-				   "blk3_floor0_flat3r_1DVar1", "blk3_floor0_flat3r_1DVar2", "blk3_floor0_flat3r_1DVar3",
-				   "blk3_floor0_flat3r_2DVar1", "blk3_floor0_flat3r_2DVar2", "blk3_floor0_flat3r_2DVar3",
-				   "blk3_floor0_flat3r_3DVar1", "blk3_floor0_flat3r_3DVar2", "blk3_floor0_flat3r_3DVar3",
-				   "blk3_floor1_flat1r_1DVar1", "blk3_floor1_flat1r_1DVar2", "blk3_floor1_flat1r_1DVar3",
-				   "blk3_floor1_flat1r_2DVar1", "blk3_floor1_flat1r_2DVar2", "blk3_floor1_flat1r_2DVar3",
-				   "blk3_floor1_flat1r_3DVar1", "blk3_floor1_flat1r_3DVar2", "blk3_floor1_flat1r_3DVar3",
-				   "blk3_floor1_flat2r_1DVar1", "blk3_floor1_flat2r_1DVar2", "blk3_floor1_flat2r_1DVar3",
-				   "blk3_floor1_flat2r_2DVar1", "blk3_floor1_flat2r_2DVar2", "blk3_floor1_flat2r_2DVar3",
-				   "blk3_floor1_flat2r_3DVar1", "blk3_floor1_flat2r_3DVar2", "blk3_floor1_flat2r_3DVar3",
-				   "blk3_floor1_flat3r_1DVar1", "blk3_floor1_flat3r_1DVar2", "blk3_floor1_flat3r_1DVar3",
-				   "blk3_floor1_flat3r_2DVar1", "blk3_floor1_flat3r_2DVar2", "blk3_floor1_flat3r_2DVar3",
-				   "blk3_floor1_flat3r_3DVar1", "blk3_floor1_flat3r_3DVar2", "blk3_floor1_flat3r_3DVar3",
-				   "blk3_floor2_flat1r_1DVar1", "blk3_floor2_flat1r_1DVar2", "blk3_floor2_flat1r_1DVar3",
-				   "blk3_floor2_flat1r_2DVar1", "blk3_floor2_flat1r_2DVar2", "blk3_floor2_flat1r_2DVar3",
-				   "blk3_floor2_flat1r_3DVar1", "blk3_floor2_flat1r_3DVar2", "blk3_floor2_flat1r_3DVar3",
-				   "blk3_floor2_flat2r_1DVar1", "blk3_floor2_flat2r_1DVar2", "blk3_floor2_flat2r_1DVar3",
-				   "blk3_floor2_flat2r_2DVar1", "blk3_floor2_flat2r_2DVar2", "blk3_floor2_flat2r_2DVar3",
-				   "blk3_floor2_flat2r_3DVar1", "blk3_floor2_flat2r_3DVar2", "blk3_floor2_flat2r_3DVar3",
-				   "blk3_floor2_flat3r_1DVar1", "blk3_floor2_flat3r_1DVar2", "blk3_floor2_flat3r_1DVar3",
-				   "blk3_floor2_flat3r_2DVar1", "blk3_floor2_flat3r_2DVar2", "blk3_floor2_flat3r_2DVar3",
-				   "blk3_floor2_flat3r_3DVar1", "blk3_floor2_flat3r_3DVar2", "blk3_floor2_flat3r_3DVar3",
-				   "blk3_floor3_flat1r_1DVar1", "blk3_floor3_flat1r_1DVar2", "blk3_floor3_flat1r_1DVar3",
-				   "blk3_floor3_flat1r_2DVar1", "blk3_floor3_flat1r_2DVar2", "blk3_floor3_flat1r_2DVar3",
-				   "blk3_floor3_flat1r_3DVar1", "blk3_floor3_flat1r_3DVar2", "blk3_floor3_flat1r_3DVar3",
-				   "blk3_floor3_flat2r_1DVar1", "blk3_floor3_flat2r_1DVar2", "blk3_floor3_flat2r_1DVar3",
-				   "blk3_floor3_flat2r_2DVar1", "blk3_floor3_flat2r_2DVar2", "blk3_floor3_flat2r_2DVar3",
-				   "blk3_floor3_flat2r_3DVar1", "blk3_floor3_flat2r_3DVar2", "blk3_floor3_flat2r_3DVar3",
-				   "blk3_floor3_flat3r_1DVar1", "blk3_floor3_flat3r_1DVar2", "blk3_floor3_flat3r_1DVar3",
-				   "blk3_floor3_flat3r_2DVar1", "blk3_floor3_flat3r_2DVar2", "blk3_floor3_flat3r_2DVar3",
-				   "blk3_floor3_flat3r_3DVar1", "blk3_floor3_flat3r_3DVar2", "blk3_floor3_flat3r_3DVar3"]
-
-TL_BLOCK = ["Bloque 1", "Bloque 2", "Bloque 3"]
-TL_FLOOR = ["Planta Baja", "Planta 1ª", "Planta 2ª", "Planta 3ª"]
-TL_FLAT = ["1 Dormitorio", "2 Dormitorios", "3 Dormitorios"]
-TL_FLAT_VAR = ["1DVar1", "1DVar2", "1DVar3",
-               "2DVar1", "2DVar2", "2DVar3",
-               "3DVar1", "3DVar2", "3DVar3"]
-
-AREA_ID = ["A", "B", "C", "ALL"]
-# "A" => "1DVar1", "1DVar2", "1DVar3"
-# "B" => "2DVar1", "2DVar2", "2DVar3"
-# "C" => "3DVar1", "3DVar2", "3DVar3"
-# "ALL" => "1DVar1", "1DVar2", "1DVar3", "2DVar1", "2DVar2", "2DVar3","3DVar1", "3DVar2", "3DVar3"
-
-# Next matrix is to build the listbox and treeview according to the floor area selected
-# [column, row]
-
-def addItemsListbox(list_box, area_id):
-    # Adding elements to the listbox
-	if area_id == AREA_ID[0]:  # 1-bedroom
-		list_box.insert(0, "1DVar1")
-		list_box.insert(1, "1DVar2")
-		list_box.insert(2, "1DVar3")
-		return
-	elif area_id == AREA_ID[1]:  # 2-bedroom
-		list_box.insert(3, "2DVar1")
-		list_box.insert(4, "2DVar2")
-		list_box.insert(5, "2DVar3")
-	else:  # 3-beedroom
-		list_box.insert(6, "3DVar1")
-		list_box.insert(7, "3DVar2")
-		list_box.insert(8, "3DVar3")
-
-def loadNewFlatPic(tv_iid_split):
-	flat_pic = Image.open("./pics/flatviews/" + tv_iid_split[3] + ".png")
-	flat_picCopy = flat_pic.copy()
-	flat_pic_resize = flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC), Image.ANTIALIAS)
-	flat_picTk = ImageTk.PhotoImage(image=flat_pic_resize)
-	return flat_picTk
 
 # to identify the area selected on the Floor pic.
 def areaId(label_floor_x, label_floor_y):
@@ -232,7 +66,7 @@ def addItemsTreeview(Treeview):
 
 	# Add blocks to the treeview.
 	for i in range(len(lst_blk)):
-		Treeview.insert("", END, text="Bloque " + str(i + 1), iid=lst_blk[i], tags=("mytag",))
+		Treeview.insert("", END, text=NAMEBLOCK + str(i + 1), iid=lst_blk[i], tags=("mytag",))
 
 	# Add
 	for sheet in range(len(lst_blk)):
@@ -244,7 +78,7 @@ def addItemsTreeview(Treeview):
 		lst_floor_mod = list(set(lst_floor))  # remove duplicate items
 		lst_floor_mod.sort()  # sort list items
 		for i in range(len(lst_floor_mod)):
-			Treeview.insert(lst_blk[sheet], END, text="Planta " + str(i),
+			Treeview.insert(lst_blk[sheet], END, text=NAMEFLOOR + str(i),
 							iid=lst_blk[sheet] + lst_floor_mod[i], tags=("mytag",))
 
 
@@ -268,7 +102,7 @@ def addItemsTreeview(Treeview):
 			for k in range(len(lst_room_mod)):
 				n_room = lst_room_mod[k] #Get the number of room from the excel.
 				#print(n_room[4:5])
-				Treeview.insert(lst_blk[sheet] + lst_floor_mod[i], END, text=n_room[4:5] + " Habitacion/es",
+				Treeview.insert(lst_blk[sheet] + lst_floor_mod[i], END, text=n_room[4:5] + NAMEROOM,
 								iid=lst_blk[sheet] + lst_floor_mod[i] + lst_room_mod[k], tags=("mytag",))
 
 		# Adding variants to the treeview
@@ -278,5 +112,6 @@ def addItemsTreeview(Treeview):
 			lst_var.append(str(ws["C" + str(i)].value))
 			lst_flat.append(str(ws["B" + str(i)].value))
 		for i in range(len(lst_var)):
-			Treeview.insert(lst_blk[sheet] + lst_floor[i] + lst_flat[i], END, text=lst_var[i],
+			n_var = lst_var[i]
+			Treeview.insert(lst_blk[sheet] + lst_floor[i] + lst_flat[i], END, text=NAMEVAR + n_var[3:4],
 								iid=lst_blk[sheet] + lst_floor[i] + lst_flat[i] + lst_var[i], tags=("mytag",))
