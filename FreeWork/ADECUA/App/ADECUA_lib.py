@@ -19,6 +19,8 @@ NAMEBLOCK = "Portal "
 NAMEFLOOR = "Planta "
 NAMEROOM = " Habitacion/es"
 NAMEVAR = "Variante "
+LENFLOOR = 10
+LENVAR = 20
 
 # Floor pic areas
 BLK1_X1 = 40

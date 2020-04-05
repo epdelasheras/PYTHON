@@ -2,7 +2,6 @@ from ADECUA_lib import *
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-import openpyxl
 
 class App():
     def __init__(self):
@@ -80,13 +79,13 @@ class App():
         print(len(tree_item))
 
         #change pics according to the tree item selected
-        if len(tree_item) == 10: #Change floor pic
+        if len(tree_item) == LENFLOOR: #Change floor pic
             self.floor_pic = Image.open("./pics/" + tree_item + ".png")
             self.floor_picCopy = self.floor_pic.copy()
             self.floor_picCopyResize = self.floor_picCopy.resize((WIDTH_FLOORPIC, HEIGHT_FLOORPIC), Image.ANTIALIAS)
             self.floor_picTk = ImageTk.PhotoImage(image=self.floor_picCopyResize)
             self.label_floor.configure(image=self.floor_picTk)
-        elif len(tree_item) == 20: #change flat pic
+        elif len(tree_item) == LENVAR: #change flat pic
             self.flat_pic = Image.open("./pics/" + tree_item + ".png")
             self.flat_picCopy = self.flat_pic.copy()
             self.flat_picCopyResize = self.flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC), Image.ANTIALIAS)
