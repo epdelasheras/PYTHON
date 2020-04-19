@@ -15,12 +15,10 @@ WIDTH_FLOORPIC = 380
 HEIGHT_FLOORPIC = 380
 
 # Tree items
+WS_ROW_START = 5
 NAMESTRUCTURE = "Estructura "
 NAMEPROFILE = "Perfil "
 NAMEFLOOR = "Planta "
-NAMEVAR = "Tipología "
-LENFLOOR = 10
-LENVAR = 20
 
 # Floor pic areas
 BLK1_X1 = 40
@@ -62,84 +60,63 @@ def addItemsTreeview(Treeview):
 
 	wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
 	# read all ws and create a list
-	lst_structure = []
+	lst_ws = []
 	for sheet in wb:
-		lst_structure.append(sheet.title)
+		lst_ws.append(sheet.title)
 
-	# Add structures to the treeview.
-	for i in range(len(lst_structure)):
-		Treeview.insert("", END, text=NAMESTRUCTURE + lst_structure[i], iid=lst_structure[i], tags=("mytag",))
+	for n_sheet in range(len(lst_ws)):
 
-	# Adding profiles to the treeview
-	for sheet in range(len(lst_structure)):
-		ws = wb[lst_structure[sheet]]
-		lst_profile = []
-		for i in range(5, ws.max_row+1): # counting profiles
-			if (ws["D"+str(i)].value != None): # remove tabulation rows.
-				lst_profile.append(str(ws["D"+str(i)].value)) #ws column D
-		lst_profile_mod = list(set(lst_profile))  # remove duplicate items
-		lst_profile_mod.sort()  # sort list items
-		for i in range(len(lst_profile_mod)): #adding profiles
-			lst_profile_mod_copy = lst_profile_mod[i]
-			if int(len(lst_profile_mod[i])) > 2:
-				n_prof = lst_profile_mod_copy[1:4]
-			else:
-				n_prof = lst_profile_mod_copy[1:2]
-			Treeview.insert(lst_structure[sheet], END, text=NAMEPROFILE + n_prof,
-							iid=lst_structure[sheet] + lst_profile_mod[i], tags=("mytag",))
+		# saving a copy in memory of the currente excel worksheet to process
+		ws = wb[lst_ws[n_sheet]]
 
-		print(lst_profile)
-		print(lst_profile_mod)
+		# read all ws rows and create a list with all the ws file names.
+		lst_fname = []
+		for i in range(WS_ROW_START, ws.max_row + 1):
+			if (ws["K" + str(i)].value != None):  # skip empty rows
+				lst_fname.append(str(ws["K" + str(i)].value)) # list with file names
+
+		# Split every file name string to do an analysis later
+		lst_split = []
+		for i in range(len(lst_fname)):
+			lst_split.append(lst_fname[i].split("-", 3)) # detect max. two of this "-" in the string
+
+		# create a list with every element of every lst_split item
+		lst_struct_prof = []
+		lst_struct_prof_floor = []
+		for i in range(len(lst_split)):
+			str_split = lst_split[i]
+			lst_struct_prof.append(str_split[0] + "-" + str_split[1])
+			lst_struct_prof_floor.append(str_split[0] + "-" + str_split[1]
+									 + "-" + str_split[2])
+
+		# Adding structures to the treeview
+		Treeview.insert("", END, text=NAMESTRUCTURE + lst_ws[n_sheet],
+						iid=lst_ws[n_sheet], tags=("mytag",))
+
+		# Adding profiles to the treeview
+		lst_struct_prof_sort = list(set(lst_struct_prof))
+		lst_struct_prof_sort.sort()
+		for i in range(len(lst_struct_prof_sort)):
+			profile = lst_struct_prof_sort[i]
+			profile_split = profile.split("-")
+			Treeview.insert(profile_split[0], END, text=NAMEPROFILE + profile_split[1],
+					iid=profile, tags=("mytag",))
 
 		# Adding floors to the treeview
-		lst_cnt_floor = []
-		for i in range(len(lst_profile_mod)):
-			cnt_floor = 0
-			for j in range(len(lst_profile)):
-				if lst_profile_mod[i] == lst_profile[j]:
-					cnt_floor += 1
-			lst_cnt_floor.append(cnt_floor)
+		lst_struct_prof_floor_sort = list(set(lst_struct_prof_floor))
+		lst_struct_prof_floor_sort.sort()
+		for i in range(len(lst_struct_prof_floor_sort)):
+			floor = lst_struct_prof_floor_sort[i]
+			floor_split = floor.split("-")
+			Treeview.insert(floor_split[0] + "-" + floor_split[1], END,
+						text=NAMEFLOOR + floor_split[2], iid=floor,
+						tags=("mytag",))
 
-		print(lst_cnt_floor)
-
-		lst_floor = [] # sorting floors
-		for i in range(len(lst_cnt_floor)):
-			k = 5
-			for j in range(lst_cnt_floor[i]):
-				if str(ws["E" + str(k)].value) == "None": # detecting empty rows
-					k += 2
-				else:
-					lst_floor.append(str(ws["E" + str(k)].value)) # ws column E
-					k += 1
-			lst_floor_mod = list(set(lst_floor))  # remove duplicate items
-			lst_floor_mod.sort(reverse=False)  # sort list items
-			for l in range(len(lst_floor_mod)):
-				Treeview.insert(lst_structure[sheet] + lst_profile_mod[i], END, text=NAMEFLOOR + lst_floor_mod[l],
-								iid=lst_structure[sheet] + lst_profile_mod[i] + lst_floor_mod[l], tags=("mytag",))
-
-'''
-		cnt_room = 0 # counter to follow the type of rooms in the excel file.
-		for i in range(len(lst_cnt_floor)):
-			lst_room = []
-			for j in range(lst_cnt_floor[i]):
-				lst_room.append(str(ws["I" + str(j+2+cnt_room)].value))
-			cnt_room = cnt_room + j + 1
-			lst_room_mod = list(set(lst_room))  # remove duplicate items
-			lst_room_mod.sort()  # sort list items
-			for k in range(len(lst_room_mod)):
-				n_room = lst_room_mod[k] #Get the number of room from the excel.
-				#print(n_room[4:5])
-				Treeview.insert(lst_structure[sheet] + lst_profile_mod[i], END, text=n_room[4:5] + NAMEFLOOR,
-								iid=lst_structure[sheet] + lst_profile_mod[i] + lst_room_mod[k], tags=("mytag",))
-
-		# Adding variants to the treeview
-		lst_var = []
-		lst_flat = []
-		for i in range(2, ws.max_row + 1):
-			lst_var.append(str(ws["C" + str(i)].value))
-			lst_flat.append(str(ws["B" + str(i)].value))
-		for i in range(len(lst_var)):
-			n_var = lst_var[i]
-			Treeview.insert(lst_structure[sheet] + lst_profile[i] + lst_flat[i], END, text=NAMEVAR + n_var[3:4],
-								iid=lst_structure[sheet] + lst_profile[i] + lst_flat[i] + lst_var[i], tags=("mytag",))
-'''
+		# Adding types to the treeview
+		for i in range(len(lst_fname)):
+			type = lst_fname[i]
+			type_split = type.split("-")
+			print(type)
+			print(type_split)
+			Treeview.insert(type_split[0] + "-" + type_split[1] + "-" + type_split[2],
+						END, text=type_split[3], iid=type, tags=("mytag",))
