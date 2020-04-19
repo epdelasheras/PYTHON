@@ -1,12 +1,11 @@
 from tkinter import *
-import cv2
-from PIL import Image, ImageTk
 import openpyxl
 
 # root window attributes
 WIN_SIZE = "1366x768"
 WIN_TITLE = "ADECUA"
-WIN_ICO_PATH = ".\pics\ADECUA.ico"
+PIC_EXTENSION = ".jpg"
+PIC_PATH = "./pics/"
 
 # Pic sizes
 WIDTH_FLATPIC = 700
@@ -15,6 +14,7 @@ WIDTH_FLOORPIC = 380
 HEIGHT_FLOORPIC = 380
 
 # Tree items
+N_ITEMS = 4 # when tipology tree view is selected, tree_view_split = 4 items
 WS_ROW_START = 5
 NAMESTRUCTURE = "Estructura "
 NAMEPROFILE = "Perfil "
@@ -26,33 +26,12 @@ BLK1_X2 = 125
 BLK1_Y1 = 115
 BLK1_Y2 = 135
 
-# to identify the area selected on the Floor pic.
-def areaId(label_floor_x, label_floor_y):
-	if (label_floor_x > BLK1_X1 and label_floor_x < BLK1_X2 and label_floor_y > BLK1_Y1 and label_floor_y < BLK1_Y2):
-		return AREA_ID[0]
-
-# make a rectangle on the floor image
-def highlightArea(label_floor_x, label_floor_y):
-	floor_picCv2 = cv2.imread("./pics/floorviews/PlantaBaja.png") # load image in open cv format
-	floor_picCv2Copy = floor_picCv2.copy() # create a copy of the previous image
-    # draw a rectangle over the image
-	x, y, w, h = 10, 10, 10, 10  # Rectangle parameters
-	cv2.rectangle(floor_picCv2Copy, (x, y), (x + w, y + h), (0, 200, 0), -1)  # A filled rectangle
-	alpha = 0.4  # Transparency factor.
-	floor_picCv2Mod = cv2.addWeighted(floor_picCv2Copy, alpha, floor_picCv2, 1 - alpha, 0)  # image with the rectangle
-
-    # OpenCV represents images in BGR order; however PIL represents
-    # images in RGB order, so we need to swap the channels
-	b, g, r = cv2.split(floor_picCv2Mod)
-	floor_picCv2_RGB = cv2.merge((r, g, b))
-
-	# Convert the Image object into a TkPhoto object
-	floor_pic = Image.fromarray(floor_picCv2_RGB)
-
-	floor_picCopy = floor_pic.copy()
-	floor_picCopyResize = floor_picCopy.resize((WIDTH_FLOORPIC, HEIGHT_FLOORPIC), Image.ANTIALIAS)
-	floor_picTk = ImageTk.PhotoImage(image=floor_picCopyResize)
-	return floor_picTk
+def searchLocation(worksheet, tree_item):
+	wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+	ws = wb[worksheet]
+	for i in range(WS_ROW_START, ws.max_row + 1):
+		if (ws["K" + str(i)].value == tree_item):
+			return ws["H" + str(i)].value
 
 def addItemsTreeview(Treeview):
     # adding elements to the tree. The previous tree label is indicated

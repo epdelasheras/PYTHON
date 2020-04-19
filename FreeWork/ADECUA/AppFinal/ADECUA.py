@@ -10,19 +10,20 @@ class App():
         self.root = Tk()
         self.root.geometry(WIN_SIZE)
         self.root.title(WIN_TITLE) #Config window title
-        self.root.iconbitmap(WIN_ICO_PATH) #Config the icon window
+        self.root.iconbitmap(PIC_PATH + WIN_TITLE + ".ico") #Config the icon window
+        self.root.iconbitmap(PIC_PATH + WIN_TITLE + ".ico")  # Config the icon window
 
         # Create main frame to place all the widgets inside
         self.main_window = Frame()
         self.main_window.grid(row=0, column=0)
 
         # Create and configure LabelFrames and auto-adjust their sizes
-        self.lf_treeview = LabelFrame(self.main_window, text="Treeview Selection", labelanchor=N)
+        self.lf_treeview = LabelFrame(self.main_window, text="ARBOL DE SELECCIÓN", labelanchor=N)
         self.lf_treeview.grid(row=0, column=0, sticky="N", padx=20, pady=20)
-        self.lf_flatview = LabelFrame(self.main_window, text="Flatview", labelanchor=N)
+        self.lf_flatview = LabelFrame(self.main_window, text="APARTAMENTO SELECCIONADO", labelanchor=N)
         self.lf_flatview.grid(row=0, column=1, sticky="N", padx=20, pady=200)
-        self.lf_floorview = LabelFrame(self.main_window, text="Floorview", labelanchor=N)
-        self.lf_floorview.grid(row=0, column=2, sticky="N", padx=20)
+        self.lf_roomview = LabelFrame(self.main_window, text="Nº DORMITORIOS", labelanchor=N)
+        self.lf_roomview.grid(row=0, column=2, sticky="N", padx=20)
 
         # Creating TreeView and bind selected item event
         self.tree_view = ttk.Treeview(self.lf_treeview, height=35)
@@ -40,33 +41,11 @@ class App():
         self.label_flat = Label(self.lf_flatview, image=self.flat_picTk)
         self.label_flat.grid(row=0, column=0, sticky="NEWS")
 
-        # Create label with floor image
-        self.floor_pic = Image.open("./pics/Diseño Base y Variante 1_2.jpg")
-        self.floor_picCopy = self.floor_pic.copy()
-        self.floor_picCopyResize = self.floor_picCopy.resize((WIDTH_FLOORPIC, HEIGHT_FLOORPIC), Image.ANTIALIAS)
-        self.floor_picTk = ImageTk.PhotoImage(image=self.floor_picCopyResize)
-        self.label_floor = Label(self.lf_floorview, image=self.floor_picTk)
-        self.label_floor.grid(row=0, column=0, sticky="NEWS")
-        self.label_floor.bind("<Motion>", self.labelFloorMotion) # bind mouse movement on pic
-        self.label_floor.bind("<Button-1>", lambda event: self.labelFloorLeftClick(event, # bind leftmouse clickon pic
-                                                          self.list_box))
+        # Create label with number of rooms text box
+        self.tb_room = Label(self.lf_roomview, text="", justify="left")
+        self.tb_room.grid(row=0, column=0, sticky="NEWS")
 
         self.root.mainloop()
-
-    # Method executed when the user makes left clik on an specific part of the floor picture
-    def labelFloorLeftClick(self, event, list_box):
-        self.floor_area_id = areaId(self.label_floor_x, self.label_floor_y)
-        if list_box.size() != 0: # delete listbox items before adding new ones.
-            list_box.delete(0,"end")
-        if self.floor_area_id == AREA_ID[0]: # Add to the listbox specific variants
-            addItemsListbox(list_box, AREA_ID[0])
-            self.tl_iid = TL_FLAT_IID[0]  # expand the treeview with the variants
-
-    # Method which return the coordenates of the mouse over the floor pic.
-    def labelFloorMotion(self, event):
-        self.label_floor_x = event.x
-        self.label_floor_y = event.y
-        #print('{}, {}'.format(self.label_floor_x, self.label_floor_y))
 
     # Method used to identify item selected on the Treeview.
     def treeItemSel(self, event):
@@ -75,28 +54,25 @@ class App():
                        self.tree_view.winfo_pointery() - self.tree_view.winfo_rooty())
         tree_item = self.tree_view.identify('item', *tree_coords)
 
-        #print(tree_item)
-        #print(len(tree_item))
+        tree_item_split = tree_item.split("-")
 
-        #change pics according to the tree item selected
-        if len(tree_item) == LENFLOOR: #Change floor pic
-            self.floor_pic = Image.open("./pics/" + tree_item + ".png")
-            self.floor_picCopy = self.floor_pic.copy()
-            self.floor_picCopyResize = self.floor_picCopy.resize((WIDTH_FLOORPIC, HEIGHT_FLOORPIC), Image.ANTIALIAS)
-            self.floor_picTk = ImageTk.PhotoImage(image=self.floor_picCopyResize)
-            self.label_floor.configure(image=self.floor_picTk)
-        elif len(tree_item) == LENVAR: #change flat pic
-            self.flat_pic = Image.open("./pics/" + tree_item + ".png")
+        if len(tree_item_split) == N_ITEMS: # Only load pics when tipololy tree view is selected
+            self.flat_pic = Image.open(PIC_PATH + tree_item + PIC_EXTENSION)
             self.flat_picCopy = self.flat_pic.copy()
             self.flat_picCopyResize = self.flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC), Image.ANTIALIAS)
             self.flat_picTk = ImageTk.PhotoImage(image=self.flat_picCopyResize)
             self.label_flat.configure(image=self.flat_picTk)
+            tipology = tree_item_split[3]
+            tipology_split = tipology.split("_",1)
+            if (len(tipology_split)>1): # to avoid the LC1 case
+                n_rooms = tipology_split[1][:1] #save only the integer related with the n_rooms
+                self.tb_room.configure(text=n_rooms + " dormitorio/s")
+                coordinates = searchLocation(tree_item_split[0], tree_item)
+                print(coordinates)
+            else: # LC1 case selected
+                coordinates = searchLocation(tree_item_split[0], tree_item)
+                print(coordinates)
 
 
-'''
-        # highlight specific area on the floor pic
-        self.floor_picTk = highlightArea(self.label_floor_x, self.label_floor_y)
-        self.label_floor.configure(image=self.floor_picTk)
-'''
 
 App()
