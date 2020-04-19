@@ -76,15 +76,15 @@ def addItemsTreeview(Treeview):
 				lst_fname.append(str(ws["K" + str(i)].value)) # list with file names
 
 		# Split every file name string to do an analysis later
-		lst_split = []
+		lst_fname_split = []
 		for i in range(len(lst_fname)):
-			lst_split.append(lst_fname[i].split("-", 3)) # detect max. two of this "-" in the string
+			lst_fname_split.append(lst_fname[i].split("-"))
 
-		# create a list with every element of every lst_split item
+		# create a list with every element of every lst_fname_split item
 		lst_struct_prof = []
 		lst_struct_prof_floor = []
-		for i in range(len(lst_split)):
-			str_split = lst_split[i]
+		for i in range(len(lst_fname_split)):
+			str_split = lst_fname_split[i]
 			lst_struct_prof.append(str_split[0] + "-" + str_split[1])
 			lst_struct_prof_floor.append(str_split[0] + "-" + str_split[1]
 									 + "-" + str_split[2])
@@ -116,7 +116,5 @@ def addItemsTreeview(Treeview):
 		for i in range(len(lst_fname)):
 			type = lst_fname[i]
 			type_split = type.split("-")
-			print(type)
-			print(type_split)
 			Treeview.insert(type_split[0] + "-" + type_split[1] + "-" + type_split[2],
 						END, text=type_split[3], iid=type, tags=("mytag",))
