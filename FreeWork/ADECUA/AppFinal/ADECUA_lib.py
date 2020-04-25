@@ -104,15 +104,23 @@ def addItemsTreeview(Treeview):
 
 	return ws_fname
 
+
 def addItemsListbox(Listbox, file_names):
+	# Adding items to the listbox
+
+	# Figure out which is the max. number of rooms in the database
 	n_room = []
 	for i in range(len(file_names)): #num max. of rows
 		for j in range(len(file_names[0])): #num max of cols
-			if (re.findall("[0-9]+D", file_names[i][j])):
-				print(file_names[i][j])
-				n_room.append("New Room")
-	print(len(n_room))
-	#Listbox.delete(0, 2)
-	Listbox.insert(0, "1 Dormitorio")
-	Listbox.insert(1, "2 Dormitorios")
-	Listbox.insert(2, "3 Dormitorios")
+			if len(re.findall(r"[0-9]+D", file_names[i][j])) > 0: #skip flat with no rooms
+				tipology_room = re.findall(r"[0-9]+D", file_names[i][j])
+				for k in range(len(tipology_room)):
+					n_room.append(tipology_room[k])
+
+	# removing duplicated items of the listbox
+	n_room = list(set(n_room))
+	n_room.sort()
+
+	# Adding rooms to the database
+	for i in range(len(n_room)):
+		Listbox.insert(i, str(i) + " Dormitorio/s")
