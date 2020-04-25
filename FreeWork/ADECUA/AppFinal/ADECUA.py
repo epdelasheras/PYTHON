@@ -21,15 +21,18 @@ class App():
         self.lf_treeview = LabelFrame(self.main_window, text="ARBOL DE SELECCIÓN", labelanchor=N)
         self.lf_treeview.grid(row=0, column=0, sticky="N", padx=20, pady=20)
         self.lf_flatview = LabelFrame(self.main_window, text="APARTAMENTO SELECCIONADO", labelanchor=N)
-        self.lf_flatview.grid(row=0, column=1, sticky="N", padx=20, pady=200)
-        self.lf_roomview = LabelFrame(self.main_window, text="Nº DORMITORIOS", labelanchor=N)
-        self.lf_roomview.grid(row=0, column=2, sticky="N", padx=20)
+        self.lf_flatview.grid(row=0, column=1, sticky="N", padx=20, pady=40)
+        self.lf_labelroom = LabelFrame(self.main_window, text="Nº DORMITORIOS", labelanchor=N)
+        self.lf_labelroom.grid(row=0, column=2, sticky="N", padx=20)
+        self.lf_listroom = LabelFrame(self.main_window, text="SELECCIÓN DORMITORIOS", labelanchor=N)
+        self.lf_listroom.grid(row=0, column=3, sticky="N", padx=20)
 
         # Creating TreeView and bind selected item event
         self.tree_view = ttk.Treeview(self.lf_treeview, height=35)
         self.tree_view.heading("#0", text="Treeview")
         self.tree_view.column("#0", minwidth=0, width=150, stretch=NO)
-        addItemsTreeview(self.tree_view)
+        self.file_names = []
+        self.file_names = addItemsTreeview(self.tree_view)
         self.tree_view.tag_bind("mytag", "<<TreeviewSelect>>", self.treeItemSel)
         self.tree_view.grid(row=0, column=0, sticky="NEWS")
 
@@ -42,10 +45,27 @@ class App():
         self.label_flat.grid(row=0, column=0, sticky="NEWS")
 
         # Create label with number of rooms text box
-        self.tb_room = Label(self.lf_roomview, text="", justify="left")
+        self.tb_room = Label(self.lf_labelroom, text="", justify="left")
         self.tb_room.grid(row=0, column=0, sticky="NEWS")
 
+        # Create listbox with number of rooms to choose
+        self.lb_room = Listbox(self.lf_listroom, heigh=0)
+        self.lb_room.grid(row=0, column=0, sticky="NEWS")
+        self.lb_room.bind("<<ListboxSelect>>", self.listboxItemSel)
+        self.lb_yscroll = Scrollbar(self.lf_listroom, orient=VERTICAL)
+        self.lb_room["yscrollcommand"] = self.lb_yscroll.set
+        self.lb_yscroll["command"] = self.lb_room.yview
+        self.lb_yscroll.grid(row=0, column=1, sticky="NEWS")
+        addItemsListbox(self.lb_room, self.file_names)
+
         self.root.mainloop()
+
+    # Method related to the item selected on the listbox
+    def listboxItemSel(self, event):
+        clickedItem = event.widget
+        itemSel = clickedItem.curselection()
+        itemString = clickedItem.get(itemSel[0])
+        print(itemString)
 
     # Method used to identify item selected on the Treeview.
     def treeItemSel(self, event):
@@ -72,7 +92,5 @@ class App():
             else: # LC1 case selected
                 coordinates = searchLocation(tree_item_split[0], tree_item)
                 print(coordinates)
-
-
 
 App()

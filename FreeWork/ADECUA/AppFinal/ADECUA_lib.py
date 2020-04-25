@@ -43,9 +43,10 @@ def addItemsTreeview(Treeview):
 	for sheet in wb:
 		lst_ws.append(sheet.title)
 
+	ws_fname = []
 	for n_sheet in range(len(lst_ws)):
 
-		# saving a copy in memory of the currente excel worksheet to process
+		# saving a copy in memory of the current excel worksheet to process
 		ws = wb[lst_ws[n_sheet]]
 
 		# read all ws rows and create a list with all the ws file names.
@@ -97,3 +98,21 @@ def addItemsTreeview(Treeview):
 			type_split = type.split("-")
 			Treeview.insert(type_split[0] + "-" + type_split[1] + "-" + type_split[2],
 						END, text=type_split[3], iid=type, tags=("mytag",))
+
+		# Create a list with all the filenames to be used in other parts of the program
+		ws_fname.append(lst_fname)
+
+	return ws_fname
+
+def addItemsListbox(Listbox, file_names):
+	n_room = []
+	for i in range(len(file_names)): #num max. of rows
+		for j in range(len(file_names[0])): #num max of cols
+			if (re.findall("[0-9]+D", file_names[i][j])):
+				print(file_names[i][j])
+				n_room.append("New Room")
+	print(len(n_room))
+	#Listbox.delete(0, 2)
+	Listbox.insert(0, "1 Dormitorio")
+	Listbox.insert(1, "2 Dormitorios")
+	Listbox.insert(2, "3 Dormitorios")
