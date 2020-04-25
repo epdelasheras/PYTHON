@@ -21,11 +21,15 @@ class App():
         self.lf_treeview = LabelFrame(self.main_window, text="ARBOL DE SELECCIÓN", labelanchor=N)
         self.lf_treeview.grid(row=0, column=0, sticky="N", padx=20, pady=20)
         self.lf_flatview = LabelFrame(self.main_window, text="APARTAMENTO SELECCIONADO", labelanchor=N)
-        self.lf_flatview.grid(row=0, column=1, sticky="N", padx=20, pady=40)
-        self.lf_labelroom = LabelFrame(self.main_window, text="Nº DORMITORIOS", labelanchor=N)
-        self.lf_labelroom.grid(row=0, column=2, sticky="N", padx=20)
+        self.lf_flatview.grid(row=0, column=1, sticky="N", padx=20, pady=150)
+        self.lf_labelroom = LabelFrame(self.main_window, text="Nº DORMITORIOS | COORDENADAS", labelanchor=N)
+        self.lf_labelroom.grid(row=0, column=1, sticky="NW", padx=20, pady=20)
         self.lf_listroom = LabelFrame(self.main_window, text="SELECCIÓN DORMITORIOS", labelanchor=N)
-        self.lf_listroom.grid(row=0, column=3, sticky="N", padx=20)
+        self.lf_listroom.grid(row=0, column=1, sticky="NE", padx=20, pady=20)
+        self.lf_listplace = LabelFrame(self.main_window, text="Nº DORMITORIOS | COORDENADAS", labelanchor=N)
+        self.lf_listplace.grid(row=0, column=2, sticky="N", padx=20, pady=20)
+
+
 
         # Creating TreeView and bind selected item event
         self.tree_view = ttk.Treeview(self.lf_treeview, height=35)
@@ -46,22 +50,35 @@ class App():
 
         # Create label with number of rooms text box
         self.tb_room = Label(self.lf_labelroom, text="", justify="left")
-        self.tb_room.grid(row=0, column=0, sticky="NEWS")
+        self.tb_room.grid(row=0, column=0, sticky="NE")
+
+        # Create label with coordinates of the tipology selected
+        self.tb_place = Label(self.lf_labelroom, text="", justify="left")
+        self.tb_place.grid(row=0, column=1, sticky="NW")
 
         # Create listbox with number of rooms to choose
         self.lb_room = Listbox(self.lf_listroom, heigh=0)
         self.lb_room.grid(row=0, column=0, sticky="NEWS")
-        self.lb_room.bind("<<ListboxSelect>>", self.listboxItemSel)
-        self.lb_yscroll = Scrollbar(self.lf_listroom, orient=VERTICAL)
-        self.lb_room["yscrollcommand"] = self.lb_yscroll.set
-        self.lb_yscroll["command"] = self.lb_room.yview
-        self.lb_yscroll.grid(row=0, column=1, sticky="NEWS")
-        addItemsListbox(self.lb_room, self.file_names)
+        self.lb_room.bind("<<ListboxSelect>>", self.listboxItemSelRoom)
+        self.lb_room_yscrl = Scrollbar(self.lf_listroom, orient=VERTICAL)
+        self.lb_room["yscrollcommand"] = self.lb_room_yscrl.set
+        self.lb_room_yscrl["command"] = self.lb_room.yview
+        self.lb_room_yscrl.grid(row=0, column=1, sticky="NEWS")
+        addItemsListboxRoom(self.lb_room, self.file_names)
+
+        # Create listbox with rooms and coordinates
+        self.lb_roomcol = Listbox(self.lf_listplace, heigh=0)
+        self.lb_roomcol.grid(row=0, column=0, sticky="NEWS")
+        self.lb_placecol = Listbox(self.lf_listplace, heigh=0)
+        self.lb_placecol.grid(row=0, column=1, sticky="NEWS")
+
+        #self.lb_roomcol.bind("<<ListboxSelect>>", self.listboxItemSelRoomcol)
+
 
         self.root.mainloop()
 
     # Method related to the item selected on the listbox
-    def listboxItemSel(self, event):
+    def listboxItemSelRoom(self, event):
         clickedItem = event.widget
         itemSel = clickedItem.curselection()
         itemString = clickedItem.get(itemSel[0])
@@ -86,11 +103,13 @@ class App():
             tipology_split = tipology.split("_",1)
             if (len(tipology_split)>1): # to avoid the LC1 case
                 n_rooms = tipology_split[1][:1] #save only the integer related with the n_rooms
-                self.tb_room.configure(text=n_rooms + " dormitorio/s")
+                self.tb_room.configure(text=n_rooms + " DORMITORIO/S")
                 coordinates = searchLocation(tree_item_split[0], tree_item)
+                self.tb_place.configure(text=" | " + coordinates)
                 print(coordinates)
             else: # LC1 case selected
                 coordinates = searchLocation(tree_item_split[0], tree_item)
+                self.tb_place.configure(teext=" | " + coordinates)
                 print(coordinates)
 
 App()

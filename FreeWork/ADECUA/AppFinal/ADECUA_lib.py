@@ -105,7 +105,7 @@ def addItemsTreeview(Treeview):
 	return ws_fname
 
 
-def addItemsListbox(Listbox, file_names):
+def addItemsListboxRoom(Listbox, file_names):
 	# Adding items to the listbox
 
 	# Figure out which is the max. number of rooms in the database
