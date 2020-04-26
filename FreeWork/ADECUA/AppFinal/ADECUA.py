@@ -64,7 +64,7 @@ class App():
         self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
 
         # Create listbox with rooms and coordinates
-        self.lb_roomplace = Listbox(self.lf_listroomplace, width=60, heigh=40)
+        self.lb_roomplace = Listbox(self.lf_listroomplace, width=65, heigh=40)
         self.lb_roomplace.grid(row=0, column=0, sticky="NEWS")
         self.lb_roomplace.bind("<<ListboxSelect>>", self.listboxItemSelRoomPlace)
         self.lb_roomplace_yscrl = Scrollbar(self.lf_listroomplace, orient=VERTICAL)
@@ -78,34 +78,33 @@ class App():
     def listboxItemSelRoomPlace(self, event):
         item_click = event.widget
         item_sel = item_click.curselection()
-        item_str = item_click.get(item_sel[0])
-        item_str_split = item_str.split(" | ")
-        file_name = item_str_split[0]
+        if len(item_sel) > 0:  # to avoid error when other listbox item is selected
+            item_str = item_click.get(item_sel[0])
+            item_str_split = item_str.split(" | ")
+            file_name = item_str_split[0]
 
         #self.treeData.item("Main", open=True)
         #self.treeData.selection_set("Sub1")
-
-        print(item_str_split)
 
     # Method executed when a item in lb_room is selected
     def listboxItemSelRoom(self, event):
         item_click = event.widget
         item_sel = item_click.curselection()
         #item_str = item_click.get(item_sel[0])
-        item_room = str(item_sel[0]) + "D"
+        if len(item_sel) > 0: # to avoid error when other listbox item is selected
+            item_search = str(item_sel[0]) + "D"
+            # check room coincidences
+            lb_roomplace_add = []
+            for i in range(len(self.file_names)):  # num max. of rows
+                for j in range(len(self.file_names[0])):  # num max of cols
+                    if re.search(item_search, self.file_names[i][j]) != None:
+                        lb_roomplace_add.append(self.file_names[i][j] + " | " +
+                                                self.file_places[i][j])
 
-        # check room coincidences
-        lb_roomplace_add = []
-        for i in range(len(self.file_names)):  # num max. of rows
-            for j in range(len(self.file_names[0])):  # num max of cols
-                if re.search(item_room, self.file_names[i][j]) != None:
-                    lb_roomplace_add.append(self.file_names[i][j] + " | " +
-                                            self.file_places[i][j])
-
-        # Adding rooms and coordinates to lb_roomplace
-        self.lb_roomplace.delete(0, END)  # delete listbox items before add new ones.
-        for i in range(len(lb_roomplace_add)):
-            self.lb_roomplace.insert(i, lb_roomplace_add[i])
+            # Adding rooms and coordinates to lb_roomplace
+            self.lb_roomplace.delete(0, END)  # delete listbox items before add new ones.
+            for i in range(len(lb_roomplace_add)):
+                self.lb_roomplace.insert(i, lb_roomplace_add[i])
 
     # Method used to identify item selected on the Treeview.
     def treeItemSel(self, event):
