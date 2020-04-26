@@ -43,7 +43,12 @@ def addItemsTreeview(Treeview):
 	for sheet in wb:
 		lst_ws.append(sheet.title)
 
+	# tuples to return at the end of the method
 	ws_fname = []
+	ws_fplace = []
+	ws_ftipo = []
+
+	# Loop to read all worsheets of the excel book
 	for n_sheet in range(len(lst_ws)):
 
 		# saving a copy in memory of the current excel worksheet to process
@@ -51,9 +56,13 @@ def addItemsTreeview(Treeview):
 
 		# read all ws rows and create a list with all the ws file names.
 		lst_fname = []
+		lst_fplace = []
+		lst_ftipo = []
 		for i in range(WS_ROW_START, ws.max_row + 1):
 			if (ws["K" + str(i)].value != None):  # skip empty rows
 				lst_fname.append(str(ws["K" + str(i)].value)) # list with file names
+				lst_fplace.append(str(ws["H" + str(i)].value)) # list with coordinates
+				lst_ftipo.append(str(ws["F" + str(i)].value)) # list with tiplogies
 
 		# Split every file name string to do an analysis later
 		lst_fname_split = []
@@ -102,7 +111,13 @@ def addItemsTreeview(Treeview):
 		# Create a list with all the filenames to be used in other parts of the program
 		ws_fname.append(lst_fname)
 
-	return ws_fname
+		# Create a list with all the coordinates to be used in other parts of the program
+		ws_fplace.append(lst_fplace)
+
+		# Create a list with all the tipologies to be used in other parts of the program
+		ws_ftipo.append(lst_ftipo)
+
+	return ws_fname, ws_fplace, ws_ftipo
 
 
 def addItemsListboxRoom(Listbox, file_names):
@@ -121,6 +136,8 @@ def addItemsListboxRoom(Listbox, file_names):
 	n_room = list(set(n_room))
 	n_room.sort()
 
-	# Adding rooms to the database
+	# Adding rooms to the listbox
 	for i in range(len(n_room)):
 		Listbox.insert(i, str(i) + " Dormitorio/s")
+
+	return n_room

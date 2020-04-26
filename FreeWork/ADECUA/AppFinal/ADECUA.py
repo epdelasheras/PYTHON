@@ -26,17 +26,14 @@ class App():
         self.lf_labelroom.grid(row=0, column=1, sticky="NW", padx=20, pady=20)
         self.lf_listroom = LabelFrame(self.main_window, text="SELECCIÓN DORMITORIOS", labelanchor=N)
         self.lf_listroom.grid(row=0, column=1, sticky="NE", padx=20, pady=20)
-        self.lf_listplace = LabelFrame(self.main_window, text="Nº DORMITORIOS | COORDENADAS", labelanchor=N)
-        self.lf_listplace.grid(row=0, column=2, sticky="N", padx=20, pady=20)
-
-
+        self.lf_listroomplace = LabelFrame(self.main_window, text="Nº DORMITORIOS | COORDENADAS", labelanchor=N)
+        self.lf_listroomplace.grid(row=0, column=2, sticky="N", padx=20, pady=20)
 
         # Creating TreeView and bind selected item event
         self.tree_view = ttk.Treeview(self.lf_treeview, height=35)
         self.tree_view.heading("#0", text="Treeview")
         self.tree_view.column("#0", minwidth=0, width=150, stretch=NO)
-        self.file_names = []
-        self.file_names = addItemsTreeview(self.tree_view)
+        self.file_names, self.file_places, self.file_tipo = addItemsTreeview(self.tree_view)
         self.tree_view.tag_bind("mytag", "<<TreeviewSelect>>", self.treeItemSel)
         self.tree_view.grid(row=0, column=0, sticky="NEWS")
 
@@ -64,25 +61,51 @@ class App():
         self.lb_room["yscrollcommand"] = self.lb_room_yscrl.set
         self.lb_room_yscrl["command"] = self.lb_room.yview
         self.lb_room_yscrl.grid(row=0, column=1, sticky="NEWS")
-        addItemsListboxRoom(self.lb_room, self.file_names)
+        self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
 
         # Create listbox with rooms and coordinates
-        self.lb_roomcol = Listbox(self.lf_listplace, heigh=0)
-        self.lb_roomcol.grid(row=0, column=0, sticky="NEWS")
-        self.lb_placecol = Listbox(self.lf_listplace, heigh=0)
-        self.lb_placecol.grid(row=0, column=1, sticky="NEWS")
-
-        #self.lb_roomcol.bind("<<ListboxSelect>>", self.listboxItemSelRoomcol)
-
+        self.lb_roomplace = Listbox(self.lf_listroomplace, width=60, heigh=40)
+        self.lb_roomplace.grid(row=0, column=0, sticky="NEWS")
+        self.lb_roomplace.bind("<<ListboxSelect>>", self.listboxItemSelRoomPlace)
+        self.lb_roomplace_yscrl = Scrollbar(self.lf_listroomplace, orient=VERTICAL)
+        self.lb_roomplace["yscrollcommand"] = self.lb_roomplace_yscrl.set
+        self.lb_roomplace_yscrl["command"] = self.lb_roomplace.yview
+        self.lb_roomplace_yscrl.grid(row=0, column=1, sticky="NEWS")
 
         self.root.mainloop()
 
-    # Method related to the item selected on the listbox
+    # Method executed when a item in lb_roomplace is selected
+    def listboxItemSelRoomPlace(self, event):
+        item_click = event.widget
+        item_sel = item_click.curselection()
+        item_str = item_click.get(item_sel[0])
+        item_str_split = item_str.split(" | ")
+        file_name = item_str_split[0]
+
+        #self.treeData.item("Main", open=True)
+        #self.treeData.selection_set("Sub1")
+
+        print(item_str_split)
+
+    # Method executed when a item in lb_room is selected
     def listboxItemSelRoom(self, event):
-        clickedItem = event.widget
-        itemSel = clickedItem.curselection()
-        itemString = clickedItem.get(itemSel[0])
-        print(itemString)
+        item_click = event.widget
+        item_sel = item_click.curselection()
+        #item_str = item_click.get(item_sel[0])
+        item_room = str(item_sel[0]) + "D"
+
+        # check room coincidences
+        lb_roomplace_add = []
+        for i in range(len(self.file_names)):  # num max. of rows
+            for j in range(len(self.file_names[0])):  # num max of cols
+                if re.search(item_room, self.file_names[i][j]) != None:
+                    lb_roomplace_add.append(self.file_names[i][j] + " | " +
+                                            self.file_places[i][j])
+
+        # Adding rooms and coordinates to lb_roomplace
+        self.lb_roomplace.delete(0, END)  # delete listbox items before add new ones.
+        for i in range(len(lb_roomplace_add)):
+            self.lb_roomplace.insert(i, lb_roomplace_add[i])
 
     # Method used to identify item selected on the Treeview.
     def treeItemSel(self, event):
