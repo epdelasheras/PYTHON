@@ -95,6 +95,24 @@ class App():
                                          file_name_split[2] + "-" +
                                          file_name_split[3])
 
+            if len(file_name_split) == N_ITEMS:  # Only load pics when tipololy tree view is selected
+                self.flat_pic = Image.open(PIC_PATH + file_name + PIC_EXTENSION)
+                self.flat_picCopy = self.flat_pic.copy()
+                self.flat_picCopyResize = self.flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC), Image.ANTIALIAS)
+                self.flat_picTk = ImageTk.PhotoImage(image=self.flat_picCopyResize)
+                self.label_flat.configure(image=self.flat_picTk)
+                tipology = file_name_split[3]
+                tipology_split = tipology.split("_", 1)
+                if (len(tipology_split) > 1):  # to avoid the LC1 case
+                    n_rooms = tipology_split[1][:1]  # save only the integer related with the n_rooms
+                    self.tb_room.configure(text=n_rooms + " DORMITORIO/S")
+                    coordinates = searchLocation(file_name_split[0], file_name)
+                    self.tb_place.configure(text=" | " + coordinates)
+                    #print(coordinates)
+                else:  # LC1 case selected
+                    coordinates = searchLocation(file_name_split[0], file_name)
+                    self.tb_place.configure(teext=" | " + coordinates)
+                    #print(coordinates)
 
     # Method executed when a item in lb_room is selected
     def listboxItemSelRoom(self, event):
@@ -125,7 +143,23 @@ class App():
 
         tree_item_split = tree_item.split("-")
 
-        loadPic(self.label_flat, self.tb_room, self.tb_place,
-                            tree_item, tree_item_split)
+        if len(tree_item_split) == N_ITEMS: # Only load pics when tipololy tree view is selected
+            self.flat_pic = Image.open(PIC_PATH + tree_item + PIC_EXTENSION)
+            self.flat_picCopy = self.flat_pic.copy()
+            self.flat_picCopyResize = self.flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC), Image.ANTIALIAS)
+            self.flat_picTk = ImageTk.PhotoImage(image=self.flat_picCopyResize)
+            self.label_flat.configure(image=self.flat_picTk)
+            tipology = tree_item_split[3]
+            tipology_split = tipology.split("_",1)
+            if (len(tipology_split)>1): # to avoid the LC1 case
+                n_rooms = tipology_split[1][:1] #save only the integer related with the n_rooms
+                self.tb_room.configure(text=n_rooms + " DORMITORIO/S")
+                coordinates = searchLocation(tree_item_split[0], tree_item)
+                self.tb_place.configure(text=" | " + coordinates)
+                #print(coordinates)
+            else: # LC1 case selected
+                coordinates = searchLocation(tree_item_split[0], tree_item)
+                self.tb_place.configure(teext=" | " + coordinates)
+                #print(coordinates)
 
 App()
