@@ -111,7 +111,7 @@ class App():
                     #print(coordinates)
                 else:  # LC1 case selected
                     coordinates = searchLocation(file_name_split[0], file_name)
-                    self.tb_place.configure(teext=" | " + coordinates)
+                    self.tb_place.configure(text=" | " + coordinates)
                     #print(coordinates)
 
     # Method executed when a item in lb_room is selected
@@ -159,7 +159,7 @@ class App():
                 #print(coordinates)
             else: # LC1 case selected
                 coordinates = searchLocation(tree_item_split[0], tree_item)
-                self.tb_place.configure(teext=" | " + coordinates)
+                self.tb_place.configure(text=" | " + coordinates)
                 #print(coordinates)
 
 App()
