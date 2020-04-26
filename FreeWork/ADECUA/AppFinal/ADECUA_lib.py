@@ -1,8 +1,10 @@
 from tkinter import *
+from tkinter import ttk
+from PIL import Image, ImageTk
 import openpyxl
 
 # root window attributes
-WIN_SIZE = "1366x768"
+WIN_SIZE = "1400x800"
 WIN_TITLE = "ADECUA"
 PIC_EXTENSION = ".jpg"
 PIC_PATH = "./pics/"
@@ -27,11 +29,39 @@ BLK1_Y1 = 115
 BLK1_Y2 = 135
 
 def searchLocation(worksheet, tree_item):
+	# It is used in "loadPic" method to search the coordinates of the flat.
+
 	wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
 	ws = wb[worksheet]
 	for i in range(WS_ROW_START, ws.max_row + 1):
 		if (ws["K" + str(i)].value == tree_item):
 			return ws["H" + str(i)].value
+
+def loadPic(label_flat, tb_room, tb_place, item, item_split):
+	if len(item_split) == N_ITEMS:  # Only load pics when tipololy tree view is selected
+		flat_pic = Image.open(PIC_PATH + item + PIC_EXTENSION)
+		flat_picCopy = flat_pic.copy()
+		print(flat_picCopy)
+		flat_picCopyResize = flat_picCopy.resize((WIDTH_FLATPIC, HEIGHT_FLATPIC),
+												 Image.ANTIALIAS)
+		flat_picTk = ImageTk.PhotoImage(image=flat_picCopyResize)
+		print(flat_picTk)
+		label_flat.configure(image=flat_picTk)
+		tipology = item_split[3]
+		tipology_split = tipology.split("_", 1)
+		if (len(tipology_split) > 1):  # to avoid the LC1 case
+			n_rooms = tipology_split[1][:1]  # save only the integer related with the n_rooms
+			tb_room.configure(text=n_rooms + " DORMITORIO/S")
+			coordinates = searchLocation(item_split[0], item)
+			tb_place.configure(text=" | " + coordinates)
+			#print(coordinates)
+		else:  # LC1 case selected
+			coordinates = searchLocation(item_split[0], item)
+			tb_place.configure(text=" | " + coordinates)
+			#print(coordinates)
+
+		return flat_picTk
+
 
 def addItemsTreeview(Treeview):
     # adding elements to the tree. The previous tree label is indicated
