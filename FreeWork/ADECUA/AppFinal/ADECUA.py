@@ -83,7 +83,6 @@ class App():
             item_str_split = item_str.split(" | ")
             file_name = item_str_split[0]
             file_name_split = file_name.split("-")
-            print(file_name_split)
             self.tree_view.item(file_name_split[0], open=True)
             self.tree_view.item(file_name_split[0] + "-" +
                                 file_name_split[1], open=True)
@@ -104,7 +103,13 @@ class App():
                 tipology = file_name_split[3]
                 tipology_split = tipology.split("_", 1)
                 if (len(tipology_split) > 1):  # to avoid the LC1 case
-                    n_rooms = tipology_split[1][:1]  # save only the integer related with the n_rooms
+                    if re.search(r"\+", file_name) != None:
+                        # check for this tipology construction: 3MF_0D.A_DA+3MF_2D.A1_DA
+                        tip_room = re.findall(r"[0-9]+D", file_name)
+                        tip_room_add = str(int(tip_room[0][:1]) + int(tip_room[1][:1]))
+                        n_rooms = tip_room_add
+                    else:  # check for this tipology construction: 3MF_1D.B
+                        n_rooms = tipology_split[1][:1]  # save only the integer related with the n_rooms
                     self.tb_room.configure(text=n_rooms + " DORMITORIO/S")
                     coordinates = searchLocation(file_name_split[0], file_name)
                     self.tb_place.configure(text=" | " + coordinates)
@@ -120,14 +125,24 @@ class App():
         item_sel = item_click.curselection()
         #item_str = item_click.get(item_sel[0])
         if len(item_sel) > 0: # to avoid error when other listbox item is selected
-            item_search = str(item_sel[0]) + "D"
+            item_search = str(item_sel[0]+1) + "D"
             # check room coincidences
             lb_roomplace_add = []
             for i in range(len(self.file_names)):  # num max. of rows
                 for j in range(len(self.file_names[0])):  # num max of cols
-                    if re.search(item_search, self.file_names[i][j]) != None:
-                        lb_roomplace_add.append(self.file_names[i][j] + " | " +
-                                                self.file_places[i][j])
+                    if re.search(r"\+", self.file_names[i][j]) != None:
+                        # check for this tipology construction: 3MF_0D.A_DA+3MF_2D.A1_DA
+                        tip_room = re.findall(r"[0-9]+D", self.file_names[i][j])
+                        tip_room_add = str(int(tip_room[0][:1]) + int(tip_room[1][:1])) + "D"
+                        if tip_room_add == item_search:
+                            lb_roomplace_add.append(self.file_names[i][j] + " | " +
+                                                    self.file_places[i][j])
+
+                    else:
+                        # check for this tipology construction: 3MF_1D.B
+                        if re.search(item_search, self.file_names[i][j]) != None:
+                            lb_roomplace_add.append(self.file_names[i][j] + " | " +
+                                                    self.file_places[i][j])
 
             # Adding rooms and coordinates to lb_roomplace
             self.lb_roomplace.delete(0, END)  # delete listbox items before add new ones.
@@ -152,7 +167,13 @@ class App():
             tipology = tree_item_split[3]
             tipology_split = tipology.split("_",1)
             if (len(tipology_split)>1): # to avoid the LC1 case
-                n_rooms = tipology_split[1][:1] #save only the integer related with the n_rooms
+                if re.search(r"\+", tree_item) != None:
+                    # check for this tipology construction: 3MF_0D.A_DA+3MF_2D.A1_DA
+                    tip_room = re.findall(r"[0-9]+D", tree_item)
+                    tip_room_add = str(int(tip_room[0][:1]) + int(tip_room[1][:1]))
+                    n_rooms = tip_room_add
+                else: # check for this tipology construction: 3MF_1D.B
+                    n_rooms = tipology_split[1][:1] #save only the integer related with the n_rooms
                 self.tb_room.configure(text=n_rooms + " DORMITORIO/S")
                 coordinates = searchLocation(tree_item_split[0], tree_item)
                 self.tb_place.configure(text=" | " + coordinates)

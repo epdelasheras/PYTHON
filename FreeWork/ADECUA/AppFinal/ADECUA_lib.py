@@ -22,12 +22,6 @@ NAMESTRUCTURE = "Estructura "
 NAMEPROFILE = "Perfil "
 NAMEFLOOR = "Planta "
 
-# Floor pic areas
-BLK1_X1 = 40
-BLK1_X2 = 125
-BLK1_Y1 = 115
-BLK1_Y2 = 135
-
 def searchLocation(worksheet, tree_item):
 	# It is used in "loadPic" method to search the coordinates of the flat.
 
@@ -133,8 +127,13 @@ def addItemsListboxRoom(Listbox, file_names):
 		for j in range(len(file_names[0])): #num max of cols
 			if len(re.findall(r"[0-9]+D", file_names[i][j])) > 0: #skip flat with no rooms
 				tipology_room = re.findall(r"[0-9]+D", file_names[i][j])
-				for k in range(len(tipology_room)):
-					n_room.append(tipology_room[k])
+				if len(tipology_room) > 1:
+					# check for this tipology construction: 3MF_0D.A_DA+3MF_2D.A1_DA
+					room_add = str(int(tipology_room[0][:1]) + int(tipology_room[1][:1])) + "D"
+					n_room.append(room_add)
+				else:
+					# check for this tipology construction: 3MF_1D.B
+					n_room.append(tipology_room[0])
 
 	# removing duplicated items of the listbox
 	n_room = list(set(n_room))
@@ -142,6 +141,6 @@ def addItemsListboxRoom(Listbox, file_names):
 
 	# Adding rooms to the listbox
 	for i in range(len(n_room)):
-		Listbox.insert(i, str(i) + " Dormitorio/s")
+		Listbox.insert(i, str(i+1) + " Dormitorio/s")
 
 	return n_room
