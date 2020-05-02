@@ -82,6 +82,7 @@ class App():
             item_str = item_click.get(item_sel[0])
             item_str_split = item_str.split(" | ")
             file_name = item_str_split[0]
+            print(file_name)
             file_name_split = file_name.split("-")
             self.tree_view.item(file_name_split[0], open=True)
             self.tree_view.item(file_name_split[0] + "-" +
@@ -129,7 +130,7 @@ class App():
             # check room coincidences
             lb_roomplace_add = []
             for i in range(len(self.file_names)):  # num max. of rows
-                for j in range(len(self.file_names[0])):  # num max of cols
+                for j in range(len(self.file_names[i])):  # num max of cols
                     if re.search(r"\+", self.file_names[i][j]) != None:
                         # check for this tipology construction: 3MF_0D.A_DA+3MF_2D.A1_DA
                         tip_room = re.findall(r"[0-9]+D", self.file_names[i][j])
