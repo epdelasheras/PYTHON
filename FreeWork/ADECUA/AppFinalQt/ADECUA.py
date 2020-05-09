@@ -35,7 +35,10 @@ class ClickListRoom(QtWidgets.QListWidget):
         super(ClickListRoom, self).mousePressEvent(event)
 
     def on_item_clicked(self, item):
-        print(item.text(), self._mouse_button)
+        #print(item.text(), self._mouse_button)
+        item_search = str(self.currentRow()+1) + "D"
+        print(item_search)
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -67,8 +70,6 @@ class Ui_MainWindow(object):
         self.layout_hsplitter.setObjectName("layout_hsplitter")
 
         # create tree view
-        #self.tree_view = QtWidgets.QTreeView(self.layout_hsplitter)
-        #self.tree_view = QtWidgets.QTreeWidget(self.layout_hsplitter)
         self.tree_view = ClickTree(self.layout_hsplitter)
         self.tree_view.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
