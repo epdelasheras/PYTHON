@@ -10,11 +10,32 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from ADECUA_lib import *
 
 class ClickTree(QtWidgets.QTreeWidget):
-    clicked = QtCore.pyqtSignal()
+    def __init__(self, parent=None):
+        super(ClickTree, self).__init__(parent)
+        self.itemClicked.connect(self.on_item_clicked)
 
     def mousePressEvent(self, event):
-        self.clicked.emit()
-        QtWidgets.QTreeWidget.mousePressEvent(self, event)
+        self._mouse_button = event.button()
+        super(ClickTree, self).mousePressEvent(event)
+
+    def on_item_clicked(self):
+        item_sel = self.selectedItems()
+        if item_sel:
+            item_val = item_sel[0]
+            item_txt = item_val.text(0)
+            print(item_txt)
+
+class ClickListRoom(QtWidgets.QListWidget):
+    def __init__(self, parent=None):
+        super(ClickListRoom, self).__init__(parent)
+        self.itemClicked.connect(self.on_item_clicked)
+
+    def mousePressEvent(self, event):
+        self._mouse_button = event.button()
+        super(ClickListRoom, self).mousePressEvent(event)
+
+    def on_item_clicked(self, item):
+        print(item.text(), self._mouse_button)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -70,13 +91,14 @@ class Ui_MainWindow(object):
         self.layout_vsplitter.setOrientation(QtCore.Qt.Vertical)
         self.layout_vsplitter.setObjectName("layout_vsplitter")
 
-        # create tb_room label
+        # create tb_room label        
         self.tb_room = QtWidgets.QLabel(self.layout_vsplitter)
         self.tb_room.setMaximumSize(QtCore.QSize(280, 100))
         self.tb_room.setObjectName("tb_room")
 
         # create lb_room widget
-        self.lb_room = QtWidgets.QListWidget(self.layout_vsplitter)
+        self.lb_room = ClickListRoom(self.layout_vsplitter)
+        #self.lb_room = QtWidgets.QListWidget(self.layout_vsplitter)
         self.lb_room.setMaximumSize(QtCore.QSize(280, 100))
         self.lb_room.setObjectName("lb_room")
 
@@ -140,17 +162,9 @@ class Ui_MainWindow(object):
         #self.tree_view.expandToDepth(0)
         #self.tree_view.setCurrentItem(adios)
         self.file_names, self.file_places, self.file_tipo = addItemsTreeview(self.tree_view)
-        self.tree_view.clicked.connect(self.treeItemSel)
 
-    # Method used to identify item selected on the Treeview.
-    def treeItemSel(self):
-        # get the tree selected item
-        getSelected = self.tree_view.selectedItems()
-
-        if getSelected:
-            baseNode = getSelected[0]
-            getChildNode = baseNode.text(0)
-            print(getChildNode)
+        #Add number of rooms to choose to the listbox
+        self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
 
 if __name__ == "__main__":
     import sys
