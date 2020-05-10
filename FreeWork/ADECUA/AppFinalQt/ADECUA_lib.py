@@ -144,3 +144,25 @@ def addItemsListboxRoom(Listbox, file_names):
         Listbox.insertItem(i, str(i+1) + " Dormitorio/s")
 
     return n_room
+
+def addItemsListboxRoomPlace(Listbox, file_names, file_places, item):
+    # Add tipologies and coordinates to lb_roomplace
+    Listbox_add = []
+    for i in range(len(file_names)):  # num max. of rows
+        for j in range(len(file_names[i])):  # num max of cols
+            if re.search(r"\+", file_names[i][j]) != None:
+                # check for this tipology construction: 3MF_0D.A_DA+3MF_2D.A1_DA
+                tip_room = re.findall(r"[0-9]+D", file_names[i][j])
+                tip_room_add = str(int(tip_room[0][:1]) + int(tip_room[1][:1])) + "D"
+                if tip_room_add == item:
+                    Listbox_add.append(file_names[i][j] + " | " + file_places[i][j])
+
+            else:
+                # check for this tipology construction: 3MF_1D.B
+                if re.search(item, file_names[i][j]) != None:
+                    Listbox_add.append(file_names[i][j] + " | " + file_places[i][j])
+
+                    # Adding rooms and coordinates to Listbox
+    Listbox.clear()  # delete listbox items before add new ones.
+    for i in range(len(Listbox_add)):
+        Listbox.insertItem(i, Listbox_add[i])

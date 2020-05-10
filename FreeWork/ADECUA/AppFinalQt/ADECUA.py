@@ -142,8 +142,11 @@ class Ui_MainWindow(object):
     # when one item is selected...
         item_search = str(self.lb_room.currentRow() + 1) + "D"
         print(item_search)
+        addItemsListboxRoomPlace(self.lb_roomplace, self.file_names,
+                                 self.file_places, item_search)
 
     def TreeItemSel(self):
+    # when one item is selected...
         item_sel = self.tree_view.selectedItems()
         if item_sel:
             item_val = item_sel[0]
