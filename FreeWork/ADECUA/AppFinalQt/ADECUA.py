@@ -9,37 +9,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ADECUA_lib import *
 
-class ClickTree(QtWidgets.QTreeWidget):
-    def __init__(self, parent=None):
-        super(ClickTree, self).__init__(parent)
-        self.itemClicked.connect(self.on_item_clicked)
-
-    def mousePressEvent(self, event):
-        self._mouse_button = event.button()
-        super(ClickTree, self).mousePressEvent(event)
-
-    def on_item_clicked(self):
-        item_sel = self.selectedItems()
-        if item_sel:
-            item_val = item_sel[0]
-            item_txt = item_val.text(0)
-            print(item_txt)
-
-class ClickListRoom(QtWidgets.QListWidget):
-    def __init__(self, parent=None):
-        super(ClickListRoom, self).__init__(parent)
-        self.itemClicked.connect(self.on_item_clicked)
-
-    def mousePressEvent(self, event):
-        self._mouse_button = event.button()
-        super(ClickListRoom, self).mousePressEvent(event)
-
-    def on_item_clicked(self, item):
-        #print(item.text(), self._mouse_button)
-        item_search = str(self.currentRow()+1) + "D"
-        print(item_search)
-
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         # Create and configure the "MainWindow"
@@ -163,9 +132,41 @@ class Ui_MainWindow(object):
         #self.tree_view.expandToDepth(0)
         #self.tree_view.setCurrentItem(adios)
         self.file_names, self.file_places, self.file_tipo = addItemsTreeview(self.tree_view)
+        self.tree_view.left_click.connect(self.TreeItemSel)
 
         #Add number of rooms to choose to the listbox
         self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
+        self.lb_room.left_click.connect(self.ListRoomSel)
+
+    def ListRoomSel(self):
+    # when one item is selected...
+        item_search = str(self.lb_room.currentRow() + 1) + "D"
+        print(item_search)
+
+    def TreeItemSel(self):
+        item_sel = self.tree_view.selectedItems()
+        if item_sel:
+            item_val = item_sel[0]
+            item_txt = item_val.text(0)
+            print(item_txt)
+
+class ClickListRoom(QtWidgets.QListWidget):
+# Handling mouse clicks on listbox
+    left_click = QtCore.pyqtSignal()
+
+    def mousePressEvent(self, event):
+        super(ClickListRoom, self).mousePressEvent(event)
+        if event.button() == QtCore.Qt.LeftButton:
+            self.left_click.emit()
+
+class ClickTree(QtWidgets.QTreeWidget):
+# Handling mouse clicks on treeview
+    left_click = QtCore.pyqtSignal()
+
+    def mousePressEvent(self, event):
+        super(ClickTree, self).mousePressEvent(event)
+        if event.button() == QtCore.Qt.LeftButton:
+            self.left_click.emit()
 
 if __name__ == "__main__":
     import sys
