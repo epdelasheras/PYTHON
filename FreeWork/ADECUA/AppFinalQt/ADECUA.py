@@ -39,7 +39,8 @@ class Ui_MainWindow(object):
         self.layout_hsplitter.setObjectName("layout_hsplitter")
 
         # create tree view
-        self.tree_view = ClickTree(self.layout_hsplitter)
+        #self.tree_view = ClickTree(self.layout_hsplitter)
+        self.tree_view = QtWidgets.QTreeWidget(self.layout_hsplitter)
         self.tree_view.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -67,8 +68,7 @@ class Ui_MainWindow(object):
         self.tb_room.setObjectName("tb_room")
 
         # create lb_room widget
-        self.lb_room = ClickListRoom(self.layout_vsplitter)
-        #self.lb_room = QtWidgets.QListWidget(self.layout_vsplitter)
+        self.lb_room = QtWidgets.QListWidget(self.layout_vsplitter)
         self.lb_room.setMaximumSize(QtCore.QSize(280, 100))
         self.lb_room.setObjectName("lb_room")
 
@@ -132,11 +132,12 @@ class Ui_MainWindow(object):
         #self.tree_view.expandToDepth(0)
         #self.tree_view.setCurrentItem(adios)
         self.file_names, self.file_places, self.file_tipo = addItemsTreeview(self.tree_view)
-        self.tree_view.left_click.connect(self.TreeItemSel)
+        #self.tree_view.left_click.connect(self.TreeItemSel)
+        self.tree_view.clicked.connect(self.TreeItemSel)
 
         #Add number of rooms to choose to the listbox
         self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
-        self.lb_room.left_click.connect(self.ListRoomSel)
+        self.lb_room.clicked.connect(self.ListRoomSel)
 
     def ListRoomSel(self):
     # when one item is selected...
@@ -153,23 +154,7 @@ class Ui_MainWindow(object):
             item_txt = item_val.text(0)
             print(item_txt)
 
-class ClickListRoom(QtWidgets.QListWidget):
-# Handling mouse clicks on listbox
-    left_click = QtCore.pyqtSignal()
 
-    def mousePressEvent(self, event):
-        super(ClickListRoom, self).mousePressEvent(event)
-        if event.button() == QtCore.Qt.LeftButton:
-            self.left_click.emit()
-
-class ClickTree(QtWidgets.QTreeWidget):
-# Handling mouse clicks on treeview
-    left_click = QtCore.pyqtSignal()
-
-    def mousePressEvent(self, event):
-        super(ClickTree, self).mousePressEvent(event)
-        if event.button() == QtCore.Qt.LeftButton:
-            self.left_click.emit()
 
 if __name__ == "__main__":
     import sys
