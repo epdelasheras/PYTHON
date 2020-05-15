@@ -52,6 +52,14 @@ def addItemsTreeview(Treeview):
     Treeview.setColumnCount(1)
     Treeview.setHeaderLabel("ARBOL DE SELECCIÓN")
 
+    # Create temporañ workbook excel file to do relation between
+    # pictures file names and treewidget items
+    wb_temp = openpyxl.Workbook()
+
+    ws_temp = wb_temp.active
+    ws_temp.title = "picnames"
+    ws_temp_cnt = int(1)
+
     # Loop to read all worsheets of the excel book
     for n_sheet in range(len(lst_ws)):
 
@@ -104,7 +112,11 @@ def addItemsTreeview(Treeview):
                         type_split = type.split("-")
                         if re.fullmatch(floor, lst_struct_prof_floor[k]) != None:
                             tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3]])
+                            ws_temp["A" + str(ws_temp_cnt)] = type
+                            ws_temp["B"+str(ws_temp_cnt)] = str(tree_type)
+                            ws_temp_cnt += 1
 
+        wb_temp.save(filename="temp.xlsx")
 
         # Create a list with all the filenames to be used in other parts of the program
         ws_fname.append(lst_fname)
@@ -116,7 +128,6 @@ def addItemsTreeview(Treeview):
         ws_ftipo.append(lst_ftipo)
 
     return ws_fname, ws_fplace, ws_ftipo
-
 
 def addItemsListboxRoom(Listbox, file_names):
     # Adding items to the listbox

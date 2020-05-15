@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ADECUA_lib import *
+import openpyxl
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -39,7 +40,6 @@ class Ui_MainWindow(object):
         self.layout_hsplitter.setObjectName("layout_hsplitter")
 
         # create tree view
-        #self.tree_view = ClickTree(self.layout_hsplitter)
         self.tree_view = QtWidgets.QTreeWidget(self.layout_hsplitter)
         self.tree_view.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -132,12 +132,36 @@ class Ui_MainWindow(object):
         #self.tree_view.expandToDepth(0)
         #self.tree_view.setCurrentItem(adios)
         self.file_names, self.file_places, self.file_tipo = addItemsTreeview(self.tree_view)
-        #self.tree_view.left_click.connect(self.TreeItemSel)
-        self.tree_view.clicked.connect(self.TreeItemSel)
+        self.tree_view.itemClicked.connect(self.TreeItemSel)
+        self.tree_view.itemExpanded.connect(self.TreeItemSel)
+        self.tree_view_selitems = []
 
         #Add number of rooms to choose to the listbox
         self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
         self.lb_room.clicked.connect(self.ListRoomSel)
+
+    def TreeItemSel(self):
+    # when one item is selected...
+        item_sel = self.tree_view.selectedItems()
+        if item_sel:
+            item_sel_txt = item_sel[0].text(0)
+            print(item_sel[0])
+            #print(item_sel_txt)
+            wb_temp = openpyxl.load_workbook("./temp.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+            ws_temp = wb_temp.active
+            for i in range(1, ws_temp.max_row + 1):
+                if ws_temp["B"+str(i+1)].value == str(item_sel[0]):
+                    print(ws_temp["B" + str(i + 1)].value)
+                    picname = ws_temp["A"+str(i+1)].value
+                    print(picname)
+                    print(PIC_PATH + picname + ".jpg")
+                    load_pic = QtGui.QPixmap(PIC_PATH + picname + ".jpg")
+                    load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
+                                               # QtCore.Qt.KeepAspectRatioByExpanding,
+                                               # QtCore.Qt.KeepAspectRatio,
+                                               QtCore.Qt.IgnoreAspectRatio,
+                                               QtCore.Qt.SmoothTransformation)
+                    self.flat_pic.setPixmap(load_pic)
 
     def ListRoomSel(self):
     # when one item is selected...
@@ -145,16 +169,6 @@ class Ui_MainWindow(object):
         print(item_search)
         addItemsListboxRoomPlace(self.lb_roomplace, self.file_names,
                                  self.file_places, item_search)
-
-    def TreeItemSel(self):
-    # when one item is selected...
-        item_sel = self.tree_view.selectedItems()
-        if item_sel:
-            item_val = item_sel[0]
-            item_txt = item_val.text(0)
-            print(item_txt)
-
-
 
 if __name__ == "__main__":
     import sys
