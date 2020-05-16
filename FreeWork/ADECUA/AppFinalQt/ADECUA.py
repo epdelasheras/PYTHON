@@ -119,56 +119,66 @@ class Ui_MainWindow(object):
         self.file_open.setText(_translate("MainWindow", "Abrir"))
         self.file_quit.setText(_translate("MainWindow", "Salir"))
 
+        # Customization of the label which shows Nroom and coodinates
+        self.tb_room.setStyleSheet(" font-size: 14px; qproperty-alignment: AlignCenter; "
+                                   "border: 1px solid black; ")
+        self.tb_room.setText("Coordenadas|NºHabitaciones")
+
         # load default image in flat_pic label
         load_pic = QtGui.QPixmap(PIC_PATH + "Diseño Base y Variante 1_2.jpg")
         load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
-                             #QtCore.Qt.KeepAspectRatioByExpanding,
-                             #QtCore.Qt.KeepAspectRatio,
                              QtCore.Qt.IgnoreAspectRatio,
                              QtCore.Qt.SmoothTransformation)
         self.flat_pic.setPixmap(load_pic)
 
-        # Add tree items
-        #self.tree_view.expandToDepth(0)
-        #self.tree_view.setCurrentItem(adios)
-        self.file_names, self.file_places, self.file_tipo = addItemsTreeview(self.tree_view)
+        # Add tree items and connect tree_view with mouse click
+        self.tree_widget_items = addItemsTreeview(self.tree_view)
         self.tree_view.itemClicked.connect(self.TreeItemSel)
         self.tree_view.itemExpanded.connect(self.TreeItemSel)
         self.tree_view_selitems = []
 
-        #Add number of rooms to choose to the listbox
-        self.n_room = addItemsListboxRoom(self.lb_room, self.file_names)
+        # Add number of rooms to choose to the listbox and connect lb_room with mouse click
+        lbRoomAddItems(self.lb_room)
         self.lb_room.clicked.connect(self.ListRoomSel)
+
+        # Connect lb_roomplace with mouse click
+        self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
 
     def TreeItemSel(self):
     # when one item is selected...
         item_sel = self.tree_view.selectedItems()
+        print(item_sel)
         if item_sel:
-            item_sel_txt = item_sel[0].text(0)
-            print(item_sel[0])
+            #item_sel_txt = item_sel[0].text(0)
             #print(item_sel_txt)
-            wb_temp = openpyxl.load_workbook("./temp.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
-            ws_temp = wb_temp.active
-            for i in range(1, ws_temp.max_row + 1):
-                if ws_temp["B"+str(i+1)].value == str(item_sel[0]):
-                    print(ws_temp["B" + str(i + 1)].value)
-                    picname = ws_temp["A"+str(i+1)].value
-                    print(picname)
-                    print(PIC_PATH + picname + ".jpg")
-                    load_pic = QtGui.QPixmap(PIC_PATH + picname + ".jpg")
-                    load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
-                                               # QtCore.Qt.KeepAspectRatioByExpanding,
-                                               # QtCore.Qt.KeepAspectRatio,
-                                               QtCore.Qt.IgnoreAspectRatio,
-                                               QtCore.Qt.SmoothTransformation)
-                    self.flat_pic.setPixmap(load_pic)
+            print(item_sel[0])
+            treeViewLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room)
 
     def ListRoomSel(self):
     # when one item is selected...
-        item_search = str(self.lb_room.currentRow() + 1) + "D"
-        print(item_search)
-        addItemsListboxRoomPlace(self.lb_roomplace, self.file_names,
-                                 self.file_places, item_search)
+        item_sel = str(self.lb_room.currentRow() + 1) + "D"
+        #print(item_sel)
+        lbRoomPlaceAddItems(item_sel, self.lb_roomplace)
+
+    def ListRoomPlaceSel(self):
+    # when one item is selected...
+        item_sel = str(self.lb_roomplace.currentItem().text())
+        print(item_sel)
+        lbRoomPlaceLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room)
+
+        wb_temp = openpyxl.load_workbook("./temp.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+        ws_temp = wb_temp.active
+        for i in range(1, ws_temp.max_row + 1):
+            if ws_temp["A" + str(i)].value == item_sel:
+                treeitem = ws_temp["B" + str(i)].value
+                print(treeitem)
+
+        for i in range(len(self.tree_widget_items)):
+            if treeitem == str(self.tree_widget_items[i]):
+                print(self.tree_widget_items[i])
+                self.tree_view.setItemExpanded(self.tree_widget_items[i], True)
+        #self.tree_view.setCurrentItem(item_sel)
+
 
 if __name__ == "__main__":
     import sys
