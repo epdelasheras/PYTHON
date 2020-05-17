@@ -129,7 +129,18 @@ class Ui_MainWindow(object):
         self.tree_view.itemExpanded.connect(self.TreeItemSel)
         self.lb_room.clicked.connect(self.ListRoomSel)
         self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
+        self.file_open.triggered.connect(self.MenuArhiveOpen)
+        self.file_quit.triggered.connect(self.MenuArhiveQuit)
 
+    def MenuArhiveOpen(self):
+        dialog = QtWidgets.QMessageBox()
+        dialog.setIcon(QtWidgets.QMessageBox.Warning)
+        dialog.setText("Esta opción aun no esta implementada")
+        dialog.addButton(QtWidgets.QMessageBox.Ok)
+        dialog.exec()
+
+    def MenuArhiveQuit(self):
+        self.close
 
     def TreeItemSel(self):
     # when one item is selected...
@@ -144,9 +155,11 @@ class Ui_MainWindow(object):
 
     def ListRoomSel(self):
     # when one item is selected...
-        item_sel = str(self.lb_room.currentRow() + 1) + "D"
+        #item_sel = str(self.lb_room.currentRow() + 1) + "D"
         #print(item_sel)
-        lbRoomPlaceAddItems(item_sel, self.lb_roomplace)
+        item_sel = self.lb_room.selectedItems()
+        item = item_sel[0].text()
+        lbRoomPlaceAddItems(item, self.lb_roomplace)
 
     def ListRoomPlaceSel(self):
     # when one item is selected...

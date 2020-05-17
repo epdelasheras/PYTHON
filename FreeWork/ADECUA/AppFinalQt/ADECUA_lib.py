@@ -234,6 +234,9 @@ def lbRoomAddItems(Listbox):
     # create list with number of rooms
     lst_nrooms = []
 
+    # create a var to figure out if there are LCXX types in the excel file
+    lc_cnt = int(0)
+
     # Loop to read all worsheets of the excel book
     for n_sheet in range(len(lst_ws)):
         # saving a copy in memory of the current excel worksheet to process
@@ -241,6 +244,8 @@ def lbRoomAddItems(Listbox):
         for i in range(WS_ROW_START, ws.max_row + 1):
             if re.match(r"[0-9]", str(ws["I" + str(i)].value)) != None:
                 lst_nrooms.append(ws["I" + str(i)].value)
+            elif str(ws["I" + str(i)].value) == "-" :
+                lc_cnt += 1
 
     # set and sort list
     lst_nrooms_sort = list(set(lst_nrooms))
@@ -250,6 +255,9 @@ def lbRoomAddItems(Listbox):
     for i in range(len(lst_nrooms_sort)):
         Listbox.insertItem(i, str(i+1) + " Dormitorio/s")
 
+    # check for the LCxx types
+    if lc_cnt > 0:
+        Listbox.insertItem(i+1, "- Dormitorio/s")
 
 def lbRoomPlaceAddItems(item, Listbox):
     # Add tipologies and coordinates to lb_roomplace
@@ -264,10 +272,19 @@ def lbRoomPlaceAddItems(item, Listbox):
 
     # print(item[:1])
 
+    # list to save items read from the excel file
+    lst_item = []
+
     # Loop to read all worsheets of the excel book
     for n_sheet in range(len(lst_ws)):
         # saving a copy in memory of the current excel worksheet to process
         ws = wb[lst_ws[n_sheet]]
         for i in range(WS_ROW_START, ws.max_row + 1):
+            #print(str(ws["I" + str(i)].value))
             if item[:1] == str(ws["I" + str(i)].value):
-                Listbox.insertItem(i, ws["K" + str(i)].value)
+                lst_item.append(ws["K" + str(i)].value)
+
+    # add sorting items to the listbox
+    lst_item.sort()
+    for i in range(len(lst_item)):
+        Listbox.insertItem(i, lst_item[i])
