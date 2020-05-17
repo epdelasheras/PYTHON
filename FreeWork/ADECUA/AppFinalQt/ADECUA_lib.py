@@ -129,15 +129,6 @@ def addItemsTreeview(Treeview):
     #Create main Treeview column
     Treeview.setColumnCount(1)
     Treeview.setHeaderLabel("ARBOL DE SELECCIÓN")
-
-    # Create temporal workbook excel file to do relation between
-    # pictures file names and treewidget items
-    wb_temp = openpyxl.Workbook()
-
-    ws_temp = wb_temp.active
-    ws_temp.title = "picnames"
-    ws_temp_cnt = int(1)
-
     # Create tuplas with all treewidgets
     lst_struct_widget = []
     lst_profile_widget = []
@@ -213,11 +204,6 @@ def addItemsTreeview(Treeview):
                             lst_type_widget.append(tree_type) # add item widget to tupla
                             lst_type_txt.append(type_split[3])  # add widget text to tupla
                             lst_picname.append(type)
-                            ws_temp["A" + str(ws_temp_cnt)] = type
-                            ws_temp["B"+str(ws_temp_cnt)] = str(tree_type)
-                            ws_temp_cnt += 1
-
-        wb_temp.save(filename="temp.xlsx")
 
     return lst_struct_widget, lst_profile_widget, lst_floor_widget, lst_type_widget, \
            lst_struct_txt, lst_profile_txt, lst_floor_txt, lst_type_txt, lst_picname
