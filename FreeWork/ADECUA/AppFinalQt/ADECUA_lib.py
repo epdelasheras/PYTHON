@@ -24,6 +24,33 @@ NAMESTRUCTURE = "Estructura "
 NAMEPROFILE = "Perfil "
 NAMEFLOOR = "Planta "
 
+
+def defGuiConfig(tb_room, flat_pic, tree_view, lb_room):
+    # Customization of the label which shows Nroom and coodinates
+    tb_room.setStyleSheet(" font-size: 14px; qproperty-alignment: AlignCenter; "
+                               "border: 1px solid black; ")
+    tb_room.setText("Coordenadas|NºHabitaciones")
+
+    # load default image in flat_pic label
+    load_pic = QtGui.QPixmap(PIC_PATH + "Diseño Base y Variante 1_2.jpg")
+    load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
+                               QtCore.Qt.IgnoreAspectRatio,
+                               QtCore.Qt.SmoothTransformation)
+    flat_pic.setPixmap(load_pic)
+
+
+
+    # Add number of rooms to choose to the listbox and connect lb_room with mouse click
+    lbRoomAddItems(lb_room)
+
+    # Add tree items and connect tree_view with mouse click
+    qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type, tree_struct, tree_profile, \
+    tree_floor, tree_type, tree_picname = addItemsTreeview(tree_view)
+
+    return qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type, tree_struct, \
+           tree_profile, tree_floor, tree_type, tree_picname
+
+
 def givemeNroomLocation(worksheet, tree_item):
     # It is used in "loadPic" method to search the coordinates of the flat.
     wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
@@ -32,39 +59,61 @@ def givemeNroomLocation(worksheet, tree_item):
         if (ws["K" + str(i)].value == tree_item):
             return ws["H" + str(i)].value, ws["I" + str(i)].value
 
-def lbRoomPlaceLoadImageAndLocation(item_sel, flat_pic, tb_room):
-    # It is used to load images and coordinates into flat pic label and tb_room from lb_roomplace widget
-
-    # load flat_pic
-    load_pic = QtGui.QPixmap(PIC_PATH + item_sel + ".jpg")
-    load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
-                               QtCore.Qt.IgnoreAspectRatio,
-                               QtCore.Qt.SmoothTransformation)
-    flat_pic.setPixmap(load_pic)
-
-    #load n_rooms and coordinates
-    item_sel_split = item_sel.split("-", 1)
-    location, n_room = givemeNroomLocation(item_sel_split[0], item_sel)
-    tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")
-
-def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room):
+def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tree_picname):
     # It is used to load images and coordinates into flat pic label and tb_room from tree_view widget
-    wb_temp = openpyxl.load_workbook("./temp.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
-    ws_temp = wb_temp.active
-    for i in range(1, ws_temp.max_row + 1):
-        if ws_temp["B" + str(i)].value == str(item_sel[0]):
-            picname = ws_temp["A" + str(i)].value
+    for i in range(len(qtwidget_type)):
+        if qtwidget_type[i] == item_sel[0]:
+            picname = tree_picname[i]
             load_pic = QtGui.QPixmap(PIC_PATH + picname + ".jpg")
             load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
                                        QtCore.Qt.IgnoreAspectRatio,
                                        QtCore.Qt.SmoothTransformation)
             flat_pic.setPixmap(load_pic)
             picname_split = picname.split("-", 1)
-            print(picname_split)
+            #print(picname_split)
             location, n_room = givemeNroomLocation(picname_split[0], picname)
-            print(location, n_room)
+            #print(location, n_room)
             tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")
 
+def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
+                   qtwidget_floor,qtwidget_type, tree_view, item_sel):
+    #It is used to expand a specific item on the tree_view
+
+    item_sel_split = item_sel.split("-")
+    #print(item_sel_split)
+
+    item_struct = NAMESTRUCTURE + item_sel_split[0]
+    item_profile = NAMEPROFILE + item_sel_split[1]
+    item_floor = NAMEFLOOR + item_sel_split[2]
+    item_type = item_sel_split[3]
+
+    #print(item_struct)
+    #print(item_profile)
+    #print(item_floor)
+
+    # collapse the complete tree before expanding a new item
+    tree_view.collapseAll()
+
+    # un-select all items
+    for i in range(len(tree_type)):
+        qtwidget_type[i].setSelected(False)
+
+    # expanding every item on tree one by one
+    for i in range(len(tree_struct)):
+        if tree_struct[i] == item_struct:
+            qtwidget_struct[i].setExpanded(True)
+
+    for i in range(len(tree_profile)):
+        if tree_profile[i] == item_profile:
+            qtwidget_profile[i].setExpanded(True)
+
+    for i in range(len(tree_floor)):
+        if tree_floor[i] == item_floor:
+            qtwidget_floor[i].setExpanded(True)
+
+    for i in range(len(tree_type)):
+        if tree_type[i] == item_type:
+            qtwidget_type[i].setSelected(True)
 
 def addItemsTreeview(Treeview):
     # adding elements to the tree. The previous tree label is indicated
@@ -99,7 +148,7 @@ def addItemsTreeview(Treeview):
     lst_profile_txt = []
     lst_floor_txt = []
     lst_type_txt = []
-
+    lst_picname = []
 
     # Loop to read all worsheets of the excel book
     for n_sheet in range(len(lst_ws)):
@@ -162,6 +211,7 @@ def addItemsTreeview(Treeview):
                             tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3]])
                             lst_type_widget.append(tree_type) # add item widget to tupla
                             lst_type_txt.append(type_split[3])  # add widget text to tupla
+                            lst_picname.append(type)
                             ws_temp["A" + str(ws_temp_cnt)] = type
                             ws_temp["B"+str(ws_temp_cnt)] = str(tree_type)
                             ws_temp_cnt += 1
@@ -169,7 +219,7 @@ def addItemsTreeview(Treeview):
         wb_temp.save(filename="temp.xlsx")
 
     return lst_struct_widget, lst_profile_widget, lst_floor_widget, lst_type_widget, \
-           lst_struct_txt, lst_profile_txt, lst_floor_txt ,lst_type_txt
+           lst_struct_txt, lst_profile_txt, lst_floor_txt, lst_type_txt, lst_picname
 
 
 def lbRoomAddItems(Listbox):

@@ -119,42 +119,28 @@ class Ui_MainWindow(object):
         self.file_open.setText(_translate("MainWindow", "Abrir"))
         self.file_quit.setText(_translate("MainWindow", "Salir"))
 
-        # Customization of the label which shows Nroom and coodinates
-        self.tb_room.setStyleSheet(" font-size: 14px; qproperty-alignment: AlignCenter; "
-                                   "border: 1px solid black; ")
-        self.tb_room.setText("Coordenadas|NºHabitaciones")
-
-        # load default image in flat_pic label
-        load_pic = QtGui.QPixmap(PIC_PATH + "Diseño Base y Variante 1_2.jpg")
-        load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
-                             QtCore.Qt.IgnoreAspectRatio,
-                             QtCore.Qt.SmoothTransformation)
-        self.flat_pic.setPixmap(load_pic)
-
-        # Add tree items and connect tree_view with mouse click
+        # load default GUI settings
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
-        self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type = \
-        addItemsTreeview(self.tree_view)
+        self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
+        defGuiConfig(self.tb_room, self.flat_pic, self.tree_view, self.lb_room)
+
+        # mouse click connect functions
         self.tree_view.itemClicked.connect(self.TreeItemSel)
         self.tree_view.itemExpanded.connect(self.TreeItemSel)
-        self.tree_view_selitems = []
-
-        # Add number of rooms to choose to the listbox and connect lb_room with mouse click
-        lbRoomAddItems(self.lb_room)
         self.lb_room.clicked.connect(self.ListRoomSel)
-
-        # Connect lb_roomplace with mouse click
         self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
+
 
     def TreeItemSel(self):
     # when one item is selected...
         item_sel = self.tree_view.selectedItems()
-        print(item_sel)
+        #print(item_sel)
         if item_sel:
             #item_sel_txt = item_sel[0].text(0)
             #print(item_sel_txt)
-            print(item_sel[0])
-            treeViewLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room)
+            #print(item_sel[0])
+            treeViewLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room,\
+                                         self.qtwidget_type, self.tree_picname)
 
     def ListRoomSel(self):
     # when one item is selected...
@@ -166,42 +152,11 @@ class Ui_MainWindow(object):
     # when one item is selected...
         item_sel = str(self.lb_roomplace.currentItem().text())
         #print(item_sel)
-        lbRoomPlaceLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room)
+        expandTreeItem(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
+                       self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
+                       self.qtwidget_type, self.tree_view, item_sel)
 
-        item_sel_split = item_sel.split("-")
-        #print(item_sel_split)
-
-        item_struct = NAMESTRUCTURE + item_sel_split[0]
-        item_profile = NAMEPROFILE + item_sel_split[1]
-        item_floor = NAMEFLOOR + item_sel_split[2]
-        item_type = item_sel_split[3]
-
-        #print(item_struct)
-        #print(item_profile)
-        #print(item_floor)
-
-        # collapse the complete tree before expanding a new item
-        self.tree_view.collapseAll()
-
-        # un-select all items
-        for i in range(len(self.tree_type)):
-            self.qtwidget_type[i].setSelected(False)
-
-        for i in range(len(self.tree_struct)):
-            if self.tree_struct[i] == item_struct:
-                self.qtwidget_struct[i].setExpanded(True)
-
-        for i in range(len(self.tree_profile)):
-            if self.tree_profile[i] == item_profile:
-                self.qtwidget_profile[i].setExpanded(True)
-
-        for i in range(len(self.tree_floor)):
-            if self.tree_floor[i] == item_floor:
-                self.qtwidget_floor[i].setExpanded(True)
-
-        for i in range(len(self.tree_type)):
-            if self.tree_type[i] == item_type:
-                self.qtwidget_type[i].setSelected(True)
+        self.TreeItemSel()
 
 if __name__ == "__main__":
     import sys
