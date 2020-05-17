@@ -132,7 +132,9 @@ class Ui_MainWindow(object):
         self.flat_pic.setPixmap(load_pic)
 
         # Add tree items and connect tree_view with mouse click
-        self.tree_widget_items = addItemsTreeview(self.tree_view)
+        self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
+        self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type = \
+        addItemsTreeview(self.tree_view)
         self.tree_view.itemClicked.connect(self.TreeItemSel)
         self.tree_view.itemExpanded.connect(self.TreeItemSel)
         self.tree_view_selitems = []
@@ -163,22 +165,43 @@ class Ui_MainWindow(object):
     def ListRoomPlaceSel(self):
     # when one item is selected...
         item_sel = str(self.lb_roomplace.currentItem().text())
-        print(item_sel)
+        #print(item_sel)
         lbRoomPlaceLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room)
 
-        wb_temp = openpyxl.load_workbook("./temp.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
-        ws_temp = wb_temp.active
-        for i in range(1, ws_temp.max_row + 1):
-            if ws_temp["A" + str(i)].value == item_sel:
-                treeitem = ws_temp["B" + str(i)].value
-                print(treeitem)
+        item_sel_split = item_sel.split("-")
+        #print(item_sel_split)
 
-        for i in range(len(self.tree_widget_items)):
-            if treeitem == str(self.tree_widget_items[i]):
-                print(self.tree_widget_items[i])
-                self.tree_view.setItemExpanded(self.tree_widget_items[i], True)
-        #self.tree_view.setCurrentItem(item_sel)
+        item_struct = NAMESTRUCTURE + item_sel_split[0]
+        item_profile = NAMEPROFILE + item_sel_split[1]
+        item_floor = NAMEFLOOR + item_sel_split[2]
+        item_type = item_sel_split[3]
 
+        #print(item_struct)
+        #print(item_profile)
+        #print(item_floor)
+
+        # collapse the complete tree before expanding a new item
+        self.tree_view.collapseAll()
+
+        # un-select all items
+        for i in range(len(self.tree_type)):
+            self.qtwidget_type[i].setSelected(False)
+
+        for i in range(len(self.tree_struct)):
+            if self.tree_struct[i] == item_struct:
+                self.qtwidget_struct[i].setExpanded(True)
+
+        for i in range(len(self.tree_profile)):
+            if self.tree_profile[i] == item_profile:
+                self.qtwidget_profile[i].setExpanded(True)
+
+        for i in range(len(self.tree_floor)):
+            if self.tree_floor[i] == item_floor:
+                self.qtwidget_floor[i].setExpanded(True)
+
+        for i in range(len(self.tree_type)):
+            if self.tree_type[i] == item_type:
+                self.qtwidget_type[i].setSelected(True)
 
 if __name__ == "__main__":
     import sys

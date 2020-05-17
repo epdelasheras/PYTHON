@@ -88,8 +88,18 @@ def addItemsTreeview(Treeview):
     ws_temp.title = "picnames"
     ws_temp_cnt = int(1)
 
-    # Create tupla with tree widget items
-    tree_widget_items = []
+    # Create tuplas with all treewidgets
+    lst_struct_widget = []
+    lst_profile_widget = []
+    lst_floor_widget = []
+    lst_type_widget = []
+
+    # Create tuplas with the text of all treewidgets
+    lst_struct_txt = []
+    lst_profile_txt = []
+    lst_floor_txt = []
+    lst_type_txt = []
+
 
     # Loop to read all worsheets of the excel book
     for n_sheet in range(len(lst_ws)):
@@ -123,6 +133,8 @@ def addItemsTreeview(Treeview):
 
         # Adding structures to the treeview
         tree_struct = Qt.QTreeWidgetItem(Treeview, [NAMESTRUCTURE + lst_ws[n_sheet]])
+        lst_struct_widget.append(tree_struct) # add item widget to tupla
+        lst_struct_txt.append(NAMESTRUCTURE + lst_ws[n_sheet])  # add widget text to tupla
 
         # Adding profiles to the structures
         lst_struct_prof_sort = list(set(lst_struct_prof))
@@ -133,25 +145,32 @@ def addItemsTreeview(Treeview):
             profile = lst_struct_prof_sort[i]
             profile_split = profile.split("-")
             tree_profile = Qt.QTreeWidgetItem(tree_struct, [NAMEPROFILE + profile_split[1]])
+            lst_profile_widget.append(tree_profile)  # add item widget to tupla
+            lst_profile_txt.append(NAMEPROFILE + profile_split[1]) # add widget text to tupla
             for j in range(len(lst_struct_prof_floor_sort)):
                 floor = lst_struct_prof_floor_sort[j]
                 floor_split = floor.split("-")
                 if re.fullmatch(profile_split[1], floor_split[1]) != None:
                     tree_floors = Qt.QTreeWidgetItem(tree_profile, [NAMEFLOOR + floor_split[2]])
+                    lst_floor_widget.append(tree_floors)  # add item widget to tupla
+                    lst_floor_txt.append(NAMEFLOOR + floor_split[2])  # add widget text to tupla
                     for k in range(len(lst_struct_prof_floor)):
                         type = lst_fname[k]
                         type_split = type.split("-")
                         if re.fullmatch(floor, lst_struct_prof_floor[k]) != None:
                             #print(type_split)
                             tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3]])
-                            tree_widget_items.append((tree_type))
+                            lst_type_widget.append(tree_type) # add item widget to tupla
+                            lst_type_txt.append(type_split[3])  # add widget text to tupla
                             ws_temp["A" + str(ws_temp_cnt)] = type
                             ws_temp["B"+str(ws_temp_cnt)] = str(tree_type)
                             ws_temp_cnt += 1
 
         wb_temp.save(filename="temp.xlsx")
 
-    return tree_widget_items
+    return lst_struct_widget, lst_profile_widget, lst_floor_widget, lst_type_widget, \
+           lst_struct_txt, lst_profile_txt, lst_floor_txt ,lst_type_txt
+
 
 def lbRoomAddItems(Listbox):
     # Adding items to the listbox
