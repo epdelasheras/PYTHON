@@ -25,7 +25,8 @@ NAMEPROFILE = "Perfil "
 NAMEFLOOR = "Planta "
 
 
-def defGuiConfig(tb_room, flat_pic, tree_view, lb_room):
+def defGuiConfig(tb_room, flat_pic, tree_widget, lb_room):
+
     # Customization of the label which shows Nroom and coodinates
     tb_room.setStyleSheet(" font-size: 14px; qproperty-alignment: AlignCenter; "
                                "border: 1px solid black; ")
@@ -43,9 +44,9 @@ def defGuiConfig(tb_room, flat_pic, tree_view, lb_room):
     # Add number of rooms to choose to the listbox and connect lb_room with mouse click
     lbRoomAddItems(lb_room)
 
-    # Add tree items and connect tree_view with mouse click
+    # Add tree items and connect tree_widget with mouse click
     qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type, tree_struct, tree_profile, \
-    tree_floor, tree_type, tree_picname = addItemsTreeview(tree_view)
+    tree_floor, tree_type, tree_picname = addItemsTreeview(tree_widget)
 
     return qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type, tree_struct, \
            tree_profile, tree_floor, tree_type, tree_picname
@@ -60,7 +61,7 @@ def givemeNroomLocation(worksheet, tree_item):
             return ws["H" + str(i)].value, ws["I" + str(i)].value
 
 def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tree_picname):
-    # It is used to load images and coordinates into flat pic label and tb_room from tree_view widget
+    # It is used to load images and coordinates into flat pic label and tb_room from tree_widget widget
     for i in range(len(qtwidget_type)):
         if qtwidget_type[i] == item_sel[0]:
             picname = tree_picname[i]
@@ -76,8 +77,8 @@ def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tre
             tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")
 
 def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
-                   qtwidget_floor,qtwidget_type, tree_view, item_sel):
-    #It is used to expand a specific item on the tree_view
+                   qtwidget_floor,qtwidget_type, tree_widget, item_sel):
+    #It is used to expand a specific item on the tree_widget
 
     item_sel_split = item_sel.split("-")
     #print(item_sel_split)
@@ -92,7 +93,7 @@ def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_st
     #print(item_floor)
 
     # collapse the complete tree before expanding a new item
-    tree_view.collapseAll()
+    tree_widget.collapseAll()
 
     # un-select all items
     for i in range(len(tree_type)):
