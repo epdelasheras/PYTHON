@@ -107,6 +107,7 @@ class Ui_MainWindow(object):
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room)
+        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
 
         # mouse click connect functions
         self.tree_widget.itemClicked.connect(self.TreeItemSel)
@@ -118,6 +119,8 @@ class Ui_MainWindow(object):
 
     def MenuArhiveOpen(self):
         dialog = QtWidgets.QMessageBox()
+        dialog.setWindowTitle(WIN_TITLE)
+        dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
         dialog.setIcon(QtWidgets.QMessageBox.Warning)
         dialog.setText("Esta opción aun no esta implementada")
         dialog.addButton(QtWidgets.QMessageBox.Ok)
