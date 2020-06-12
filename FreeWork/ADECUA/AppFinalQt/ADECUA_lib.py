@@ -12,8 +12,8 @@ PIC_EXTENSION = ".jpg"
 PIC_PATH = "./pics/"
 
 # Pic sizes
-WIDTH_FLATPIC = 900
-HEIGHT_FLATPIC = 700
+WIDTH_FLATPIC = 842
+HEIGHT_FLATPIC = 595
 WIDTH_FLOORPIC = 380
 HEIGHT_FLOORPIC = 380
 
@@ -35,7 +35,8 @@ def defGuiConfig(tb_room, flat_pic, tree_widget, lb_room):
     # load default image in flat_pic label
     load_pic = QtGui.QPixmap(PIC_PATH + "Diseño Base y Variante 1_2.jpg")
     load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
-                               QtCore.Qt.IgnoreAspectRatio,
+                               #QtCore.Qt.IgnoreAspectRatio,
+                               QtCore.Qt.KeepAspectRatio,
                                QtCore.Qt.SmoothTransformation)
     flat_pic.setPixmap(load_pic)
 
@@ -67,7 +68,8 @@ def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tre
             picname = tree_picname[i]
             load_pic = QtGui.QPixmap(PIC_PATH + picname + ".jpg")
             load_pic = load_pic.scaled(WIDTH_FLATPIC, HEIGHT_FLATPIC,
-                                       QtCore.Qt.IgnoreAspectRatio,
+                                       #QtCore.Qt.IgnoreAspectRatio,
+                                       QtCore.Qt.KeepAspectRatio,                                       
                                        QtCore.Qt.SmoothTransformation)
             flat_pic.setPixmap(load_pic)
             picname_split = picname.split("-", 1)
