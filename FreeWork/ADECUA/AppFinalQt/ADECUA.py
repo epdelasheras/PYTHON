@@ -104,9 +104,11 @@ class Ui_MainWindow(object):
         self.file_quit.setText(_translate("MainWindow", "Salir"))
 
         # load default GUI settings
+        self.excelFileName = "./database.xlsx"
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
-        defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room)
+        defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
+        MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
         MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
 
         # mouse click connect functions
@@ -115,9 +117,34 @@ class Ui_MainWindow(object):
         self.lb_room.clicked.connect(self.ListRoomSel)
         self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
         self.file_open.triggered.connect(self.MenuArhiveOpen)
-        self.file_quit.triggered.connect(self.MenuArhiveQuit)
+        self.file_quit.triggered.connect(self.MenuArhiveQuit)              
 
     def MenuArhiveOpen(self):
+        # Open excel file
+        dialog = QtWidgets.QFileDialog()
+        dialog.setWindowTitle("Abrir fichero")        
+        dialog.setNameFilter('Excel files (*.xlsx)')
+        dialog.setDirectory(QtCore.QDir.currentPath())
+        dialog.setFileMode(QtWidgets.QFileDialog.ExistingFile)
+        if dialog.exec_() == QtWidgets.QDialog.Accepted:
+            self.excelFileName = str(dialog.selectedFiles()[0])
+        else:
+            return None       
+
+        # clean all listbox and tree view
+        self.tree_widget.clear()  
+        self.lb_room.clear()
+        self.lb_roomplace.clear()
+        
+        # load new items into treeview
+        self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
+        self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
+        defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
+        MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
+                
+
+    def MenuArhiveQuit(self):
+        '''
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle(WIN_TITLE)
         dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
@@ -125,8 +152,7 @@ class Ui_MainWindow(object):
         dialog.setText("Esta opción aun no esta implementada")
         dialog.addButton(QtWidgets.QMessageBox.Ok)
         dialog.exec()
-
-    def MenuArhiveQuit(self):
+        '''
         self.close
 
     def TreeItemSel(self):
@@ -138,7 +164,13 @@ class Ui_MainWindow(object):
             #print(item_sel_txt)
             #print(item_sel[0])
             treeViewLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room,\
-                                         self.qtwidget_type, self.tree_picname)
+                                         self.qtwidget_type, self.tree_picname,\
+                                         self.excelFileName)
+        
+        # to set horizontal scrollbar on tree widget
+        self.tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.tree_widget.header().setStretchLastSection(False)
+
 
     def ListRoomSel(self):
     # when one item is selected...
@@ -146,7 +178,7 @@ class Ui_MainWindow(object):
         #print(item_sel)
         item_sel = self.lb_room.selectedItems()
         item = item_sel[0].text()
-        lbRoomPlaceAddItems(item, self.lb_roomplace)
+        lbRoomPlaceAddItems(item, self.lb_roomplace, self.excelFileName)
 
     def ListRoomPlaceSel(self):
     # when one item is selected...
