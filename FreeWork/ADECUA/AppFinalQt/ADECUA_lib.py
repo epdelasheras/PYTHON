@@ -25,7 +25,7 @@ NAMEPROFILE = "Perfil "
 NAMEFLOOR = "Planta "
 
 
-def defGuiConfig(tb_room, flat_pic, tree_widget, lb_room):
+def defGuiConfig(tb_room, flat_pic, tree_widget, lb_room, excelFileName):
 
     # Customization of the label which shows Nroom and coodinates
     tb_room.setStyleSheet(" font-size: 14px; qproperty-alignment: AlignCenter; "
@@ -40,28 +40,26 @@ def defGuiConfig(tb_room, flat_pic, tree_widget, lb_room):
                                QtCore.Qt.SmoothTransformation)
     flat_pic.setPixmap(load_pic)
 
-
-
     # Add number of rooms to choose to the listbox and connect lb_room with mouse click
-    lbRoomAddItems(lb_room)
+    lbRoomAddItems(lb_room, excelFileName)
 
     # Add tree items and connect tree_widget with mouse click
     qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type, tree_struct, tree_profile, \
-    tree_floor, tree_type, tree_picname = addItemsTreeview(tree_widget)
+    tree_floor, tree_type, tree_picname = addItemsTreeview(tree_widget, excelFileName)   
 
     return qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type, tree_struct, \
            tree_profile, tree_floor, tree_type, tree_picname
 
 
-def givemeNroomLocation(worksheet, tree_item):
+def givemeNroomLocation(worksheet, tree_item, excelFileName):
     # It is used in "loadPic" method to search the coordinates of the flat.
-    wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)  # data_only=True to read the cell data instead of the formula
     ws = wb[worksheet]
     for i in range(WS_ROW_START, ws.max_row + 1):
         if (ws["K" + str(i)].value == tree_item):
             return ws["H" + str(i)].value, ws["I" + str(i)].value
 
-def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tree_picname):
+def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tree_picname, excelFileName):
     # It is used to load images and coordinates into flat pic label and tb_room from tree_widget widget
     for i in range(len(qtwidget_type)):
         if qtwidget_type[i] == item_sel[0]:
@@ -74,7 +72,7 @@ def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tre
             flat_pic.setPixmap(load_pic)
             picname_split = picname.split("-", 1)
             #print(picname_split)
-            location, n_room = givemeNroomLocation(picname_split[0], picname)
+            location, n_room = givemeNroomLocation(picname_split[0], picname, excelFileName)
             #print(location, n_room)
             tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")
 
@@ -118,11 +116,11 @@ def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_st
         if tree_type[i] == item_type:
             qtwidget_type[i].setSelected(True)
 
-def addItemsTreeview(Treeview):
+def addItemsTreeview(Treeview, excelFileName):
     # adding elements to the tree. The previous tree label is indicated
     # to have an event response
 
-    wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)  # data_only=True to read the cell data instead of the formula
     # read all ws and create a list
     lst_ws = []
     for sheet in wb:
@@ -205,16 +203,16 @@ def addItemsTreeview(Treeview):
                             tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3]])
                             lst_type_widget.append(tree_type) # add item widget to tupla
                             lst_type_txt.append(type_split[3])  # add widget text to tupla
-                            lst_picname.append(type)
+                            lst_picname.append(type)   
 
     return lst_struct_widget, lst_profile_widget, lst_floor_widget, lst_type_widget, \
            lst_struct_txt, lst_profile_txt, lst_floor_txt, lst_type_txt, lst_picname
 
 
-def lbRoomAddItems(Listbox):
+def lbRoomAddItems(Listbox, excelFileName):
     # Adding items to the listbox
 
-    wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)  # data_only=True to read the cell data instead of the formula
     # read all ws and create a list
     lst_ws = []
     for sheet in wb:
@@ -248,10 +246,10 @@ def lbRoomAddItems(Listbox):
     if lc_cnt > 0:
         Listbox.insertItem(i+1, "- Dormitorio/s")
 
-def lbRoomPlaceAddItems(item, Listbox):
+def lbRoomPlaceAddItems(item, Listbox, excelFileName):
     # Add tipologies and coordinates to lb_roomplace
 
-    wb = openpyxl.load_workbook("./database.xlsx", data_only=True)  # data_only=True to read the cell data instead of the formula
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)  # data_only=True to read the cell data instead of the formula
     # read all ws and create a list
     lst_ws = []
     for sheet in wb:
