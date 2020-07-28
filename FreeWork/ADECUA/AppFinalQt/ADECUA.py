@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import pathlib
 from ADECUA_lib import *
 
 class Ui_MainWindow(object):
@@ -104,7 +105,7 @@ class Ui_MainWindow(object):
         self.file_quit.setText(_translate("MainWindow", "Salir"))
 
         # load default GUI settings
-        self.excelFileName = "./database.xlsx"
+        self.excelFileName = str(pathlib.Path(__file__).parent.absolute()) + "\database.xlsx"
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
