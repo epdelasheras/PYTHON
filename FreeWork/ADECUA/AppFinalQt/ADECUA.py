@@ -9,11 +9,13 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ADECUA_lib import *
+from ClientNew import *
+from tinydb import TinyDB, Query
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1400, 800)
+        MainWindow.resize(1400, 797)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -31,7 +33,7 @@ class Ui_MainWindow(object):
         self.tree_widget.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed|QtWidgets.QAbstractItemView.SelectedClicked)
         self.tree_widget.setUniformRowHeights(True)
         self.tree_widget.setAnimated(False)
-        self.tree_widget.setObjectName("treeWidget")
+        self.tree_widget.setObjectName("tree_widget")
         self.tree_widget.headerItem().setText(0, "1")
         self.flat_pic = QtWidgets.QLabel(self.splitter_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -78,6 +80,8 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
+        self.menuClient = QtWidgets.QMenu(self.menubar)
+        self.menuClient.setObjectName("menuClient")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -86,10 +90,17 @@ class Ui_MainWindow(object):
         self.file_open.setObjectName("file_open")
         self.file_quit = QtWidgets.QAction(MainWindow)
         self.file_quit.setObjectName("file_quit")
+        self.client_new = QtWidgets.QAction(MainWindow)
+        self.client_new.setObjectName("client_new")
+        self.client_manage = QtWidgets.QAction(MainWindow)
+        self.client_manage.setObjectName("client_manage")
         self.menuFile.addAction(self.file_open)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.file_quit)
+        self.menuClient.addAction(self.client_new)
+        self.menuClient.addAction(self.client_manage)
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuClient.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -100,8 +111,11 @@ class Ui_MainWindow(object):
         self.lb_room.setSortingEnabled(True)
         self.lb_roomplace.setSortingEnabled(True)
         self.menuFile.setTitle(_translate("MainWindow", "Archivo"))
+        self.menuClient.setTitle(_translate("MainWindow", "Cliente"))
         self.file_open.setText(_translate("MainWindow", "Abrir"))
         self.file_quit.setText(_translate("MainWindow", "Salir"))
+        self.client_new.setText(_translate("MainWindow", "Nuevo"))
+        self.client_manage.setText(_translate("MainWindow", "Gestionar"))
 
         # load default GUI settings
         self.excelFileName = "./database.xlsx"
@@ -109,7 +123,7 @@ class Ui_MainWindow(object):
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
-        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))        
 
         # mouse click connect functions
         self.tree_widget.itemClicked.connect(self.TreeItemSel)
@@ -117,8 +131,25 @@ class Ui_MainWindow(object):
         self.lb_room.clicked.connect(self.ListRoomSel)
         self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
         self.file_open.triggered.connect(self.MenuArhiveOpen)
-        self.file_quit.triggered.connect(self.MenuArhiveQuit)              
+        self.file_quit.triggered.connect(self.MenuArhiveQuit)
+        self.client_new.triggered.connect(self.ClientNew)             
+        self.client_manage.triggered.connect(self.ClientManage)             
 
+        # create database
+        self.db_ADECUA = TinyDB("ADECUA_DB.json")
+
+    def ClientNew(self):
+        self.window=QtWidgets.QMainWindow()
+        self.ui=Ui_ClientNew(self.db_ADECUA)
+        self.ui.setup(self.window)
+        self.window.show()
+        #MainWindow.hide() # hide main window when this new one is open.
+
+    def ClientManage(self):        
+       #get all documents stored in the database
+        print (self.db_ADECUA.all())
+
+    
     def MenuArhiveOpen(self):
         # Open excel file
         dialog = QtWidgets.QFileDialog()
@@ -154,6 +185,7 @@ class Ui_MainWindow(object):
         dialog.exec()
         '''
         self.close
+
 
     def TreeItemSel(self):
     # when one item is selected...

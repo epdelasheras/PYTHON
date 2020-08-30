@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1400</width>
-    <height>800</height>
+    <height>797</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -163,7 +163,15 @@
     <addaction name="separator"/>
     <addaction name="file_quit"/>
    </widget>
+   <widget class="QMenu" name="menuClient">
+    <property name="title">
+     <string>Cliente</string>
+    </property>
+    <addaction name="client_new"/>
+    <addaction name="client_manage"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuClient"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="file_open">
@@ -174,6 +182,16 @@
   <action name="file_quit">
    <property name="text">
     <string>Salir</string>
+   </property>
+  </action>
+  <action name="client_new">
+   <property name="text">
+    <string>Nuevo</string>
+   </property>
+  </action>
+  <action name="client_manage">
+   <property name="text">
+    <string>Gestionar</string>
    </property>
   </action>
  </widget>
