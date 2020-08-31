@@ -19,12 +19,11 @@ into the main window:
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_ClientNew(object): 
-    def __init__(self, db_ADECUA):
-        self.dbClientNew = db_ADECUA
-        self.dbClientNew.insert({'Nombre': 'Enrique', 'Piso': 'DB-P3-02-2MP_1D.A'})
-        self.dbClientNew.insert({'Nombre': 'Jose', 'Piso': 'DB-P3-03_Atico-3MF_0D.C&3MF_3D.A1'})        
+    def __init__(self, db_ADECUA, windowClientNew):
+        self.dbClientNew = db_ADECUA # copy database to a local variable. 
+        self.wClientNew = windowClientNew #copy window var to a loca var.
+               
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(491, 304)
@@ -43,15 +42,6 @@ class Ui_ClientNew(object):
         self.LabelSurname1 = QtWidgets.QLabel(self.centralwidget)
         self.LabelSurname1.setGeometry(QtCore.QRect(20, 60, 61, 21))
         self.LabelSurname1.setObjectName("LabelSurname1")
-        self.ButtonSave = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSave.setGeometry(QtCore.QRect(60, 240, 75, 23))
-        self.ButtonSave.setObjectName("ButtonSave")
-        self.ButtonErase = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonErase.setGeometry(QtCore.QRect(160, 240, 91, 23))
-        self.ButtonErase.setObjectName("ButtonErase")
-        self.ButtonExit = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonExit.setGeometry(QtCore.QRect(270, 240, 75, 23))
-        self.ButtonExit.setObjectName("ButtonExit")
         self.LabelSurname2 = QtWidgets.QLabel(self.centralwidget)
         self.LabelSurname2.setGeometry(QtCore.QRect(20, 90, 61, 21))
         self.LabelSurname2.setObjectName("LabelSurname2")
@@ -73,6 +63,15 @@ class Ui_ClientNew(object):
         self.LinePhone.setGeometry(QtCore.QRect(100, 150, 151, 21))
         self.LinePhone.setText("")
         self.LinePhone.setObjectName("LinePhone")
+        self.ButtonSave = QtWidgets.QPushButton(self.centralwidget)
+        self.ButtonSave.setGeometry(QtCore.QRect(40, 200, 75, 23))
+        self.ButtonSave.setObjectName("ButtonSave")
+        self.ButtonErase = QtWidgets.QPushButton(self.centralwidget)
+        self.ButtonErase.setGeometry(QtCore.QRect(130, 200, 75, 23))
+        self.ButtonErase.setObjectName("ButtonErase")
+        self.ButtonExit = QtWidgets.QPushButton(self.centralwidget)
+        self.ButtonExit.setGeometry(QtCore.QRect(220, 200, 75, 23))
+        self.ButtonExit.setObjectName("ButtonExit")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -83,33 +82,51 @@ class Ui_ClientNew(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Cliente Nuevo"))
         self.LabelName.setText(_translate("MainWindow", "Nombre:"))
         self.LabelSurname1.setText(_translate("MainWindow", "Apellido 1:"))
-        self.ButtonSave.setText(_translate("MainWindow", "Guardar"))
-        self.ButtonErase.setText(_translate("MainWindow", "Borrar campos"))
-        self.ButtonExit.setText(_translate("MainWindow", "Salir"))
         self.LabelSurname2.setText(_translate("MainWindow", "Apellido 2:"))
         self.LabelDNI.setText(_translate("MainWindow", "DNI:"))
         self.LabelPhone.setText(_translate("MainWindow", "Teléfono:"))
+        self.ButtonSave.setText(_translate("MainWindow", "Guardar"))
+        self.ButtonErase.setText(_translate("MainWindow", "Borrar"))
+        self.ButtonExit.setText(_translate("MainWindow", "Salir"))
 
     # mouse click connect functions
         self.ButtonSave.clicked.connect(self.SaveClient)
-        
+        self.ButtonErase.clicked.connect(self.EraseLinesClient)
+        self.ButtonExit.clicked.connect(self.ExitClient)
 
+    # methods related to the action buttons
+        
     def SaveClient(self):
         name = self.LineName.text()
-        print(name)
+        surname1 = self.LineSurname1.text()
+        surname2 = self.LineSurname2.text()
+        dni = self.LineDNI.text()
+        phone = self.LinePhone.text()        
+        self.dbClientNew.insert({'Name': name, 'Surname1': surname1})
         #get all documents stored in the database
-        #print (self.dbClientNew.all())
+        print (self.dbClientNew.all())
 
+    def EraseLinesClient(self):
+        self.LineName.clear()
+        self.LineSurname1.clear()
+        self.LineSurname2.clear()
+        self.LineDNI.clear()
+        self.LinePhone.clear()
 
+    def ExitClient(self):        
+        self.wClientNew.hide()
 
-if __name__ == "__main__":
-    import sys
+'''
+if __name__ == "__main__":  
+    import sys 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_ClientNew()
     ui.setup(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
+'''

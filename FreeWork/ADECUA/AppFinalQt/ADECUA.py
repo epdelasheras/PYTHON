@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from ADECUA_lib import *
 from ClientNew import *
 from tinydb import TinyDB, Query
+import sys
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -139,10 +140,10 @@ class Ui_MainWindow(object):
         self.db_ADECUA = TinyDB("ADECUA_DB.json")
 
     def ClientNew(self):
-        self.window=QtWidgets.QMainWindow()
-        self.ui=Ui_ClientNew(self.db_ADECUA)
-        self.ui.setup(self.window)
-        self.window.show()
+        self.windowClientNew=QtWidgets.QMainWindow()
+        self.ui=Ui_ClientNew(self.db_ADECUA, self.windowClientNew)        
+        self.ui.setup(self.windowClientNew)
+        self.windowClientNew.show()
         #MainWindow.hide() # hide main window when this new one is open.
 
     def ClientManage(self):        
@@ -175,6 +176,7 @@ class Ui_MainWindow(object):
                 
 
     def MenuArhiveQuit(self):
+        sys.exit()
         '''
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle(WIN_TITLE)
@@ -183,9 +185,7 @@ class Ui_MainWindow(object):
         dialog.setText("Esta opción aun no esta implementada")
         dialog.addButton(QtWidgets.QMessageBox.Ok)
         dialog.exec()
-        '''
-        self.close
-
+        '''   
 
     def TreeItemSel(self):
     # when one item is selected...
@@ -223,7 +223,7 @@ class Ui_MainWindow(object):
         self.TreeItemSel()
 
 if __name__ == "__main__":
-    import sys
+    #import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

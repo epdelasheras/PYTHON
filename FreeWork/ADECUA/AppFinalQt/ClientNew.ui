@@ -63,45 +63,6 @@
      <string>Apellido 1:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="ButtonSave">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>240</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Guardar</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonErase">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>240</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Borrar campos</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonExit">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>240</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Salir</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="LabelSurname2">
     <property name="geometry">
      <rect>
@@ -178,6 +139,45 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonSave">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>200</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Guardar</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonErase">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>200</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Borrar</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonExit">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>200</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Salir</string>
     </property>
    </widget>
   </widget>
