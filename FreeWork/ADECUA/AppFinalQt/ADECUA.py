@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ADECUA_lib import *
 from ClientNew import *
+from ClientManage import *
 from tinydb import TinyDB, Query
 import sys
 
@@ -137,19 +138,20 @@ class Ui_MainWindow(object):
         self.client_manage.triggered.connect(self.ClientManage)             
 
         # create database
-        self.db_ADECUA = TinyDB("ADECUA_DB.json")
+        self.db_ADECUA = TinyDB("ADECUA_DB.json")   
 
     def ClientNew(self):
         self.windowClientNew=QtWidgets.QMainWindow()
         self.ui=Ui_ClientNew(self.db_ADECUA, self.windowClientNew)        
         self.ui.setup(self.windowClientNew)
         self.windowClientNew.show()
-        #MainWindow.hide() # hide main window when this new one is open.
+        
 
     def ClientManage(self):        
-       #get all documents stored in the database
-        print (self.db_ADECUA.all())
-
+        self.windowClientManage=QtWidgets.QMainWindow()
+        self.ui=Ui_ClientManage(self.db_ADECUA, self.windowClientManage)        
+        self.ui.setup(self.windowClientManage)
+        self.windowClientManage.show()
     
     def MenuArhiveOpen(self):
         # Open excel file

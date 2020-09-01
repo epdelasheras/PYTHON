@@ -105,7 +105,8 @@ class Ui_ClientNew(object):
         surname2 = self.LineSurname2.text()
         dni = self.LineDNI.text()
         phone = self.LinePhone.text()        
-        self.dbClientNew.insert({'Name': name, 'Surname1': surname1})
+        self.dbClientNew.insert({'Name': name, 'Surname1': surname1, 'Surname2': surname2, 
+                                 'DNI': dni, 'Phone': phone})
         #get all documents stored in the database
         print (self.dbClientNew.all())
 
