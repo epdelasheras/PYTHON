@@ -9,8 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from tinydb import TinyDB, Query
-import json
+from tinydb import TinyDB, Query, where
+from ClientView import *
 
 class Ui_ClientManage(object):
     def __init__(self, db_ADECUA, windowClientManage):
@@ -78,10 +78,83 @@ class Ui_ClientManage(object):
 
 # mouse click connect functions
         self.ButtonSearchDNI.clicked.connect(self.SearchDNI)
+        self.ButtonSearchPhone.clicked.connect(self.SearchPhone)
+        self.ButtonSearchEmail.clicked.connect(self.SearchEmail)
+        self.ButtonView.clicked.connect(self.Client2View)
 
 # methods related to the action buttons
         
+    def Client2View(self):
+        self.windowClientView=QtWidgets.QMainWindow()
+        self.ui=Ui_ClientView(self.dbClientManage, self.windowClientView)        
+        self.ui.setup(self.windowClientView)
+        self.windowClientView.show()        
+
     def SearchDNI(self):
-        dni2search = Query()        
-        val = self.dbClientManage.get(dni2search.DNI == "53442925x")
-        print(val.get('Name'))
+        # get value from the textbox
+        dni2search = self.LineDNI.text()
+        
+        # search for any match in database
+        docs = self.dbClientManage.search(where('DNI') == dni2search)
+        if not docs:
+            print('No docs found, och....')
+            exit(0)       
+
+        # create a temp list with the fields to show in the listbox
+        lClient = []      
+        for doc in docs:
+            clientTemp = str(doc.doc_id) + " " + doc['Surname1'] + " " + doc['Surname2'] \
+                            + " " + doc['Name'] + " " + doc['DNI'] + " " + doc['Phone']   
+            #print(clientTemp)
+            lClient.append(clientTemp) 
+            
+        # add items to the listbox
+        self.listClient.clear()
+        for i in range(len(lClient)):    
+            self.listClient.insertItem(i, lClient[i])
+
+    def SearchPhone(self):    
+        # get value from the textbox
+        phone2search = self.LinePhone.text()
+        
+        # search for any match in database
+        docs = self.dbClientManage.search(where('Phone') == phone2search)
+        if not docs:
+            print('No docs found, och....')
+            exit(0)       
+
+        # create a temp list with the fields to show in the listbox
+        lClient = []      
+        for doc in docs:
+            clientTemp = str(doc.doc_id) + " " + doc['Surname1'] + " " + doc['Surname2'] \
+                            + " " + doc['Name'] + " " + doc['DNI'] + " " + doc['Phone']   
+            #print(clientTemp)
+            lClient.append(clientTemp) 
+            
+        # add items to the listbox
+        self.listClient.clear()
+        for i in range(len(lClient)):    
+            self.listClient.insertItem(i, lClient[i])
+
+    def SearchEmail(self):
+        # get value from the textbox
+        email2search = self.LineEmail.text()
+        
+        # search for any match in database
+        docs = self.dbClientManage.search(where('Email') == email2search)
+        if not docs:
+            print('No docs found, och....')
+            exit(0)       
+
+        # create a temp list with the fields to show in the listbox
+        lClient = []      
+        for doc in docs:
+            clientTemp = str(doc.doc_id) + " " + doc['Surname1'] + " " + doc['Surname2'] \
+                            + " " + doc['Name'] + " " + doc['DNI'] + " " + doc['Phone']   
+            #print(clientTemp)
+            lClient.append(clientTemp) 
+            
+        # add items to the listbox
+        self.listClient.clear()
+        for i in range(len(lClient)):    
+            self.listClient.insertItem(i, lClient[i])
