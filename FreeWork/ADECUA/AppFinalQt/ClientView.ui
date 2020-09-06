@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>491</width>
-    <height>304</height>
+    <width>449</width>
+    <height>749</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,69 +79,221 @@
      <string>Teléfono:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelNameView">
+   <widget class="QLineEdit" name="lineNameView">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>30</y>
       <width>201</width>
-      <height>21</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>NameView</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelSurname1View">
+   <widget class="QLineEdit" name="lineSurname1View">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>60</y>
       <width>201</width>
-      <height>21</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Surname1View</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelSurname2View">
+   <widget class="QLineEdit" name="lineSurname2View">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>90</y>
       <width>201</width>
-      <height>21</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Surname2View</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelDNIView">
+   <widget class="QLineEdit" name="lineDNIView">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>120</y>
       <width>201</width>
-      <height>21</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>DNIView</string>
+     <string>SurnameDNIView</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPhoneView">
+   <widget class="QLineEdit" name="linePhoneView">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>80</x>
       <y>150</y>
       <width>201</width>
-      <height>21</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>PhoneView</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonEdit">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>60</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Editar</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonSave">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>90</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Guardar</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonExit">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>120</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Salir</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listFlatView">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>260</y>
+      <width>401</width>
+      <height>121</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelFlatView">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>230</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lista de Favoritos</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listFlatBook">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>420</y>
+      <width>401</width>
+      <height>121</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelFlatBook">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>390</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lista de Reservas</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listFlatBuy">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>590</y>
+      <width>401</width>
+      <height>121</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelFlatBuy">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>560</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lista de Compras</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelEmail">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>180</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Email:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEmailView">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>180</y>
+      <width>201</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>EmailView</string>
     </property>
    </widget>
   </widget>

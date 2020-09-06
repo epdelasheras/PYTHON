@@ -1,4 +1,4 @@
-from tkinter import *
+import re
 from typing import List
 
 import openpyxl

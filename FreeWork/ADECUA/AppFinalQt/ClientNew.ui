@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>491</width>
+    <width>329</width>
     <height>304</height>
    </rect>
   </property>
@@ -14,16 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="LineName">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>30</y>
-      <width>151</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="LabelName">
     <property name="geometry">
      <rect>
@@ -35,19 +25,6 @@
     </property>
     <property name="text">
      <string>Nombre:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="LineSurname1">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>60</y>
-      <width>151</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="LabelSurname1">
@@ -89,32 +66,6 @@
      <string>DNI:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="LineSurname2">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>90</y>
-      <width>151</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="LineDNI">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>120</y>
-      <width>151</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="LabelPhone">
     <property name="geometry">
      <rect>
@@ -128,24 +79,84 @@
      <string>Teléfono:</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="LineName">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>30</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LineSurname1">
+    <property name="geometry">
+     <rect>
+      <x>92</x>
+      <y>60</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LineSurname2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>90</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LineDNI">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>120</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
    <widget class="QLineEdit" name="LinePhone">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>90</x>
       <y>150</y>
-      <width>151</width>
-      <height>21</height>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LineEmail">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>180</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelEmail">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>180</y>
+      <width>47</width>
+      <height>13</height>
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>Email:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ButtonSave">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>200</y>
+      <y>230</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -158,7 +169,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>200</y>
+      <y>230</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -171,7 +182,7 @@
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>200</y>
+      <y>230</y>
       <width>75</width>
       <height>23</height>
      </rect>
