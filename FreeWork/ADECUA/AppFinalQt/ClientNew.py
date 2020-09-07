@@ -26,7 +26,8 @@ class Ui_ClientNew(object):
                
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(329, 304)
+        MainWindow.resize(300, 300)
+        MainWindow.setMaximumSize(QtCore.QSize(300, 300))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.LabelName = QtWidgets.QLabel(self.centralwidget)
@@ -66,13 +67,16 @@ class Ui_ClientNew(object):
         self.labelEmail.setGeometry(QtCore.QRect(20, 180, 47, 13))
         self.labelEmail.setObjectName("labelEmail")
         self.ButtonSave = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSave.setGeometry(QtCore.QRect(40, 230, 75, 23))
+        self.ButtonSave.setGeometry(QtCore.QRect(20, 230, 75, 23))
+        self.ButtonSave.setMaximumSize(QtCore.QSize(300, 300))
         self.ButtonSave.setObjectName("ButtonSave")
         self.ButtonErase = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonErase.setGeometry(QtCore.QRect(130, 230, 75, 23))
+        self.ButtonErase.setGeometry(QtCore.QRect(110, 230, 75, 23))
+        self.ButtonErase.setMaximumSize(QtCore.QSize(300, 300))
         self.ButtonErase.setObjectName("ButtonErase")
         self.ButtonExit = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonExit.setGeometry(QtCore.QRect(220, 230, 75, 23))
+        self.ButtonExit.setGeometry(QtCore.QRect(200, 230, 75, 23))
+        self.ButtonExit.setMaximumSize(QtCore.QSize(300, 300))
         self.ButtonExit.setObjectName("ButtonExit")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -96,13 +100,13 @@ class Ui_ClientNew(object):
         self.ButtonExit.setText(_translate("MainWindow", "Salir"))
 
     # mouse click connect functions
-        self.ButtonSave.clicked.connect(self.SaveClient)
-        self.ButtonErase.clicked.connect(self.EraseLinesClient)
-        self.ButtonExit.clicked.connect(self.ExitClient)
+        self.ButtonSave.clicked.connect(self.ClientNewSave)
+        self.ButtonErase.clicked.connect(self.ClientNewClear)
+        self.ButtonExit.clicked.connect(self.ClientNewExit)
 
     # methods related to the action buttons
         
-    def SaveClient(self):
+    def ClientNewSave(self):
         name = self.LineName.text()
         surname1 = self.LineSurname1.text()
         surname2 = self.LineSurname2.text()
@@ -114,7 +118,7 @@ class Ui_ClientNew(object):
         #get all documents stored in the database
         print (self.dbClientNew.all())
 
-    def EraseLinesClient(self):
+    def ClientNewClear(self):
         self.LineName.clear()
         self.LineSurname1.clear()
         self.LineSurname2.clear()
@@ -122,7 +126,7 @@ class Ui_ClientNew(object):
         self.LinePhone.clear()
         self.LineEmail.clear()
 
-    def ExitClient(self):        
+    def ClientNewExit(self):        
         self.wClientNew.hide()
 
 '''

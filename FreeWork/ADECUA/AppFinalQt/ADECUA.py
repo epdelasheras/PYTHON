@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
 
     def ClientManage(self):        
         self.windowClientManage=QtWidgets.QMainWindow()
-        self.ui=Ui_ClientManage(self.db_ADECUA, self.windowClientManage)        
+        self.ui=Ui_ClientManage(self.db_ADECUA, self.windowClientManage, MainWindow)
         self.ui.setup(self.windowClientManage)
         self.windowClientManage.show()
     

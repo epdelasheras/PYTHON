@@ -12,15 +12,18 @@ import re
 from PyQt5 import QtCore, QtGui, QtWidgets
 from tinydb import TinyDB, Query, where
 from ClientView import *
+from ADECUA_lib import *
 
 class Ui_ClientManage(object):
-    def __init__(self, db_ADECUA, windowClientManage):
+    def __init__(self, db_ADECUA, windowClientManage, MainWindow):
         self.dbClientManage = db_ADECUA # copy database to a local variable. 
         self.wClientManage = windowClientManage #copy window var to a loca var.
+        self.PrincipalWindow = MainWindow
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(482, 423)
+        MainWindow.resize(482, 481)
+        MainWindow.setMaximumSize(QtCore.QSize(482, 482))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.LineDNI = QtWidgets.QLineEdit(self.centralwidget)
@@ -38,17 +41,14 @@ class Ui_ClientManage(object):
         self.ButtonSearchDNI.setGeometry(QtCore.QRect(260, 30, 141, 23))
         self.ButtonSearchDNI.setObjectName("ButtonSearchDNI")
         self.listClient = QtWidgets.QListWidget(self.centralwidget)
-        self.listClient.setGeometry(QtCore.QRect(20, 130, 451, 192))
+        self.listClient.setGeometry(QtCore.QRect(20, 130, 441, 251))
         self.listClient.setObjectName("listClient")
         self.ButtonSelect = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSelect.setGeometry(QtCore.QRect(20, 340, 101, 23))
+        self.ButtonSelect.setGeometry(QtCore.QRect(20, 410, 101, 23))
         self.ButtonSelect.setObjectName("ButtonSelect")
         self.ButtonView = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonView.setGeometry(QtCore.QRect(140, 340, 101, 23))
+        self.ButtonView.setGeometry(QtCore.QRect(190, 410, 101, 23))
         self.ButtonView.setObjectName("ButtonView")
-        self.ButtonEdit = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonEdit.setGeometry(QtCore.QRect(260, 340, 101, 23))
-        self.ButtonEdit.setObjectName("ButtonEdit")
         self.ButtonSearchPhone = QtWidgets.QPushButton(self.centralwidget)
         self.ButtonSearchPhone.setGeometry(QtCore.QRect(260, 60, 141, 23))
         self.ButtonSearchPhone.setObjectName("ButtonSearchPhone")
@@ -56,7 +56,7 @@ class Ui_ClientManage(object):
         self.ButtonSearchEmail.setGeometry(QtCore.QRect(260, 90, 141, 23))
         self.ButtonSearchEmail.setObjectName("ButtonSearchEmail")
         self.ButtonExit = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonExit.setGeometry(QtCore.QRect(370, 340, 101, 23))
+        self.ButtonExit.setGeometry(QtCore.QRect(370, 410, 101, 23))
         self.ButtonExit.setObjectName("ButtonExit")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -72,49 +72,91 @@ class Ui_ClientManage(object):
         self.ButtonSearchDNI.setText(_translate("MainWindow", "Buscar por DNI"))
         self.ButtonSelect.setText(_translate("MainWindow", "Seleccionar"))
         self.ButtonView.setText(_translate("MainWindow", "Ver"))
-        self.ButtonEdit.setText(_translate("MainWindow", "Modificar"))
         self.ButtonSearchPhone.setText(_translate("MainWindow", "Buscar por Telf."))
         self.ButtonSearchEmail.setText(_translate("MainWindow", "Buscar por Email"))
         self.ButtonExit.setText(_translate("MainWindow", "Salir"))
 
 # mouse click connect functions
-        self.ButtonSearchDNI.clicked.connect(self.SearchDNI)
-        self.ButtonSearchPhone.clicked.connect(self.SearchPhone)
-        self.ButtonSearchEmail.clicked.connect(self.SearchEmail)
-        self.ButtonView.clicked.connect(self.Client2View)
+        self.ButtonSearchDNI.clicked.connect(self.ClientManageSearchDNI)
+        self.ButtonSearchPhone.clicked.connect(self.ClientManageSearchPhone)
+        self.ButtonSearchEmail.clicked.connect(self.ClientManageSearchEmail)
+        self.ButtonView.clicked.connect(self.ClientManage2View)        
+        self.ButtonExit.clicked.connect(self.ClientManageExit)      
+        self.ButtonSelect.clicked.connect(self.ClientManageSelect)      
 
 # methods related to the action buttons
-        
-    def Client2View(self):
-        item_sel = str(self.listClient.currentItem().text())        
-        # filtering the string to get the doc_id of the data base
-        item_split = item_sel.split('[')                
-        db_id = item_split[1][:-1]
-        #save data of the current selected client for future argument function
-        clientSel = self.dbClientManage.get(doc_id=int(db_id))          
-        # open a new window
-        self.windowClientView=QtWidgets.QMainWindow()
-        self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.windowClientView)        
-        self.ui.setup(self.windowClientView)
-        self.windowClientView.show()        
 
-    def SearchDNI(self):
+    def ClientManageSelect(self):
+        item_sel = self.listClient.selectedItems()
+        if item_sel:
+            item_curr = str(self.listClient.currentItem().text())                    
+            # filtering the string to get the doc_id of the data base
+            item_split = item_curr.split('[')                
+            db_id = item_split[1][:-1]
+            #save data of the current selected client for future argument function
+            doc = self.dbClientManage.get(doc_id=int(db_id))
+            clientTemp =  "Cliente: " +\
+                          doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
+                          doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
+                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"   
+            self.PrincipalWindow.statusBar().showMessage(clientTemp)
+
+        else:
+            dialog = QtWidgets.QMessageBox()
+            dialog.setWindowTitle(WIN_TITLE)
+            dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+            dialog.setIcon(QtWidgets.QMessageBox.Warning)
+            dialog.setText("No ha seleccionado ningun cliente")
+            dialog.addButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()          
+    
+    def ClientManageExit(self):
+        self.wClientManage.hide()
+    
+    def ClientManage2View(self):
+        item_sel = self.listClient.selectedItems()
+        if item_sel:
+            item_curr = str(self.listClient.currentItem().text())        
+            # filtering the string to get the doc_id of the data base
+            item_split = item_curr.split('[')                
+            db_id = item_split[1][:-1]
+            #save data of the current selected client for future argument function
+            clientSel = self.dbClientManage.get(doc_id=int(db_id))          
+            # open a new window
+            self.windowClientView=QtWidgets.QMainWindow()
+            self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.windowClientView)        
+            self.ui.setup(self.windowClientView)
+            self.windowClientView.show()        
+        else:
+            dialog = QtWidgets.QMessageBox()
+            dialog.setWindowTitle(WIN_TITLE)
+            dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+            dialog.setIcon(QtWidgets.QMessageBox.Warning)
+            dialog.setText("No ha seleccionado ningun cliente")
+            dialog.addButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()
+
+    def ClientManageSearchDNI(self):
         # get value from the textbox
         dni2search = self.LineDNI.text()
         
         # search for any match in database
         docs = self.dbClientManage.search(where('DNI') == dni2search)
-        if not docs:
-            print('No docs found, och....')
-            exit(0)       
+        if not docs:        
+            dialog = QtWidgets.QMessageBox()
+            dialog.setWindowTitle(WIN_TITLE)
+            dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+            dialog.setIcon(QtWidgets.QMessageBox.Warning)
+            dialog.setText("No existe este valor")
+            dialog.addButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()          
 
         # create a temp list with the fields to show in the listbox        
         lClient = []      
         for doc in docs:
-            clientTemp =  doc['Surname1'] + " " + doc['Surname2'] + " " +\
-                          doc['Name'] + " " + doc['DNI'] + " " + doc['Phone'] +\
-                          doc['Email'] + " [" + str(doc.doc_id) + "]"  
-            #print(clientTemp)
+            clientTemp =  doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
+                          doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
+                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"  
             lClient.append(clientTemp) 
             
         # add items to the listbox
@@ -122,23 +164,27 @@ class Ui_ClientManage(object):
         for i in range(len(lClient)):    
             self.listClient.insertItem(i, lClient[i])
 
-    def SearchPhone(self):    
+    def ClientManageSearchPhone(self):    
         # get value from the textbox
         phone2search = self.LinePhone.text()
         
         # search for any match in database
         docs = self.dbClientManage.search(where('Phone') == phone2search)
         if not docs:
-            print('No docs found, och....')
-            exit(0)       
+            dialog = QtWidgets.QMessageBox()
+            dialog.setWindowTitle(WIN_TITLE)
+            dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+            dialog.setIcon(QtWidgets.QMessageBox.Warning)
+            dialog.setText("No existe este valor")
+            dialog.addButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()          
 
         # create a temp list with the fields to show in the listbox
         lClient = []      
         for doc in docs:
-            clientTemp =  doc['Surname1'] + " " + doc['Surname2'] + " " +\
-                          doc['Name'] + " " + doc['DNI'] + " " + doc['Phone'] +\
-                          doc['Email'] + " [" + str(doc.doc_id) + "]"  
-            #print(clientTemp)
+            clientTemp =  doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
+                          doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
+                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"  
             lClient.append(clientTemp) 
             
         # add items to the listbox
@@ -146,23 +192,27 @@ class Ui_ClientManage(object):
         for i in range(len(lClient)):    
             self.listClient.insertItem(i, lClient[i])
 
-    def SearchEmail(self):
+    def ClientManageSearchEmail(self):
         # get value from the textbox
         email2search = self.LineEmail.text()
         
         # search for any match in database
         docs = self.dbClientManage.search(where('Email') == email2search)
         if not docs:
-            print('No docs found, och....')
-            exit(0)       
+            dialog = QtWidgets.QMessageBox()
+            dialog.setWindowTitle(WIN_TITLE)
+            dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+            dialog.setIcon(QtWidgets.QMessageBox.Warning)
+            dialog.setText("No existe este valor")
+            dialog.addButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()          
 
         # create a temp list with the fields to show in the listbox
         lClient = []      
         for doc in docs:
-            clientTemp =  doc['Surname1'] + " " + doc['Surname2'] + " " +\
-                          doc['Name'] + " " + doc['DNI'] + " " + doc['Phone'] +\
-                          doc['Email'] + " [" + str(doc.doc_id) + "]"  
-            #print(clientTemp)
+            clientTemp =  doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
+                          doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
+                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"  
             lClient.append(clientTemp) 
             
         # add items to the listbox

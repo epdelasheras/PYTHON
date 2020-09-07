@@ -20,7 +20,8 @@ class Ui_ClientView(object):
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(449, 749)
+        MainWindow.resize(450, 750)
+        MainWindow.setMaximumSize(QtCore.QSize(450, 750))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.LabelName = QtWidgets.QLabel(self.centralwidget)
@@ -121,7 +122,7 @@ class Ui_ClientView(object):
         self.LabelFlatBuy.setText(_translate("MainWindow", "Lista de Compras"))
         self.LabelEmail.setText(_translate("MainWindow", "Email:"))
         self.lineEmailView.setText(_translate("MainWindow", "EmailView"))
-
+        
         # Edit line widgets with data client
         self.lineNameView.setText(_translate("MainWindow", self.clientData['Name']))
         self.lineSurname1View.setText(_translate("MainWindow", self.clientData['Surname1']))
@@ -131,13 +132,13 @@ class Ui_ClientView(object):
         self.lineEmailView.setText(_translate("MainWindow", self.clientData['Email']))
 
         # mouse click connect functions
-        self.ButtonEdit.clicked.connect(self.EditClientData)
-        self.ButtonSave.clicked.connect(self.SaveClientData)
-        self.ButtonExit.clicked.connect(self.ExitClientData)
+        self.ButtonEdit.clicked.connect(self.ClientViewEdit)
+        self.ButtonSave.clicked.connect(self.ClientViewSave)
+        self.ButtonExit.clicked.connect(self.ClientViewExit)
 
 # methods related to the action buttons
         
-    def EditClientData(self):
+    def ClientViewEdit(self):
         self.lineNameView.setEnabled(True)
         self.lineSurname1View.setEnabled(True)
         self.lineSurname2View.setEnabled(True)
@@ -145,7 +146,7 @@ class Ui_ClientView(object):
         self.linePhoneView.setEnabled(True)
         self.lineEmailView.setEnabled(True)
 
-    def SaveClientData(self):
+    def ClientViewSave(self):
         self.dbClientView.update({'Name': self.lineNameView.text()}, doc_ids = [self.clientData.doc_id])
         self.dbClientView.update({'Surname1': self.lineSurname1View.text()}, doc_ids = [self.clientData.doc_id])
         self.dbClientView.update({'Surname2': self.lineSurname2View.text()}, doc_ids = [self.clientData.doc_id])
@@ -154,6 +155,6 @@ class Ui_ClientView(object):
         self.dbClientView.update({'Email': self.lineEmailView.text()}, doc_ids = [self.clientData.doc_id])
         print(self.dbClientView.all())
 
-    def ExitClientData(self):
+    def ClientViewExit(self):
         self.windowClientView.hide()
         
