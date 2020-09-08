@@ -30,7 +30,8 @@ class Ui_MainWindow(object):
         self.splitter_2 = QtWidgets.QSplitter(self.centralwidget)
         self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
         self.splitter_2.setObjectName("splitter_2")
-        self.tree_widget = QtWidgets.QTreeWidget(self.splitter_2)
+        #self.tree_widget = QtWidgets.QTreeWidget(self.splitter_2)
+        self.tree_widget = TreeWidget(self.splitter_2)
         self.tree_widget.setMaximumSize(QtCore.QSize(300, 16777215))
         self.tree_widget.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed|QtWidgets.QAbstractItemView.SelectedClicked)
         self.tree_widget.setUniformRowHeights(True)
@@ -117,7 +118,8 @@ class Ui_MainWindow(object):
         self.file_open.setText(_translate("MainWindow", "Abrir"))
         self.file_quit.setText(_translate("MainWindow", "Salir"))
         self.client_new.setText(_translate("MainWindow", "Nuevo"))
-        self.client_manage.setText(_translate("MainWindow", "Gestionar"))
+        self.client_manage.setText(_translate("MainWindow", "Gestionar"))             
+        
 
         # load default GUI settings
         self.excelFileName = "./database.xlsx"
@@ -127,9 +129,10 @@ class Ui_MainWindow(object):
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
         MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))        
 
-        # mouse click connect functions
+        # mouse click connect functions 
+        self.tree_widget.right_click.connect(self.TreeItemRightMenu)
         self.tree_widget.itemClicked.connect(self.TreeItemSel)
-        self.tree_widget.itemExpanded.connect(self.TreeItemSel)
+        self.tree_widget.itemExpanded.connect(self.TreeItemSel)        
         self.lb_room.clicked.connect(self.ListRoomSel)
         self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
         self.file_open.triggered.connect(self.MenuArhiveOpen)
@@ -138,8 +141,11 @@ class Ui_MainWindow(object):
         self.client_manage.triggered.connect(self.ClientManage)             
 
         # create database
-        self.db_ADECUA = TinyDB("ADECUA_DB.json")   
-
+        self.db_ADECUA = TinyDB("ADECUA_DB.json")       
+    
+    def TreeItemRightMenu(sef):
+        print ("Mostrar Menu de reserva")
+    
     def ClientNew(self):
         self.windowClientNew=QtWidgets.QMainWindow()
         self.ui=Ui_ClientNew(self.db_ADECUA, self.windowClientNew)        
@@ -223,6 +229,19 @@ class Ui_MainWindow(object):
                        self.qtwidget_type, self.tree_widget, item_sel)
 
         self.TreeItemSel()
+
+
+# Class to handle right click button action over tree widget
+class TreeWidget(QtWidgets.QTreeWidget):
+    # Handling mouse clicks on treeview
+    right_click = QtCore.pyqtSignal()
+
+    def mousePressEvent(self, event):
+        super(TreeWidget, self).mousePressEvent(event)
+        if event.button() == QtCore.Qt.RightButton:
+            print("boton derecho pulsado")
+            self.right_click.emit()
+   
 
 if __name__ == "__main__":
     #import sys

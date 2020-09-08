@@ -95,7 +95,7 @@
    <widget class="QPushButton" name="ButtonView">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>130</x>
       <y>410</y>
       <width>101</width>
       <height>23</height>
@@ -131,12 +131,25 @@
      <string>Buscar por Email</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="ButtonErase">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>410</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Borrar</string>
+    </property>
+   </widget>
    <widget class="QPushButton" name="ButtonExit">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>350</x>
       <y>410</y>
-      <width>101</width>
+      <width>91</width>
       <height>23</height>
      </rect>
     </property>

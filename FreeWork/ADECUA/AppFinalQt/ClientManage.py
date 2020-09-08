@@ -47,7 +47,7 @@ class Ui_ClientManage(object):
         self.ButtonSelect.setGeometry(QtCore.QRect(20, 410, 101, 23))
         self.ButtonSelect.setObjectName("ButtonSelect")
         self.ButtonView = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonView.setGeometry(QtCore.QRect(190, 410, 101, 23))
+        self.ButtonView.setGeometry(QtCore.QRect(130, 410, 101, 23))
         self.ButtonView.setObjectName("ButtonView")
         self.ButtonSearchPhone = QtWidgets.QPushButton(self.centralwidget)
         self.ButtonSearchPhone.setGeometry(QtCore.QRect(260, 60, 141, 23))
@@ -55,8 +55,11 @@ class Ui_ClientManage(object):
         self.ButtonSearchEmail = QtWidgets.QPushButton(self.centralwidget)
         self.ButtonSearchEmail.setGeometry(QtCore.QRect(260, 90, 141, 23))
         self.ButtonSearchEmail.setObjectName("ButtonSearchEmail")
+        self.ButtonErase = QtWidgets.QPushButton(self.centralwidget)
+        self.ButtonErase.setGeometry(QtCore.QRect(240, 410, 101, 23))
+        self.ButtonErase.setObjectName("ButtonErase")
         self.ButtonExit = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonExit.setGeometry(QtCore.QRect(370, 410, 101, 23))
+        self.ButtonExit.setGeometry(QtCore.QRect(350, 410, 91, 23))
         self.ButtonExit.setObjectName("ButtonExit")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -74,8 +77,8 @@ class Ui_ClientManage(object):
         self.ButtonView.setText(_translate("MainWindow", "Ver"))
         self.ButtonSearchPhone.setText(_translate("MainWindow", "Buscar por Telf."))
         self.ButtonSearchEmail.setText(_translate("MainWindow", "Buscar por Email"))
+        self.ButtonErase.setText(_translate("MainWindow", "Borrar"))
         self.ButtonExit.setText(_translate("MainWindow", "Salir"))
-
 # mouse click connect functions
         self.ButtonSearchDNI.clicked.connect(self.ClientManageSearchDNI)
         self.ButtonSearchPhone.clicked.connect(self.ClientManageSearchPhone)
@@ -83,8 +86,30 @@ class Ui_ClientManage(object):
         self.ButtonView.clicked.connect(self.ClientManage2View)        
         self.ButtonExit.clicked.connect(self.ClientManageExit)      
         self.ButtonSelect.clicked.connect(self.ClientManageSelect)      
+        self.ButtonErase.clicked.connect(self.ClientManageErase)      
 
 # methods related to the action buttons
+
+    def ClientManageErase(self):
+        item_sel = self.listClient.selectedItems()                
+        
+        if item_sel:
+            item_curr = str(self.listClient.currentItem().text())                    
+            # filtering the string to get the doc_id of the data base.
+            item_split = item_curr.split('[')                
+            db_id = item_split[1][:-1]
+            # remove item from the database.
+            self.dbClientManage.remove(doc_ids = [int(db_id)])
+            # remove item from the listbox.
+            self.listClient.takeItem(self.listClient.currentRow())            
+        else:
+            dialog = QtWidgets.QMessageBox()
+            dialog.setWindowTitle(WIN_TITLE)
+            dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+            dialog.setIcon(QtWidgets.QMessageBox.Warning)
+            dialog.setText("No ha seleccionado ningun cliente")
+            dialog.addButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()        
 
     def ClientManageSelect(self):
         item_sel = self.listClient.selectedItems()
@@ -115,6 +140,7 @@ class Ui_ClientManage(object):
     
     def ClientManage2View(self):
         item_sel = self.listClient.selectedItems()
+        print(item_sel)
         if item_sel:
             item_curr = str(self.listClient.currentItem().text())        
             # filtering the string to get the doc_id of the data base
