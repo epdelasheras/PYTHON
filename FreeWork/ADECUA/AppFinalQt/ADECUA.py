@@ -129,7 +129,7 @@ class Ui_MainWindow(object):
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
         MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))        
 
-        # mouse click connect functions 
+        # mouse click connect functions         
         self.tree_widget.right_click.connect(self.TreeItemRightMenu)
         self.tree_widget.itemClicked.connect(self.TreeItemSel)
         self.tree_widget.itemExpanded.connect(self.TreeItemSel)        
@@ -141,17 +141,21 @@ class Ui_MainWindow(object):
         self.client_manage.triggered.connect(self.ClientManage)             
 
         # create database
-        self.db_ADECUA = TinyDB("ADECUA_DB.json")       
-    
-    def TreeItemRightMenu(sef):
-        print ("Mostrar Menu de reserva")
-    
+        self.db_ADECUA = TinyDB("ADECUA_DB.json")           
+
+    def TreeItemRightMenu(self): 
+        if self.tree_widget.action == self.tree_widget.favAction:
+            print ("Favorito")
+        elif self.tree_widget.action == self.tree_widget.bookAction:
+            print ("Reserva")
+        elif self.tree_widget.action == self.tree_widget.buyAction:
+            print ("Compra")
+
     def ClientNew(self):
         self.windowClientNew=QtWidgets.QMainWindow()
         self.ui=Ui_ClientNew(self.db_ADECUA, self.windowClientNew)        
         self.ui.setup(self.windowClientNew)
-        self.windowClientNew.show()
-        
+        self.windowClientNew.show()        
 
     def ClientManage(self):        
         self.windowClientManage=QtWidgets.QMainWindow()
@@ -232,15 +236,21 @@ class Ui_MainWindow(object):
 
 
 # Class to handle right click button action over tree widget
-class TreeWidget(QtWidgets.QTreeWidget):
+class TreeWidget(QtWidgets.QTreeWidget):   
+
     # Handling mouse clicks on treeview
-    right_click = QtCore.pyqtSignal()
+    right_click = QtCore.pyqtSignal() 
 
     def mousePressEvent(self, event):
         super(TreeWidget, self).mousePressEvent(event)
-        if event.button() == QtCore.Qt.RightButton:
-            print("boton derecho pulsado")
+        if event.button() == QtCore.Qt.RightButton:            
+            menu = QtWidgets.QMenu()
+            self.favAction = menu.addAction("Añadir a favoritos") 
+            self.bookAction = menu.addAction("Reservar")   
+            self.buyAction = menu.addAction("Comprar")   
+            self.action = menu.exec_(event.globalPos())          
             self.right_click.emit()
+            
    
 
 if __name__ == "__main__":
