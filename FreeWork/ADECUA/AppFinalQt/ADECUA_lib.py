@@ -74,7 +74,8 @@ def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tre
             #print(picname_split)
             location, n_room = givemeNroomLocation(picname_split[0], picname, excelFileName)
             #print(location, n_room)
-            tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")
+            tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")                  
+            
 
 def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
                    qtwidget_floor,qtwidget_type, tree_widget, item_sel):

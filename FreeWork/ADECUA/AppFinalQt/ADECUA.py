@@ -127,43 +127,37 @@ class Ui_MainWindow(object):
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
-        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))        
+        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))               
 
         # mouse click connect functions         
-        self.tree_widget.right_click.connect(self.TreeItemRightMenu)
-        self.tree_widget.itemClicked.connect(self.TreeItemSel)
-        self.tree_widget.itemExpanded.connect(self.TreeItemSel)        
-        self.lb_room.clicked.connect(self.ListRoomSel)
-        self.lb_roomplace.clicked.connect(self.ListRoomPlaceSel)
-        self.file_open.triggered.connect(self.MenuArhiveOpen)
-        self.file_quit.triggered.connect(self.MenuArhiveQuit)
-        self.client_new.triggered.connect(self.ClientNew)             
-        self.client_manage.triggered.connect(self.ClientManage)             
+        self.tree_widget.right_click.connect(self.AdecuaTreeItemRightMenu)
+        self.tree_widget.itemClicked.connect(self.AdecuaTreeItemSel)
+        self.tree_widget.itemExpanded.connect(self.AdecuaTreeItemSel)        
+        self.lb_room.clicked.connect(self.AdecuaListRoomSel)
+        self.lb_roomplace.clicked.connect(self.AdecuaListRoomPlaceSel)
+        self.file_open.triggered.connect(self.AdecuaMenuArhiveOpen)
+        self.file_quit.triggered.connect(self.AdecuaMenuArhiveQuit)
+        self.client_new.triggered.connect(self.AdecuaMenuClientNew)             
+        self.client_manage.triggered.connect(self.AdecuaMenuClientManage)             
 
         # create database
         self.db_ADECUA = TinyDB("ADECUA_DB.json")           
 
-    def TreeItemRightMenu(self): 
-        if self.tree_widget.action == self.tree_widget.favAction:
-            print ("Favorito")
-        elif self.tree_widget.action == self.tree_widget.bookAction:
-            print ("Reserva")
-        elif self.tree_widget.action == self.tree_widget.buyAction:
-            print ("Compra")
-
-    def ClientNew(self):
+    #-- Menu methods --#
+    
+    def AdecuaMenuClientNew(self):
         self.windowClientNew=QtWidgets.QMainWindow()
         self.ui=Ui_ClientNew(self.db_ADECUA, self.windowClientNew)        
         self.ui.setup(self.windowClientNew)
         self.windowClientNew.show()        
 
-    def ClientManage(self):        
+    def AdecuaMenuClientManage(self):        
         self.windowClientManage=QtWidgets.QMainWindow()
         self.ui=Ui_ClientManage(self.db_ADECUA, self.windowClientManage, MainWindow)
         self.ui.setup(self.windowClientManage)
         self.windowClientManage.show()
     
-    def MenuArhiveOpen(self):
+    def AdecuaMenuArhiveOpen(self):
         # Open excel file
         dialog = QtWidgets.QFileDialog()
         dialog.setWindowTitle("Abrir fichero")        
@@ -187,7 +181,7 @@ class Ui_MainWindow(object):
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
                 
 
-    def MenuArhiveQuit(self):
+    def AdecuaMenuArhiveQuit(self):
         sys.exit()
         '''
         dialog = QtWidgets.QMessageBox()
@@ -199,7 +193,38 @@ class Ui_MainWindow(object):
         dialog.exec()
         '''   
 
-    def TreeItemSel(self):
+    #-- Widget methods --#
+    
+    def AdecuaTreeItemRightMenu(self): 
+    # when righ click is over tree item...
+        item_sel = self.tree_widget.selectedItems()        
+        if item_sel:
+            # check if user makes right click over the right tree item
+            mouse_pos = False
+            for i in range(len(self.qtwidget_type)):
+                if self.qtwidget_type[i] == item_sel[0]:
+                    mouse_pos = True
+
+            # only launch the action when the user makes click over the right item.
+            if mouse_pos == True:
+                    if self.tree_widget.action == self.tree_widget.favAction:
+                        print ("Favorito")                        
+                    elif self.tree_widget.action == self.tree_widget.bookAction:
+                        print ("Reserva")
+                    elif self.tree_widget.action == self.tree_widget.buyAction:
+                        print ("Compra")                        
+            else:
+                    print("Error")                    
+                    dialog = QtWidgets.QMessageBox()
+                    dialog.setWindowTitle(WIN_TITLE)
+                    dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+                    dialog.setIcon(QtWidgets.QMessageBox.Warning)
+                    dialog.setText("Seleccion incorrecta")
+                    dialog.addButton(QtWidgets.QMessageBox.Ok)
+                    dialog.exec()                  
+
+    
+    def AdecuaTreeItemSel(self):
     # when one item is selected...
         item_sel = self.tree_widget.selectedItems()
         #print(item_sel)
@@ -216,7 +241,7 @@ class Ui_MainWindow(object):
         self.tree_widget.header().setStretchLastSection(False)
 
 
-    def ListRoomSel(self):
+    def AdecuaListRoomSel(self):
     # when one item is selected...
         #item_sel = str(self.lb_room.currentRow() + 1) + "D"
         #print(item_sel)
@@ -224,25 +249,22 @@ class Ui_MainWindow(object):
         item = item_sel[0].text()
         lbRoomPlaceAddItems(item, self.lb_roomplace, self.excelFileName)
 
-    def ListRoomPlaceSel(self):
+    def AdecuaListRoomPlaceSel(self):
     # when one item is selected...
         item_sel = str(self.lb_roomplace.currentItem().text())
         #print(item_sel)
         expandTreeItem(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
                        self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
                        self.qtwidget_type, self.tree_widget, item_sel)
-
-        self.TreeItemSel()
-
+        self.AdecuaTreeItemSel()
 
 # Class to handle right click button action over tree widget
-class TreeWidget(QtWidgets.QTreeWidget):   
-
+class TreeWidget(QtWidgets.QTreeWidget):          
     # Handling mouse clicks on treeview
-    right_click = QtCore.pyqtSignal() 
+    right_click = QtCore.pyqtSignal()               
 
     def mousePressEvent(self, event):
-        super(TreeWidget, self).mousePressEvent(event)
+        super(TreeWidget, self).mousePressEvent(event)                    
         if event.button() == QtCore.Qt.RightButton:            
             menu = QtWidgets.QMenu()
             self.favAction = menu.addAction("Añadir a favoritos") 
@@ -250,14 +272,12 @@ class TreeWidget(QtWidgets.QTreeWidget):
             self.buyAction = menu.addAction("Comprar")   
             self.action = menu.exec_(event.globalPos())          
             self.right_click.emit()
-            
-   
 
 if __name__ == "__main__":
     #import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui.setupUi(MainWindow)     
     MainWindow.show()
     sys.exit(app.exec_())
