@@ -178,8 +178,7 @@ class Ui_MainWindow(object):
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
-        MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
-                
+        MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")        
 
     def AdecuaMenuArhiveQuit(self):
         sys.exit()
@@ -196,9 +195,14 @@ class Ui_MainWindow(object):
     #-- Widget methods --#
     
     def AdecuaTreeItemRightMenu(self): 
-    # when righ click is over tree item...
-        item_sel = self.tree_widget.selectedItems()        
-        if item_sel:
+    # when righ click is over tree item...                
+        item_sel = self.tree_widget.selectedItems()
+        if item_sel:           
+            print(item_sel)
+            # implementar una funcion que recorra toda la lista self.tree_type y cuando encuentre el item_sel 
+            # guardar esa posicion e imprimir el self.tree_picname. Es jugar con ambas listas
+
+
             # check if user makes right click over the right tree item
             mouse_pos = False
             for i in range(len(self.qtwidget_type)):
@@ -207,22 +211,37 @@ class Ui_MainWindow(object):
 
             # only launch the action when the user makes click over the right item.
             if mouse_pos == True:
+                # read statusbar string
+                statusBarText = self.statusbar.currentMessage()
+                # filtering the string to get the doc_id of the data base                
+                statusBarText_split = statusBarText.split('[')                
+                #db_id = statusBarText_split[1][:-1]
+                # execute code only if a client is selected.
+                if len(statusBarText_split) > 1:                    
+                    item_sel = self.tree_widget.selectedItems()        
                     if self.tree_widget.action == self.tree_widget.favAction:
                         print ("Favorito")                        
                     elif self.tree_widget.action == self.tree_widget.bookAction:
                         print ("Reserva")
                     elif self.tree_widget.action == self.tree_widget.buyAction:
-                        print ("Compra")                        
-            else:
-                    print("Error")                    
+                        print ("Compra")  
+                else:                     
                     dialog = QtWidgets.QMessageBox()
                     dialog.setWindowTitle(WIN_TITLE)
                     dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
                     dialog.setIcon(QtWidgets.QMessageBox.Warning)
-                    dialog.setText("Seleccion incorrecta")
+                    dialog.setText("Error en la seleccion de cliente")
                     dialog.addButton(QtWidgets.QMessageBox.Ok)
-                    dialog.exec()                  
-
+                    dialog.exec()                        
+            # if the user does not make click over the right item...
+            else:                 
+                 dialog = QtWidgets.QMessageBox()
+                 dialog.setWindowTitle(WIN_TITLE)
+                 dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+                 dialog.setIcon(QtWidgets.QMessageBox.Warning)
+                 dialog.setText("Seleccion incorrecta")
+                 dialog.addButton(QtWidgets.QMessageBox.Ok)
+                 dialog.exec()               
     
     def AdecuaTreeItemSel(self):
     # when one item is selected...
