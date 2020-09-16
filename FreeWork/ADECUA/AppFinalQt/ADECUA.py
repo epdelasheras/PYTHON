@@ -197,16 +197,13 @@ class Ui_MainWindow(object):
     def AdecuaTreeItemRightMenu(self): 
     # when righ click is over tree item...                
         item_sel = self.tree_widget.selectedItems()
-        if item_sel:           
-            print(item_sel)
-            # implementar una funcion que recorra toda la lista self.tree_type y cuando encuentre el item_sel 
-            # guardar esa posicion e imprimir el self.tree_picname. Es jugar con ambas listas
-
-
+        if item_sel:                                      
             # check if user makes right click over the right tree item
             mouse_pos = False
             for i in range(len(self.qtwidget_type)):
                 if self.qtwidget_type[i] == item_sel[0]:
+                    print(self.tree_picname[i])
+                    flat_sel_temp = self.tree_picname[i]
                     mouse_pos = True
 
             # only launch the action when the user makes click over the right item.
@@ -219,7 +216,8 @@ class Ui_MainWindow(object):
                 # execute code only if a client is selected.
                 if len(statusBarText_split) > 1:                    
                     item_sel = self.tree_widget.selectedItems()        
-                    if self.tree_widget.action == self.tree_widget.favAction:
+                    print(flat_sel_temp)
+                    if self.tree_widget.action == self.tree_widget.favAction:                        
                         print ("Favorito")                        
                     elif self.tree_widget.action == self.tree_widget.bookAction:
                         print ("Reserva")
