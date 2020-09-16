@@ -201,8 +201,7 @@ class Ui_MainWindow(object):
             # check if user makes right click over the right tree item
             mouse_pos = False
             for i in range(len(self.qtwidget_type)):
-                if self.qtwidget_type[i] == item_sel[0]:
-                    print(self.tree_picname[i])
+                if self.qtwidget_type[i] == item_sel[0]:                    
                     flat_sel_temp = self.tree_picname[i]
                     mouse_pos = True
 
@@ -216,7 +215,15 @@ class Ui_MainWindow(object):
                 # execute code only if a client is selected.
                 if len(statusBarText_split) > 1:                    
                     item_sel = self.tree_widget.selectedItems()        
+
+                    # Getting info from the selected item
                     print(flat_sel_temp)
+                    flat_sel_temp_split = flat_sel_temp.split("-", 1)
+                    location, n_room = givemeNroomLocation(flat_sel_temp_split[0], flat_sel_temp, self.excelFileName)
+                    print(location)
+                    print(n_room)
+                    #
+
                     if self.tree_widget.action == self.tree_widget.favAction:                        
                         print ("Favorito")                        
                     elif self.tree_widget.action == self.tree_widget.bookAction:
