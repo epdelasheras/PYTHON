@@ -206,6 +206,7 @@ class Ui_MainWindow(object):
                     mouse_pos = True
 
             # only launch the action when the user makes click over the right item.
+             # only launch the action when the user makes click over the right item.
             if mouse_pos == True:
                 # read statusbar string
                 statusBarText = self.statusbar.currentMessage()
