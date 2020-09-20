@@ -181,16 +181,7 @@ class Ui_MainWindow(object):
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")        
 
     def AdecuaMenuArhiveQuit(self):
-        sys.exit()
-        '''
-        dialog = QtWidgets.QMessageBox()
-        dialog.setWindowTitle(WIN_TITLE)
-        dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
-        dialog.setIcon(QtWidgets.QMessageBox.Warning)
-        dialog.setText("Esta opción aun no esta implementada")
-        dialog.addButton(QtWidgets.QMessageBox.Ok)
-        dialog.exec()
-        '''   
+        sys.exit()        
 
     #-- Widget methods --#
     
@@ -206,8 +197,7 @@ class Ui_MainWindow(object):
                     flat_sel_temp = self.tree_picname[i]
                     mouse_pos = True
 
-            # only launch the action when the user makes click over the right item.
-             # only launch the action when the user makes click over the right item.
+            # only launch the action when the user makes click over the right item.            
             if mouse_pos == True:
                 # read statusbar string
                 statusBarText = self.statusbar.currentMessage()
@@ -232,23 +222,12 @@ class Ui_MainWindow(object):
                         print ("Reserva")
                     elif self.tree_widget.action == self.tree_widget.buyAction:
                         print ("Compra")  
-                else:                     
-                    dialog = QtWidgets.QMessageBox()
-                    dialog.setWindowTitle(WIN_TITLE)
-                    dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
-                    dialog.setIcon(QtWidgets.QMessageBox.Warning)
-                    dialog.setText("Error en la seleccion de cliente")
-                    dialog.addButton(QtWidgets.QMessageBox.Ok)
-                    dialog.exec()                        
+                else:    
+                    popupWarningWindow("Error en la seleccion de cliente");                 
+                                           
             # if the user does not make click over the right item...
-            else:                 
-                 dialog = QtWidgets.QMessageBox()
-                 dialog.setWindowTitle(WIN_TITLE)
-                 dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
-                 dialog.setIcon(QtWidgets.QMessageBox.Warning)
-                 dialog.setText("Seleccion incorrecta")
-                 dialog.addButton(QtWidgets.QMessageBox.Ok)
-                 dialog.exec()               
+            else:  
+                popupWarningWindow("Seleccion incorrecta")
     
     def AdecuaTreeItemSel(self):
     # when one item is selected...

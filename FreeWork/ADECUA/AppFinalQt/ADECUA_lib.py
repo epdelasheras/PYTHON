@@ -276,3 +276,13 @@ def lbRoomPlaceAddItems(item, Listbox, excelFileName):
     lst_item.sort()
     for i in range(len(lst_item)):
         Listbox.insertItem(i, lst_item[i])
+
+
+def popupWarningWindow(text):
+    dialog = QtWidgets.QMessageBox()
+    dialog.setWindowTitle(WIN_TITLE)
+    dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+    dialog.setIcon(QtWidgets.QMessageBox.Warning)
+    dialog.setText(text)
+    dialog.addButton(QtWidgets.QMessageBox.Ok)
+    dialog.exec() 
