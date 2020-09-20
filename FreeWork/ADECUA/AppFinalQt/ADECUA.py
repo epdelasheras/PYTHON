@@ -207,6 +207,7 @@ class Ui_MainWindow(object):
                     mouse_pos = True
 
             # only launch the action when the user makes click over the right item.
+             # only launch the action when the user makes click over the right item.
             if mouse_pos == True:
                 # read statusbar string
                 statusBarText = self.statusbar.currentMessage()
@@ -216,7 +217,15 @@ class Ui_MainWindow(object):
                 # execute code only if a client is selected.
                 if len(statusBarText_split) > 1:                    
                     item_sel = self.tree_widget.selectedItems()        
+
+                    # Getting info from the selected item
                     print(flat_sel_temp)
+                    flat_sel_temp_split = flat_sel_temp.split("-", 1)
+                    location, n_room = givemeNroomLocation(flat_sel_temp_split[0], flat_sel_temp, self.excelFileName)
+                    print(location)
+                    print(n_room)
+                    #
+
                     if self.tree_widget.action == self.tree_widget.favAction:                        
                         print ("Favorito")                        
                     elif self.tree_widget.action == self.tree_widget.bookAction:
