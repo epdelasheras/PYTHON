@@ -9,14 +9,29 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from tinydb import TinyDB, Query
 
 class Ui_ClientView(object):
-    def __init__(self, clientSel, dbClientManage, windowClientView):
+    def __init__(self, clientSel, dbClientManage, dbTableFavClientManage, dbTableBookClientManage,
+                dbTableBuyClientManage, windowClientView):
         self.dbClientView = dbClientManage # copy database to a local variable. 
         self.windowClientView = windowClientView #copy window var to a loca var.
         self.clientData = clientSel
+        # copy database tables to local variables
+        self.dbTableFavClientView = dbTableFavClientManage
+        self.dbTableBookClientView = dbTableBookClientManage
+        self.dbTableBuyClientView = dbTableBuyClientManage
 
+        print(self.clientData.doc_id)
+        #print(self.dbTableFavClientView.all())
+
+        flatFav = Query()
+        docs = self.dbTableFavClientView.search(flatFav.Id == str(self.clientData.doc_id))
+        lflatFav = []
+        for doc in docs:
+            listFlatFavTxt = 'Apartamento: ' + str(doc['Picname']) + ' | ' + 'Habitaciones: ' +\
+                              str(doc['NumRoom']) + ' | ' + 'Coordenadas: ' + str(doc['Coordinates'])
+            lflatFav.append(listFlatFavTxt)   
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")

@@ -15,10 +15,15 @@ from ClientView import *
 from ADECUA_lib import *
 
 class Ui_ClientManage(object):
-    def __init__(self, db_ADECUA, windowClientManage, MainWindow):
+    def __init__(self, db_ADECUA, db_ADECUA_TableFlatFav, db_ADECUA_TableFlatBook,
+                 db_ADECUA_TableFlatBuy, windowClientManage, MainWindow):
         self.dbClientManage = db_ADECUA # copy database to a local variable. 
         self.wClientManage = windowClientManage #copy window var to a loca var.
         self.PrincipalWindow = MainWindow
+        # copy database tables to local variables
+        self.dbTableFavClientManage = db_ADECUA_TableFlatFav
+        self.dbTableBookClientManage = db_ADECUA_TableFlatBook
+        self.dbTableBuyClientManage = db_ADECUA_TableFlatBuy
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -150,7 +155,9 @@ class Ui_ClientManage(object):
             clientSel = self.dbClientManage.get(doc_id=int(db_id))          
             # open a new window
             self.windowClientView=QtWidgets.QMainWindow()
-            self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.windowClientView)        
+            self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.dbTableFavClientManage,
+                                  self.dbTableBookClientManage, self.dbTableBuyClientManage,
+                                  self.windowClientView)        
             self.ui.setup(self.windowClientView)
             self.windowClientView.show()        
         else:

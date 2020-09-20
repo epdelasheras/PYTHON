@@ -140,8 +140,11 @@ class Ui_MainWindow(object):
         self.client_new.triggered.connect(self.AdecuaMenuClientNew)             
         self.client_manage.triggered.connect(self.AdecuaMenuClientManage)             
 
-        # create database
-        self.db_ADECUA = TinyDB("ADECUA_DB.json")           
+        # create database and tables
+        self.db_ADECUA = TinyDB("ADECUA_DB.json") 
+        self.db_ADECUA_TableFlatFav = self.db_ADECUA.table("FLATS_FAV")
+        self.db_ADECUA_TableFlatBook = self.db_ADECUA.table("FLATS_BOOK")
+        self.db_ADECUA_TableFlatBuy = self.db_ADECUA.table("FLATS_BUY")       
 
     #-- Menu methods --#
     
@@ -153,7 +156,8 @@ class Ui_MainWindow(object):
 
     def AdecuaMenuClientManage(self):        
         self.windowClientManage=QtWidgets.QMainWindow()
-        self.ui=Ui_ClientManage(self.db_ADECUA, self.windowClientManage, MainWindow)
+        self.ui=Ui_ClientManage(self.db_ADECUA, self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
+                                self.db_ADECUA_TableFlatBuy, self.windowClientManage, MainWindow)
         self.ui.setup(self.windowClientManage)
         self.windowClientManage.show()
     
@@ -193,7 +197,7 @@ class Ui_MainWindow(object):
             mouse_pos = False
             for i in range(len(self.qtwidget_type)):
                 if self.qtwidget_type[i] == item_sel[0]:                    
-                    flat_sel_temp = self.tree_picname[i]
+                    flat_picname = self.tree_picname[i]
                     mouse_pos = True
 
             # only launch the action when the user makes click over the right item.            
@@ -201,25 +205,34 @@ class Ui_MainWindow(object):
                 # read statusbar string
                 statusBarText = self.statusbar.currentMessage()
                 # filtering the string to get the doc_id of the data base                
-                statusBarText_split = statusBarText.split('[')                
-                #db_id = statusBarText_split[1][:-1]
+                statusBarText_split = statusBarText.split('[')           
                 # execute code only if a client is selected.
-                if len(statusBarText_split) > 1:                    
+                if len(statusBarText_split) > 1:                                  
+                    # save item selected from tree widget
                     item_sel = self.tree_widget.selectedItems()        
-
+                    # save db_id
+                    db_id = statusBarText_split[1][:-1]
                     # Getting info from the selected item
-                    print(flat_sel_temp)
-                    flat_sel_temp_split = flat_sel_temp.split("-", 1)
-                    location, n_room = givemeNroomLocation(flat_sel_temp_split[0], flat_sel_temp, self.excelFileName)
+                    print(flat_picname)
+                    flat_picname_split = flat_picname.split("-", 1)
+                    location, n_room = givemeNroomLocation(flat_picname_split[0], flat_picname,
+                                                           self.excelFileName)
                     print(location)
                     print(n_room)
                     #
 
                     if self.tree_widget.action == self.tree_widget.favAction:                        
-                        print ("Favorito")                        
+                        print ("Favorito")
+                        self.db_ADECUA_TableFlatFav.insert({'Id': db_id, 'Picname': flat_picname,
+                                                            'NumRoom':n_room, 'Coordinates': location})
+                        print(self.db_ADECUA_TableFlatFav.all())                        
                     elif self.tree_widget.action == self.tree_widget.bookAction:
+                        self.db_ADECUA_TableFlatBook.insert({'Id': db_id, 'Picname': flat_picname,
+                                                            'NumRoom':n_room, 'Coordinates': location})
                         print ("Reserva")
                     elif self.tree_widget.action == self.tree_widget.buyAction:
+                        self.db_ADECUA_TableFlatBuy.insert({'Id': db_id, 'Picname': flat_picname,
+                                                            'NumRoom':n_room, 'Coordinates': location})
                         print ("Compra")  
                 else:    
                     popupWarningWindow("Error en la seleccion de cliente");                 
