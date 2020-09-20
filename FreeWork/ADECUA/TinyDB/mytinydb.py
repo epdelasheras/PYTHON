@@ -1,4 +1,4 @@
-# using tables
+# using tables in tinidb database
 from tinydb import TinyDB, Query
 
 db = TinyDB('db.json')
