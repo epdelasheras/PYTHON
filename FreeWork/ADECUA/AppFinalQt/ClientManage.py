@@ -21,9 +21,9 @@ class Ui_ClientManage(object):
         self.wClientManage = windowClientManage #copy window var to a loca var.
         self.PrincipalWindow = MainWindow
         # copy database tables to local variables
-        self.dbTableFavClientManage = db_ADECUA_TableFlatFav
-        self.dbTableBookClientManage = db_ADECUA_TableFlatBook
-        self.dbTableBuyClientManage = db_ADECUA_TableFlatBuy
+        self.dbTableFlatFavClientManage = db_ADECUA_TableFlatFav
+        self.dbTableFlatBookClientManage = db_ADECUA_TableFlatBook
+        self.dbTableFlatBuyClientManage = db_ADECUA_TableFlatBuy
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -145,7 +145,7 @@ class Ui_ClientManage(object):
     
     def ClientManage2View(self):
         item_sel = self.listClient.selectedItems()
-        print(item_sel)
+        #print(item_sel)
         if item_sel:
             item_curr = str(self.listClient.currentItem().text())        
             # filtering the string to get the doc_id of the data base
@@ -155,8 +155,8 @@ class Ui_ClientManage(object):
             clientSel = self.dbClientManage.get(doc_id=int(db_id))          
             # open a new window
             self.windowClientView=QtWidgets.QMainWindow()
-            self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.dbTableFavClientManage,
-                                  self.dbTableBookClientManage, self.dbTableBuyClientManage,
+            self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.dbTableFlatFavClientManage,
+                                  self.dbTableFlatBookClientManage, self.dbTableFlatBuyClientManage,
                                   self.windowClientView)        
             self.ui.setup(self.windowClientView)
             self.windowClientView.show()        

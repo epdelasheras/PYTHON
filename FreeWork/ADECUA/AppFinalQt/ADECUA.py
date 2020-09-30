@@ -213,24 +213,29 @@ class Ui_MainWindow(object):
                     # save db_id
                     db_id = statusBarText_split[1][:-1]
                     # Getting info from the selected item
-                    print(flat_picname)
+                    #print(flat_picname)
                     flat_picname_split = flat_picname.split("-", 1)
                     location, n_room = givemeNroomLocation(flat_picname_split[0], flat_picname,
                                                            self.excelFileName)
-                    print(location)
-                    print(n_room)
-                    #
+                    #print(location)
+                    #print(n_room)                    
 
                     if self.tree_widget.action == self.tree_widget.favAction:                        
-                        print ("Favorito")
+                        # improve this action doing a click filtering. just in case 
+                        # the use makes click several times over the same item                        
                         self.db_ADECUA_TableFlatFav.insert({'Id': db_id, 'Picname': flat_picname,
                                                             'NumRoom':n_room, 'Coordinates': location})
-                        print(self.db_ADECUA_TableFlatFav.all())                        
+                        print ("Favorito")
+                        #print(self.db_ADECUA_TableFlatFav.all())                        
                     elif self.tree_widget.action == self.tree_widget.bookAction:
+                        # improve this action doing a click filtering. just in case 
+                        # the use makes click several times over the same item    
                         self.db_ADECUA_TableFlatBook.insert({'Id': db_id, 'Picname': flat_picname,
                                                             'NumRoom':n_room, 'Coordinates': location})
                         print ("Reserva")
                     elif self.tree_widget.action == self.tree_widget.buyAction:
+                        # improve this action doing a click filtering. just in case 
+                        # the use makes click several times over the same item    
                         self.db_ADECUA_TableFlatBuy.insert({'Id': db_id, 'Picname': flat_picname,
                                                             'NumRoom':n_room, 'Coordinates': location})
                         print ("Compra")  
