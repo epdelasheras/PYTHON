@@ -164,11 +164,13 @@ class Ui_ClientView(object):
                 print ("Ver piso")
             elif self.listFlatFav.action == self.listFlatFav.moveToBookAction:
                 print ("Mover a lista de reservas")
+                item2Move(item_sel, self.clientData.doc_id, self.dbTableFlatFavClientView,
+                          self.dbTableFlatBookClientView, self.listFlatFav, self.listFlatBook)
             elif self.listFlatFav.action == self.listFlatFav.moveToBuyAction:
                 print ("Mover a lista de compras")
             elif self.listFlatFav.action == self.listFlatFav.removeAction:
                 print ("Quitar de la lista")
-                removeItem(item_sel, self.dbTableFlatFavClientView, self.listFlatFav)
+                itemRemove(item_sel, self.dbTableFlatFavClientView, self.listFlatFav)
 
 
     def ClientListBookRightMenu(self): 
@@ -302,7 +304,7 @@ class ListBuyWidget(QtWidgets.QListWidget):
 
 #----------------------------METHODS--------------------------
 
-def removeItem (item_sel, dbTableFlatClientView, listFlat):
+def itemRemove (item_sel, dbTableFlatClientView, listFlat):
     # remove listbox selected item from the listbox
     for i in item_sel:
         listFlat.takeItem(listFlat.row(i))
@@ -316,4 +318,30 @@ def removeItem (item_sel, dbTableFlatClientView, listFlat):
     docs = dbTableFlatClientView.search(picname_query.Picname == picname_text)    
     for doc in docs:        
         dbTableFlatClientView.remove(doc_ids = [doc.doc_id])
+    
+def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2):
+    # remove listbox selected item from the list1
+    for i in item_sel:
+        list1.takeItem(list1.row(i))
+    #drop item from the database1
+    item_text = item_sel[0].text()
+    item_text_split = item_text.split('|')
+    item_flat = item_text_split[0]
+    item_flat_split = item_flat.split(':')
+    picname_text = item_flat_split[1][1:-1]   
+    picname_query = Query()
+    docs = dbTable1.search(picname_query.Picname == picname_text)    
+    for doc in docs:        
+        dbTable1.remove(doc_ids = [doc.doc_id])
+    # add item to the list2
+    list2.addItem(item_text)
+    # add item to the database2 
+    item_room = item_text_split[1]
+    item_location = item_text_split[2]
+    item_room_split = item_room.split(':')
+    item_location_split = item_location.split(':')
+    flat_picname = picname_text
+    n_room = item_room_split[1][1:-1]
+    location = item_location_split[1][1:]    
+    dbTable2.insert({'Id': db_id, 'Picname': flat_picname, 'NumRoom':n_room, 'Coordinates': location})   
     
