@@ -144,7 +144,12 @@ class Ui_MainWindow(object):
         self.db_ADECUA = TinyDB("ADECUA_DB.json") 
         self.db_ADECUA_TableFlatFav = self.db_ADECUA.table("FLATS_FAV")
         self.db_ADECUA_TableFlatBook = self.db_ADECUA.table("FLATS_BOOK")
-        self.db_ADECUA_TableFlatBuy = self.db_ADECUA.table("FLATS_BUY")       
+        self.db_ADECUA_TableFlatBuy = self.db_ADECUA.table("FLATS_BUY")
+
+        # list to share between different windows
+        self.tree_widget_list = [self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
+                                 self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
+                                 self.qtwidget_type, self.tree_widget]       
 
     #-- Menu methods --#
     
@@ -157,7 +162,8 @@ class Ui_MainWindow(object):
     def AdecuaMenuClientManage(self):        
         self.windowClientManage=QtWidgets.QMainWindow()
         self.ui=Ui_ClientManage(self.db_ADECUA, self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
-                                self.db_ADECUA_TableFlatBuy, self.windowClientManage, MainWindow)
+                                self.db_ADECUA_TableFlatBuy, self.windowClientManage, MainWindow,
+                                self.tree_widget_list)
         self.ui.setup(self.windowClientManage)
         self.windowClientManage.show()
     
@@ -274,7 +280,7 @@ class Ui_MainWindow(object):
     def AdecuaListRoomPlaceSel(self):
     # when one item is selected...
         item_sel = str(self.lb_roomplace.currentItem().text())
-        #print(item_sel)
+        #print(item_sel)        
         expandTreeItem(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
                        self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
                        self.qtwidget_type, self.tree_widget, item_sel)

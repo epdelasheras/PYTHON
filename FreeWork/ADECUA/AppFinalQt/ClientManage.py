@@ -16,14 +16,15 @@ from ADECUA_lib import *
 
 class Ui_ClientManage(object):
     def __init__(self, db_ADECUA, db_ADECUA_TableFlatFav, db_ADECUA_TableFlatBook,
-                 db_ADECUA_TableFlatBuy, windowClientManage, MainWindow):
-        self.dbClientManage = db_ADECUA # copy database to a local variable. 
-        self.wClientManage = windowClientManage #copy window var to a loca var.
-        self.PrincipalWindow = MainWindow
+                 db_ADECUA_TableFlatBuy, windowClientManage, MainWindow, tree_widget_list):
+        self.ClientMngDb = db_ADECUA # copy database to a local variable. 
+        self.ClientMngWin = windowClientManage #copy window var to a loca var.
+        self.ClientMngAdecuaWin = MainWindow # copy Adecua mainwindow to a local var 
+        self.ClientMngAdecuaTreeWidLst = tree_widget_list # copy widget to local var
         # copy database tables to local variables
-        self.dbTableFlatFavClientManage = db_ADECUA_TableFlatFav
-        self.dbTableFlatBookClientManage = db_ADECUA_TableFlatBook
-        self.dbTableFlatBuyClientManage = db_ADECUA_TableFlatBuy
+        self.ClientMngDbTableFlatFav = db_ADECUA_TableFlatFav
+        self.ClientMngDbTableFlatBook = db_ADECUA_TableFlatBook
+        self.ClientMngDbTableFlatBuy = db_ADECUA_TableFlatBuy
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -85,17 +86,17 @@ class Ui_ClientManage(object):
         self.ButtonErase.setText(_translate("MainWindow", "Borrar"))
         self.ButtonExit.setText(_translate("MainWindow", "Salir"))
 # mouse click connect functions
-        self.ButtonSearchDNI.clicked.connect(self.ClientManageSearchDNI)
-        self.ButtonSearchPhone.clicked.connect(self.ClientManageSearchPhone)
-        self.ButtonSearchEmail.clicked.connect(self.ClientManageSearchEmail)
-        self.ButtonView.clicked.connect(self.ClientManage2View)        
-        self.ButtonExit.clicked.connect(self.ClientManageExit)      
-        self.ButtonSelect.clicked.connect(self.ClientManageSelect)      
-        self.ButtonErase.clicked.connect(self.ClientManageErase)      
+        self.ButtonSearchDNI.clicked.connect(self.ClientMngSearchDNI)
+        self.ButtonSearchPhone.clicked.connect(self.ClientMngSearchPhone)
+        self.ButtonSearchEmail.clicked.connect(self.ClientMngSearchEmail)
+        self.ButtonView.clicked.connect(self.ClientMng2View)        
+        self.ButtonExit.clicked.connect(self.ClientMngExit)      
+        self.ButtonSelect.clicked.connect(self.ClientMngSelect)      
+        self.ButtonErase.clicked.connect(self.ClientMngErase)      
 
 # methods related to the action buttons
 
-    def ClientManageErase(self):
+    def ClientMngErase(self):
         item_sel = self.listClient.selectedItems()                
         
         if item_sel:
@@ -104,7 +105,7 @@ class Ui_ClientManage(object):
             item_split = item_curr.split('[')                
             db_id = item_split[1][:-1]
             # remove item from the database.
-            self.dbClientManage.remove(doc_ids = [int(db_id)])
+            self.ClientMngDb.remove(doc_ids = [int(db_id)])
             # remove item from the listbox.
             self.listClient.takeItem(self.listClient.currentRow())            
         else:
@@ -116,7 +117,7 @@ class Ui_ClientManage(object):
             dialog.addButton(QtWidgets.QMessageBox.Ok)
             dialog.exec()        
 
-    def ClientManageSelect(self):
+    def ClientMngSelect(self):
         item_sel = self.listClient.selectedItems()
         if item_sel:
             item_curr = str(self.listClient.currentItem().text())                    
@@ -124,12 +125,12 @@ class Ui_ClientManage(object):
             item_split = item_curr.split('[')                
             db_id = item_split[1][:-1]
             #save data of the current selected client for future argument function
-            doc = self.dbClientManage.get(doc_id=int(db_id))
+            doc = self.ClientMngDb.get(doc_id=int(db_id))
             clientTemp =  "Cliente: " +\
                           doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
                           doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
                           doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"   
-            self.PrincipalWindow.statusBar().showMessage(clientTemp)
+            self.ClientMngAdecuaWin.statusBar().showMessage(clientTemp)
 
         else:
             dialog = QtWidgets.QMessageBox()
@@ -140,10 +141,10 @@ class Ui_ClientManage(object):
             dialog.addButton(QtWidgets.QMessageBox.Ok)
             dialog.exec()          
     
-    def ClientManageExit(self):
-        self.wClientManage.hide()
+    def ClientMngExit(self):
+        self.ClientMngWin.hide()
     
-    def ClientManage2View(self):
+    def ClientMng2View(self):
         item_sel = self.listClient.selectedItems()
         #print(item_sel)
         if item_sel:
@@ -152,12 +153,13 @@ class Ui_ClientManage(object):
             item_split = item_curr.split('[')                
             db_id = item_split[1][:-1]
             #save data of the current selected client for future argument function
-            clientSel = self.dbClientManage.get(doc_id=int(db_id))          
+            clientSel = self.ClientMngDb.get(doc_id=int(db_id))          
             # open a new window
             self.windowClientView=QtWidgets.QMainWindow()
-            self.ui=Ui_ClientView(clientSel, self.dbClientManage, self.dbTableFlatFavClientManage,
-                                  self.dbTableFlatBookClientManage, self.dbTableFlatBuyClientManage,
-                                  self.windowClientView)        
+            self.ui=Ui_ClientView(clientSel, self.ClientMngDb, self.ClientMngDbTableFlatFav,
+                                  self.ClientMngDbTableFlatBook, self.ClientMngDbTableFlatBuy,
+                                  self.windowClientView, self.ClientMngAdecuaWin, 
+                                  self.ClientMngAdecuaTreeWidLst)        
             self.ui.setup(self.windowClientView)
             self.windowClientView.show()        
         else:
@@ -169,12 +171,12 @@ class Ui_ClientManage(object):
             dialog.addButton(QtWidgets.QMessageBox.Ok)
             dialog.exec()
 
-    def ClientManageSearchDNI(self):
+    def ClientMngSearchDNI(self):
         # get value from the textbox
         dni2search = self.LineDNI.text()
         
         # search for any match in database
-        docs = self.dbClientManage.search(where('DNI') == dni2search)
+        docs = self.ClientMngDb.search(where('DNI') == dni2search)
         if not docs:        
             dialog = QtWidgets.QMessageBox()
             dialog.setWindowTitle(WIN_TITLE)
@@ -197,12 +199,12 @@ class Ui_ClientManage(object):
         for i in range(len(lClient)):    
             self.listClient.insertItem(i, lClient[i])
 
-    def ClientManageSearchPhone(self):    
+    def ClientMngSearchPhone(self):    
         # get value from the textbox
         phone2search = self.LinePhone.text()
         
         # search for any match in database
-        docs = self.dbClientManage.search(where('Phone') == phone2search)
+        docs = self.ClientMngDb.search(where('Phone') == phone2search)
         if not docs:
             dialog = QtWidgets.QMessageBox()
             dialog.setWindowTitle(WIN_TITLE)
@@ -225,12 +227,12 @@ class Ui_ClientManage(object):
         for i in range(len(lClient)):    
             self.listClient.insertItem(i, lClient[i])
 
-    def ClientManageSearchEmail(self):
+    def ClientMngSearchEmail(self):
         # get value from the textbox
         email2search = self.LineEmail.text()
         
         # search for any match in database
-        docs = self.dbClientManage.search(where('Email') == email2search)
+        docs = self.ClientMngDb.search(where('Email') == email2search)
         if not docs:
             dialog = QtWidgets.QMessageBox()
             dialog.setWindowTitle(WIN_TITLE)
