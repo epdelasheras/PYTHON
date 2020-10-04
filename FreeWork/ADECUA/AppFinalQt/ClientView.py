@@ -10,19 +10,22 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from tinydb import TinyDB, Query
+from ADECUA_lib import *
 
 class Ui_ClientView(object):
     def __init__(self, clientSel, dbClientManage, dbTableFlatFavClientManage, dbTableFlatBookClientManage,
-                dbTableFlatBuyClientManage, windowClientView):
-        self.dbClientView = dbClientManage # copy database to a local variable. 
-        self.windowClientView = windowClientView #copy window var to a loca var.
-        self.clientData = clientSel
+                dbTableFlatBuyClientManage, windowClientView, MainWindow, tree_widget_list):
+        self.ClientViewDb = dbClientManage # copy database to a local variable. 
+        self.ClientViewWi = windowClientView #copy window var to a loca var.
+        self.ClientViewSel = clientSel # copy client seleted on clientManage window to a local var
+        self.ClientViewAdecuaWin = MainWindow # copy Adecua mainwindow to a local var
+        self.ClientViewAdecuaTreeWidLst = tree_widget_list # copy widget to local var    
         # copy database tables to local variables
         self.dbTableFlatFavClientView = dbTableFlatFavClientManage
         self.dbTableFlatBookClientView = dbTableFlatBookClientManage
         self.dbTableFlatBuyClientView = dbTableFlatBuyClientManage
 
-        #print(self.clientData.doc_id)
+        #print(self.ClientViewSel.doc_id)
         #print(self.dbTableFlatFavClientView.all())
 
         
@@ -136,12 +139,12 @@ class Ui_ClientView(object):
         self.lineEmailView.setText(_translate("MainWindow", "EmailView"))
         
         # Edit line widgets with data client
-        self.lineNameView.setText(_translate("MainWindow", self.clientData['Name']))
-        self.lineSurname1View.setText(_translate("MainWindow", self.clientData['Surname1']))
-        self.lineSurname2View.setText(_translate("MainWindow", self.clientData['Surname2']))
-        self.lineDNIView.setText(_translate("MainWindow", self.clientData['DNI']))
-        self.linePhoneView.setText(_translate("MainWindow", self.clientData['Phone']))
-        self.lineEmailView.setText(_translate("MainWindow", self.clientData['Email']))
+        self.lineNameView.setText(_translate("MainWindow", self.ClientViewSel['Name']))
+        self.lineSurname1View.setText(_translate("MainWindow", self.ClientViewSel['Surname1']))
+        self.lineSurname2View.setText(_translate("MainWindow", self.ClientViewSel['Surname2']))
+        self.lineDNIView.setText(_translate("MainWindow", self.ClientViewSel['DNI']))
+        self.linePhoneView.setText(_translate("MainWindow", self.ClientViewSel['Phone']))
+        self.lineEmailView.setText(_translate("MainWindow", self.ClientViewSel['Email']))
 
         # Mouse click connect functions
         self.ButtonEdit.clicked.connect(self.ClientViewEdit)
@@ -162,9 +165,10 @@ class Ui_ClientView(object):
         if item_sel: 
             if self.listFlatFav.action == self.listFlatFav.viewAction:                        
                 print ("Ver piso")
+                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
             elif self.listFlatFav.action == self.listFlatFav.moveToBookAction:
                 print ("Mover a lista de reservas")
-                item2Move(item_sel, self.clientData.doc_id, self.dbTableFlatFavClientView,
+                item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatFavClientView,
                           self.dbTableFlatBookClientView, self.listFlatFav, self.listFlatBook)
             elif self.listFlatFav.action == self.listFlatFav.moveToBuyAction:
                 print ("Mover a lista de compras")
@@ -183,7 +187,7 @@ class Ui_ClientView(object):
     # add items to the list boxes
         # add items to the fav list.
         flatFav = Query()        
-        docs = self.dbTableFlatFavClientView.search(flatFav.Id == str(self.clientData.doc_id)) # search in the table
+        docs = self.dbTableFlatFavClientView.search(flatFav.Id == str(self.ClientViewSel.doc_id)) # search in the table
         lflatFav = []
         # create a list with the items to add to the listbox.
         for doc in docs:
@@ -199,7 +203,7 @@ class Ui_ClientView(object):
 
         # add items to the book list.
         flatBook = Query()        
-        docs = self.dbTableFlatBookClientView.search(flatBook.Id == str(self.clientData.doc_id)) # search in the table
+        docs = self.dbTableFlatBookClientView.search(flatBook.Id == str(self.ClientViewSel.doc_id)) # search in the table
         lflatBook = []
         # create a list with the items to add to the listbox.
         for doc in docs:
@@ -215,7 +219,7 @@ class Ui_ClientView(object):
 
         # add items to the Buy list.
         flatBuy = Query()        
-        docs = self.dbTableFlatBuyClientView.search(flatBuy.Id == str(self.clientData.doc_id)) # search in the table
+        docs = self.dbTableFlatBuyClientView.search(flatBuy.Id == str(self.ClientViewSel.doc_id)) # search in the table
         lflatBuy = []
         # create a list with the items to add to the listbox.
         for doc in docs:
@@ -240,17 +244,17 @@ class Ui_ClientView(object):
 
     def ClientViewSave(self):
     # when save button is clicked...
-        self.dbClientView.update({'Name': self.lineNameView.text()}, doc_ids = [self.clientData.doc_id])
-        self.dbClientView.update({'Surname1': self.lineSurname1View.text()}, doc_ids = [self.clientData.doc_id])
-        self.dbClientView.update({'Surname2': self.lineSurname2View.text()}, doc_ids = [self.clientData.doc_id])
-        self.dbClientView.update({'DNI': self.lineDNIView.text()}, doc_ids = [self.clientData.doc_id])
-        self.dbClientView.update({'Phone': self.linePhoneView.text()}, doc_ids = [self.clientData.doc_id])
-        self.dbClientView.update({'Email': self.lineEmailView.text()}, doc_ids = [self.clientData.doc_id])
-        print(self.dbClientView.all())
+        self.ClientViewDb.update({'Name': self.lineNameView.text()}, doc_ids = [self.ClientViewSel.doc_id])
+        self.ClientViewDb.update({'Surname1': self.lineSurname1View.text()}, doc_ids = [self.ClientViewSel.doc_id])
+        self.ClientViewDb.update({'Surname2': self.lineSurname2View.text()}, doc_ids = [self.ClientViewSel.doc_id])
+        self.ClientViewDb.update({'DNI': self.lineDNIView.text()}, doc_ids = [self.ClientViewSel.doc_id])
+        self.ClientViewDb.update({'Phone': self.linePhoneView.text()}, doc_ids = [self.ClientViewSel.doc_id])
+        self.ClientViewDb.update({'Email': self.lineEmailView.text()}, doc_ids = [self.ClientViewSel.doc_id])
+        print(self.ClientViewDb.all())
 
     def ClientViewExit(self):
     # when exit button is clicked...
-        self.windowClientView.hide()       
+        self.ClientViewWi.hide()       
 
 #-------------------------CLASSES---------------------------
 
@@ -345,3 +349,29 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2):
     location = item_location_split[1][1:]    
     dbTable2.insert({'Id': db_id, 'Picname': flat_picname, 'NumRoom':n_room, 'Coordinates': location})   
     
+
+def itemView(window, treeWidgetLst, item_sel):    
+    # gettin picname
+    item_text = item_sel[0].text()
+    item_text_split = item_text.split('|')
+    item_flat = item_text_split[0]
+    item_flat_split = item_flat.split(':')
+    picname_text = item_flat_split[1][1:-1]    
+    # extracting lists....
+    tree_profile = treeWidgetLst[1]
+    tree_struct = treeWidgetLst[0] 
+    tree_floor = treeWidgetLst[2]
+    tree_type = treeWidgetLst[3]
+    qtwidget_struct = treeWidgetLst[4]
+    qtwidget_profile = treeWidgetLst[5]
+    qtwidget_floor = treeWidgetLst[6]
+    qtwidget_type = treeWidgetLst[7]
+    tree_widget = treeWidgetLst[8]    
+    print(picname_text)        
+    expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type,\
+                   qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                   qtwidget_type, tree_widget, picname_text)
+    #self.AdecuaTreeItemSel() => Need to be adapted 
+
+    # bring back window to the front.
+    window.activateWindow() 
