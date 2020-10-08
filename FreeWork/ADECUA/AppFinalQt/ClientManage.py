@@ -231,7 +231,7 @@ class Ui_ClientManage(object):
         # get value from the textbox
         email2search = self.LineEmail.text()
         
-        # search for any match in database
+        # search for any match in database.
         docs = self.ClientMngDb.search(where('Email') == email2search)
         if not docs:
             dialog = QtWidgets.QMessageBox()

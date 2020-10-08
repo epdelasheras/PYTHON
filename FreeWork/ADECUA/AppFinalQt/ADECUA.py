@@ -278,7 +278,7 @@ class Ui_MainWindow(object):
         lbRoomPlaceAddItems(item, self.lb_roomplace, self.excelFileName)
 
     def AdecuaListRoomPlaceSel(self):
-    # when one item is selected...
+    # when one item is selected....
         item_sel = str(self.lb_roomplace.currentItem().text())
         #print(item_sel)        
         expandTreeItem(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\

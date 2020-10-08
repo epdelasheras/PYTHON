@@ -306,7 +306,7 @@ class ListBuyWidget(QtWidgets.QListWidget):
             self.action = menu.exec_(event.globalPos())          
             self.right_click.emit()
 
-#----------------------------METHODS--------------------------
+#----------------------------METHODS---------------------------
 
 def itemRemove (item_sel, dbTableFlatClientView, listFlat):
     # remove listbox selected item from the listbox

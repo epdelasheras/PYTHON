@@ -79,7 +79,7 @@ def treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, tre
 
 def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
                    qtwidget_floor,qtwidget_type, tree_widget, item_sel):
-    #It is used to expand a specific item on the tree_widget
+    #It is used to expand a specific item on the tree_widget.
 
     item_sel_split = item_sel.split("-")
     #print(item_sel_split)
