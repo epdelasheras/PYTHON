@@ -149,7 +149,8 @@ class Ui_MainWindow(object):
         # list to share between different windows
         self.tree_widget_list = [self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
                                  self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
-                                 self.qtwidget_type, self.tree_widget]       
+                                 self.qtwidget_type, self.tree_widget, self.excelFileName, \
+                                 self.tree_picname, self.tb_room, self.flat_pic]       
 
     #-- Menu methods --#
     
@@ -254,8 +255,7 @@ class Ui_MainWindow(object):
     
     def AdecuaTreeItemSel(self):
     # when one item is selected...
-        item_sel = self.tree_widget.selectedItems()
-        #print(item_sel)
+        item_sel = self.tree_widget.selectedItems()        
         if item_sel:
             #item_sel_txt = item_sel[0].text(0)
             #print(item_sel_txt)

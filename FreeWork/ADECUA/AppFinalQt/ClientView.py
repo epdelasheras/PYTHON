@@ -366,12 +366,24 @@ def itemView(window, treeWidgetLst, item_sel):
     qtwidget_profile = treeWidgetLst[5]
     qtwidget_floor = treeWidgetLst[6]
     qtwidget_type = treeWidgetLst[7]
-    tree_widget = treeWidgetLst[8]    
-    print(picname_text)        
+    tree_widget = treeWidgetLst[8]
+    excel_filename = treeWidgetLst[9]
+    tree_picname = treeWidgetLst[10]
+    tb_room = treeWidgetLst[11]
+    flat_pic = treeWidgetLst[12]
+    #print(picname_text)
+    # expanding tree widget        
     expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type,\
                    qtwidget_struct, qtwidget_profile, qtwidget_floor,\
                    qtwidget_type, tree_widget, picname_text)
-    #self.AdecuaTreeItemSel() => Need to be adapted 
+    # load image
+    item_sel = tree_widget.selectedItems()
+    if item_sel:
+        treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type,\
+                                    tree_picname, excel_filename)        
+    # to set horizontal scrollbar on tree widget
+    tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+    tree_widget.header().setStretchLastSection(False)
 
     # bring back window to the front.
     window.activateWindow() 
