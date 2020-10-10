@@ -218,7 +218,7 @@ class Ui_MainWindow(object):
                     # save item selected from tree widget
                     item_sel = self.tree_widget.selectedItems()        
                     # save db_id
-                    db_id = statusBarText_split[1][:-1]
+                    db_id = str(statusBarText_split[1][:-1])
                     # Getting info from the selected item
                     #print(flat_picname)
                     flat_picname_split = flat_picname.split("-", 1)

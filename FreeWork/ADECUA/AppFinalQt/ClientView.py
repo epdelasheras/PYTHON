@@ -23,12 +23,10 @@ class Ui_ClientView(object):
         # copy database tables to local variables
         self.dbTableFlatFavClientView = dbTableFlatFavClientManage
         self.dbTableFlatBookClientView = dbTableFlatBookClientManage
-        self.dbTableFlatBuyClientView = dbTableFlatBuyClientManage
+        self.dbTableFlatBuyClientView = dbTableFlatBuyClientManage      
 
         #print(self.ClientViewSel.doc_id)
-        #print(self.dbTableFlatFavClientView.all())
-
-        
+        #print(self.dbTableFlatFavClientView.all())       
         
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -164,7 +162,7 @@ class Ui_ClientView(object):
         item_sel = self.listFlatFav.selectedItems()     
         if item_sel: 
             if self.listFlatFav.action == self.listFlatFav.viewAction:                        
-                print ("Ver piso")
+                print ("Ver piso")                
                 itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
             elif self.listFlatFav.action == self.listFlatFav.moveToBookAction:
                 print ("Mover a lista de reservas")
@@ -172,17 +170,51 @@ class Ui_ClientView(object):
                           self.dbTableFlatBookClientView, self.listFlatFav, self.listFlatBook)
             elif self.listFlatFav.action == self.listFlatFav.moveToBuyAction:
                 print ("Mover a lista de compras")
+                item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatFavClientView,
+                          self.dbTableFlatBuyClientView, self.listFlatFav, self.listFlatBuy)
             elif self.listFlatFav.action == self.listFlatFav.removeAction:
                 print ("Quitar de la lista")
                 itemRemove(item_sel, self.dbTableFlatFavClientView, self.listFlatFav)
 
 
     def ClientListBookRightMenu(self): 
-        pass
+    # when righ click is over widget item...
+        item_sel = self.listFlatBook.selectedItems()     
+        if item_sel: 
+            if self.listFlatBook.action == self.listFlatBook.viewAction:                        
+                print ("Ver piso")                
+                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
+            elif self.listFlatBook.action == self.listFlatBook.moveToFavAction:
+                print ("Mover a lista de Favoritos")
+                item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBookClientView,
+                          self.dbTableFlatFavClientView, self.listFlatBook, self.listFlatFav)
+            elif self.listFlatBook.action == self.listFlatBook.moveToBuyAction:
+                print ("Mover a lista de compras")
+                item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBookClientView,
+                          self.dbTableFlatBuyClientView, self.listFlatBook, self.listFlatBuy)
+            elif self.listFlatBook.action == self.listFlatBook.removeAction:
+                print ("Quitar de la lista")
+                itemRemove(item_sel, self.dbTableFlatBookClientView, self.listFlatBook)
 
     def ClientListBuyRightMenu(self):
-        pass
-
+    # when righ click is over widget item...
+        item_sel = self.listFlatBuy.selectedItems()     
+        if item_sel: 
+            if self.listFlatBuy.action == self.listFlatBuy.viewAction:                        
+                print ("Ver piso")                
+                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
+            elif self.listFlatBuy.action == self.listFlatBuy.moveToFavAction:
+                print ("Mover a lista de Favoritos")
+                item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBuyClientView,
+                          self.dbTableFlatFavClientView, self.listFlatBuy, self.listFlatFav)
+            elif self.listFlatBuy.action == self.listFlatBuy.moveToBookAction:
+                print ("Mover a lista de reservas")
+                item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBuyClientView,
+                          self.dbTableFlatBookClientView, self.listFlatBuy, self.listFlatBook)
+            elif self.listFlatBuy.action == self.listFlatBuy.removeAction:
+                print ("Quitar de la lista")
+                itemRemove(item_sel, self.dbTableFlatBuyClientView, self.listFlatBuy)
+                
     def ClientListAddItems(self):
     # add items to the list boxes
         # add items to the fav list.
@@ -196,7 +228,8 @@ class Ui_ClientView(object):
             lflatFav.append(listFlatFavTxt)   
         # set and sort list (just in case the user makes click over the same item several times).
         lflatFav_sort = list(set(lflatFav))
-        lflatFav_sort.sort()       
+        lflatFav_sort.sort()
+
         # Adding rooms to the listbox
         for i in range(len(lflatFav_sort)):
             self.listFlatFav.insertItem(i, lflatFav_sort[i])
@@ -284,7 +317,7 @@ class ListBookWidget(QtWidgets.QListWidget):
         if event.button() == QtCore.Qt.RightButton:            
             menu = QtWidgets.QMenu()
             self.viewAction = menu.addAction("Ver") 
-            self.moveToBookAction = menu.addAction("Mover a Favoritos")   
+            self.moveToFavAction = menu.addAction("Mover a Favoritos")   
             self.moveToBuyAction = menu.addAction("Mover a compras")
             self.removeAction = menu.addAction("Quitar")               
             self.action = menu.exec_(event.globalPos())          
@@ -300,8 +333,8 @@ class ListBuyWidget(QtWidgets.QListWidget):
         if event.button() == QtCore.Qt.RightButton:            
             menu = QtWidgets.QMenu()
             self.viewAction = menu.addAction("Ver") 
-            self.moveToBookAction = menu.addAction("Mover a favoritos")   
-            self.moveToBuyAction = menu.addAction("Mover a reservas")
+            self.moveToFavAction = menu.addAction("Mover a favoritos")   
+            self.moveToBookAction = menu.addAction("Mover a reservas")
             self.removeAction = menu.addAction("Quitar")               
             self.action = menu.exec_(event.globalPos())          
             self.right_click.emit()
@@ -347,9 +380,10 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2):
     flat_picname = picname_text
     n_room = item_room_split[1][1:-1]
     location = item_location_split[1][1:]    
-    dbTable2.insert({'Id': db_id, 'Picname': flat_picname, 'NumRoom':n_room, 'Coordinates': location})   
-    
-
+    dbTable2.insert({'Id': ''+str(db_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
+                     'Coordinates':location})   
+    print(dbTable2.all())     
+ 
 def itemView(window, treeWidgetLst, item_sel):    
     # gettin picname
     item_text = item_sel[0].text()
@@ -384,6 +418,5 @@ def itemView(window, treeWidgetLst, item_sel):
     # to set horizontal scrollbar on tree widget
     tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
     tree_widget.header().setStretchLastSection(False)
-
     # bring back window to the front.
     window.activateWindow() 
