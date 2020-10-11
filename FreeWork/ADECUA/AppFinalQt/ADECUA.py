@@ -198,15 +198,14 @@ class Ui_MainWindow(object):
     
     def AdecuaTreeItemRightMenu(self): 
     # when righ click is over tree item...                
-        item_sel = self.tree_widget.selectedItems()
-        if item_sel:                                      
+        item_sel = self.tree_widget.selectedItems()                 
+        if item_sel:                                           
             # check if user makes right click over the right tree item
             mouse_pos = False
             for i in range(len(self.qtwidget_type)):
                 if self.qtwidget_type[i] == item_sel[0]:                    
                     flat_picname = self.tree_picname[i]
                     mouse_pos = True
-
             # only launch the action when the user makes click over the right item.            
             if mouse_pos == True:
                 # read statusbar string
@@ -225,8 +224,7 @@ class Ui_MainWindow(object):
                     location, n_room = givemeNroomLocation(flat_picname_split[0], flat_picname,
                                                            self.excelFileName)
                     #print(location)
-                    #print(n_room)                    
-
+                    #print(n_room)                   
                     if self.tree_widget.action == self.tree_widget.favAction:                        
                         # improve this action doing a click filtering. just in case 
                         # the use makes click several times over the same item                        
@@ -240,15 +238,22 @@ class Ui_MainWindow(object):
                         self.db_ADECUA_TableFlatBook.insert({'Id': db_id, 'Picname': flat_picname,
                                                             'NumRoom':n_room, 'Coordinates': location})
                         print ("Reserva")
+                        # disable this item and make it not selectable
+                        for i in item_sel:
+                            i.setDisabled(True)
+                            i.setSelected(False)
                     elif self.tree_widget.action == self.tree_widget.buyAction:
                         # improve this action doing a click filtering. just in case 
                         # the use makes click several times over the same item    
                         self.db_ADECUA_TableFlatBuy.insert({'Id': db_id, 'Picname': flat_picname,
                                                             'NumRoom':n_room, 'Coordinates': location})
-                        print ("Compra")  
+                        print ("Compra")
+                        # disable this item and make it not selectable
+                        for i in item_sel:
+                            i.setDisabled(True)
+                            i.setSelected(False)  
                 else:    
-                    popupWarningWindow("Error en la seleccion de cliente");                 
-                                           
+                    popupWarningWindow("Error en la seleccion de cliente");               
             # if the user does not make click over the right item...
             else:  
                 popupWarningWindow("Seleccion incorrecta")
