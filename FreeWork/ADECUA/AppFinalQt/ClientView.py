@@ -216,55 +216,10 @@ class Ui_ClientView(object):
                 itemRemove(item_sel, self.dbTableFlatBuyClientView, self.listFlatBuy)
                 
     def ClientListAddItems(self):
-    # add items to the list boxes
-        # add items to the fav list.
-        flatFav = Query()        
-        docs = self.dbTableFlatFavClientView.search(flatFav.Id == str(self.ClientViewSel.doc_id)) # search in the table
-        lflatFav = []
-        # create a list with the items to add to the listbox.
-        for doc in docs:
-            listFlatFavTxt = 'Apartamento: ' + str(doc['Picname']) + ' | ' + 'Habitaciones: ' +\
-                              str(doc['NumRoom']) + ' | ' + 'Coordenadas: ' + str(doc['Coordinates'])
-            lflatFav.append(listFlatFavTxt)   
-        # set and sort list (just in case the user makes click over the same item several times).
-        lflatFav_sort = list(set(lflatFav))
-        lflatFav_sort.sort()
-
-        # Adding rooms to the listbox
-        for i in range(len(lflatFav_sort)):
-            self.listFlatFav.insertItem(i, lflatFav_sort[i])
-
-        # add items to the book list.
-        flatBook = Query()        
-        docs = self.dbTableFlatBookClientView.search(flatBook.Id == str(self.ClientViewSel.doc_id)) # search in the table
-        lflatBook = []
-        # create a list with the items to add to the listbox.
-        for doc in docs:
-            listFlatBookTxt = 'Apartamento: ' + str(doc['Picname']) + ' | ' + 'Habitaciones: ' +\
-                              str(doc['NumRoom']) + ' | ' + 'Coordenadas: ' + str(doc['Coordinates'])
-            lflatBook.append(listFlatBookTxt)   
-        # set and sort list (just in case the user makes click over the same item several times).
-        lflatBook_sort = list(set(lflatBook))
-        lflatBook_sort.sort()       
-        # Adding rooms to the listbox
-        for i in range(len(lflatBook_sort)):
-            self.listFlatBook.insertItem(i, lflatBook_sort[i])
-
-        # add items to the Buy list.
-        flatBuy = Query()        
-        docs = self.dbTableFlatBuyClientView.search(flatBuy.Id == str(self.ClientViewSel.doc_id)) # search in the table
-        lflatBuy = []
-        # create a list with the items to add to the listbox.
-        for doc in docs:
-            listFlatBuyTxt = 'Apartamento: ' + str(doc['Picname']) + ' | ' + 'Habitaciones: ' +\
-                              str(doc['NumRoom']) + ' | ' + 'Coordenadas: ' + str(doc['Coordinates'])
-            lflatBuy.append(listFlatBuyTxt)   
-        # set and sort list (just in case the user makes click over the same item several times).
-        lflatBuy_sort = list(set(lflatBuy))
-        lflatBuy_sort.sort()       
-        # Adding rooms to the listbox
-        for i in range(len(lflatBuy_sort)):
-            self.listFlatBuy.insertItem(i, lflatBuy_sort[i])
+    # add items to the list boxes        
+        add2ListDb(self.dbTableFlatFavClientView, self.ClientViewSel.doc_id, self.listFlatFav)  #fav lst     
+        add2ListDb(self.dbTableFlatBookClientView, self.ClientViewSel.doc_id, self.listFlatBook) # book lst
+        add2ListDb(self.dbTableFlatBuyClientView, self.ClientViewSel.doc_id, self.listFlatBuy) # buy lst
         
     def ClientViewEdit(self):
     # when edit button is clicked...
@@ -382,7 +337,7 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2):
     location = item_location_split[1][1:]    
     dbTable2.insert({'Id': ''+str(db_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                      'Coordinates':location})   
-    print(dbTable2.all())     
+    #print(dbTable2.all())     
  
 def itemView(window, treeWidgetLst, item_sel):    
     # gettin picname
@@ -420,3 +375,41 @@ def itemView(window, treeWidgetLst, item_sel):
     tree_widget.header().setStretchLastSection(False)
     # bring back window to the front.
     window.activateWindow() 
+
+def add2ListDb(db, doc_id, lst):
+# method related to ClientListAddItems(self) to fill window lists
+    Flat = Query()        
+    docs = db.search(Flat.Id == str(doc_id)) # search in the table
+    lFlat = []
+    # create a list with the items to add to the listbox.
+    for doc in docs:
+        listFlatTxt = 'Apartamento: ' + str(doc['Picname']) + ' | ' + 'Habitaciones: ' +\
+                        str(doc['NumRoom']) + ' | ' + 'Coordenadas: ' + str(doc['Coordinates'])
+        lFlat.append(listFlatTxt)   
+    # truncate database
+    db.truncate()
+    # set and sort list (just in case the user makes click over the same item several times).
+    lFlat_sort = list(set(lFlat))
+    lFlat_sort.sort()      
+    # Add items to the listbox and database
+    for i in range(len(lFlat_sort)):
+        # add to the list box
+        lst.insertItem(i, lFlat_sort[i])
+        # prepare data to the database
+        item_text = lFlat_sort[i]
+        item_text_split = item_text.split('|')
+        item_flat = item_text_split[0]
+        item_flat_split = item_flat.split(':')
+        picname_text = item_flat_split[1][1:-1] 
+        flat_picname = picname_text
+        item_room = item_text_split[1]
+        item_location = item_text_split[2]
+        item_room_split = item_room.split(':')
+        item_location_split = item_location.split(':')
+        n_room = item_room_split[1][1:-1]
+        location = item_location_split[1][1:]
+        # add to the database   
+        db.insert({'Id': ''+str(doc_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
+                         'Coordinates':location})
+    print(db.all())
+    
