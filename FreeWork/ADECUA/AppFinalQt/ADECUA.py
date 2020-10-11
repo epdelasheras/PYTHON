@@ -127,7 +127,7 @@ class Ui_MainWindow(object):
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
-        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))               
+        MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))           
 
         # mouse click connect functions         
         self.tree_widget.right_click.connect(self.AdecuaTreeItemRightMenu)
@@ -150,7 +150,7 @@ class Ui_MainWindow(object):
         self.tree_widget_list = [self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
                                  self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
                                  self.qtwidget_type, self.tree_widget, self.excelFileName, \
-                                 self.tree_picname, self.tb_room, self.flat_pic]       
+                                 self.tree_picname, self.tb_room, self.flat_pic]     
 
     #-- Menu methods --#
     
@@ -198,13 +198,13 @@ class Ui_MainWindow(object):
     
     def AdecuaTreeItemRightMenu(self): 
     # when righ click is over tree item...                
-        item_sel = self.tree_widget.selectedItems()                 
+        item_sel = self.tree_widget.selectedItems()
         if item_sel:                                           
             # check if user makes right click over the right tree item
             mouse_pos = False
             for i in range(len(self.qtwidget_type)):
                 if self.qtwidget_type[i] == item_sel[0]:                    
-                    flat_picname = self.tree_picname[i]
+                    flat_picname = self.tree_picname[i]                    
                     mouse_pos = True
             # only launch the action when the user makes click over the right item.            
             if mouse_pos == True:
@@ -242,6 +242,8 @@ class Ui_MainWindow(object):
                         for i in item_sel:
                             i.setDisabled(True)
                             i.setSelected(False)
+                        # open an excel book
+                        excelBlockPicname(flat_picname, self.excelFileName)   
                     elif self.tree_widget.action == self.tree_widget.buyAction:
                         # improve this action doing a click filtering. just in case 
                         # the use makes click several times over the same item    
@@ -251,7 +253,8 @@ class Ui_MainWindow(object):
                         # disable this item and make it not selectable
                         for i in item_sel:
                             i.setDisabled(True)
-                            i.setSelected(False)  
+                            i.setSelected(False)
+                        excelBlockPicname(flat_picname, self.excelFileName)  
                 else:    
                     popupWarningWindow("Error en la seleccion de cliente");               
             # if the user does not make click over the right item...

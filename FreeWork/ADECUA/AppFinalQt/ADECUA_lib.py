@@ -286,3 +286,13 @@ def popupWarningWindow(text):
     dialog.setText(text)
     dialog.addButton(QtWidgets.QMessageBox.Ok)
     dialog.exec() 
+
+def excelBlockPicname(picname, excelFileName):
+    picname_split = picname.split("-", 1)
+    print(picname_split)
+    print(picname_split[0])                
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)
+    ws = wb[picname_split[0]]
+    for i in range(WS_ROW_START, ws.max_row + 1):
+        if (ws["K" + str(i)].value == picname):
+            print(ws["H" + str(i)].value, ws["K" + str(i)].value)
