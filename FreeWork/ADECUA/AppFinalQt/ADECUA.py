@@ -243,7 +243,7 @@ class Ui_MainWindow(object):
                             i.setDisabled(True)
                             i.setSelected(False)
                         # open an excel book
-                        excelBlockPicname(flat_picname, self.excelFileName)   
+                        excelLockPicname(flat_picname, self.excelFileName)   
                     elif self.tree_widget.action == self.tree_widget.buyAction:
                         # improve this action doing a click filtering. just in case 
                         # the use makes click several times over the same item    
@@ -254,7 +254,7 @@ class Ui_MainWindow(object):
                         for i in item_sel:
                             i.setDisabled(True)
                             i.setSelected(False)
-                        excelBlockPicname(flat_picname, self.excelFileName)  
+                        excelLockPicname(flat_picname, self.excelFileName)  
                 else:    
                     popupWarningWindow("Error en la seleccion de cliente");               
             # if the user does not make click over the right item...

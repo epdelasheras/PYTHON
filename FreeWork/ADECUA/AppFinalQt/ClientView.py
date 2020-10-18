@@ -166,16 +166,20 @@ class Ui_ClientView(object):
                 itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
             elif self.listFlatFav.action == self.listFlatFav.moveToBookAction:
                 print ("Mover a lista de reservas")
+                excel_lock = True
                 item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatFavClientView,
-                          self.dbTableFlatBookClientView, self.listFlatFav, self.listFlatBook)
+                          self.dbTableFlatBookClientView, self.listFlatFav, self.listFlatBook,
+                          self.ClientViewAdecuaTreeWidLst, excel_lock)
             elif self.listFlatFav.action == self.listFlatFav.moveToBuyAction:
                 print ("Mover a lista de compras")
+                excel_lock = True
                 item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatFavClientView,
-                          self.dbTableFlatBuyClientView, self.listFlatFav, self.listFlatBuy)
+                          self.dbTableFlatBuyClientView, self.listFlatFav, self.listFlatBuy,
+                          self.ClientViewAdecuaTreeWidLst, excel_lock)
             elif self.listFlatFav.action == self.listFlatFav.removeAction:
-                print ("Quitar de la lista")
-                itemRemove(item_sel, self.dbTableFlatFavClientView, self.listFlatFav)
-
+                print ("Quitar de la lista")                
+                itemRemove(item_sel, self.dbTableFlatFavClientView, self.listFlatFav, 
+                           self.ClientViewAdecuaTreeWidLst)
 
     def ClientListBookRightMenu(self): 
     # when righ click is over widget item...
@@ -186,15 +190,20 @@ class Ui_ClientView(object):
                 itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
             elif self.listFlatBook.action == self.listFlatBook.moveToFavAction:
                 print ("Mover a lista de Favoritos")
+                excel_lock = False
                 item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBookClientView,
-                          self.dbTableFlatFavClientView, self.listFlatBook, self.listFlatFav)
+                          self.dbTableFlatFavClientView, self.listFlatBook, self.listFlatFav,
+                          self.ClientViewAdecuaTreeWidLst, excel_lock)
             elif self.listFlatBook.action == self.listFlatBook.moveToBuyAction:
                 print ("Mover a lista de compras")
+                excel_lock = True
                 item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBookClientView,
-                          self.dbTableFlatBuyClientView, self.listFlatBook, self.listFlatBuy)
+                          self.dbTableFlatBuyClientView, self.listFlatBook, self.listFlatBuy,
+                          self.ClientViewAdecuaTreeWidLst, excel_lock)
             elif self.listFlatBook.action == self.listFlatBook.removeAction:
                 print ("Quitar de la lista")
-                itemRemove(item_sel, self.dbTableFlatBookClientView, self.listFlatBook)
+                itemRemove(item_sel, self.dbTableFlatBookClientView, self.listFlatBook,
+                           self.ClientViewAdecuaTreeWidLst)
 
     def ClientListBuyRightMenu(self):
     # when righ click is over widget item...
@@ -205,15 +214,21 @@ class Ui_ClientView(object):
                 itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
             elif self.listFlatBuy.action == self.listFlatBuy.moveToFavAction:
                 print ("Mover a lista de Favoritos")
+                excel_lock = False
                 item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBuyClientView,
-                          self.dbTableFlatFavClientView, self.listFlatBuy, self.listFlatFav)
+                          self.dbTableFlatFavClientView, self.listFlatBuy, self.listFlatFav,
+                          self.ClientViewAdecuaTreeWidLst, excel_lock)
             elif self.listFlatBuy.action == self.listFlatBuy.moveToBookAction:
                 print ("Mover a lista de reservas")
+                excel_lock = True
                 item2Move(item_sel, self.ClientViewSel.doc_id, self.dbTableFlatBuyClientView,
-                          self.dbTableFlatBookClientView, self.listFlatBuy, self.listFlatBook)
+                          self.dbTableFlatBookClientView, self.listFlatBuy, self.listFlatBook,
+                          self.ClientViewAdecuaTreeWidLst, excel_lock)
             elif self.listFlatBuy.action == self.listFlatBuy.removeAction:
                 print ("Quitar de la lista")
-                itemRemove(item_sel, self.dbTableFlatBuyClientView, self.listFlatBuy)
+                excel_lock = True
+                itemRemove(item_sel, self.dbTableFlatBuyClientView, self.listFlatBuy,
+                           self.ClientViewAdecuaTreeWidLst)
                 
     def ClientListAddItems(self):
     # add items to the list boxes        
@@ -296,7 +311,7 @@ class ListBuyWidget(QtWidgets.QListWidget):
 
 #----------------------------METHODS---------------------------
 
-def itemRemove (item_sel, dbTableFlatClientView, listFlat):
+def itemRemove (item_sel, dbTableFlatClientView, listFlat, treeWidgetLst):
     # remove listbox selected item from the listbox
     for i in item_sel:
         listFlat.takeItem(listFlat.row(i))
@@ -310,8 +325,11 @@ def itemRemove (item_sel, dbTableFlatClientView, listFlat):
     docs = dbTableFlatClientView.search(picname_query.Picname == picname_text)    
     for doc in docs:        
         dbTableFlatClientView.remove(doc_ids = [doc.doc_id])
+    # unblock flat from excel file
+    excel_filename = treeWidgetLst[9]
+    excelUnlockPicname(picname_text, excel_filename)
     
-def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2):
+def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst, excel_lock):
     # remove listbox selected item from the list1
     for i in item_sel:
         list1.takeItem(list1.row(i))
@@ -338,6 +356,12 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2):
     dbTable2.insert({'Id': ''+str(db_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                      'Coordinates':location})   
     #print(dbTable2.all())     
+    # block or unblock flat from excel file
+    excel_filename = treeWidgetLst[9]
+    if excel_lock == True:
+        excelLockPicname(picname_text, excel_filename)
+    else:
+        excelUnlockPicname(picname_text, excel_filename)
  
 def itemView(window, treeWidgetLst, item_sel):    
     # gettin picname
@@ -412,4 +436,3 @@ def add2ListDb(db, doc_id, lst):
         db.insert({'Id': ''+str(doc_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                          'Coordinates':location})
     print(db.all())
-    

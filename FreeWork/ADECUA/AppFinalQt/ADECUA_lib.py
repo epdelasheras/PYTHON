@@ -2,6 +2,7 @@ import re
 from typing import List
 
 import openpyxl
+from openpyxl.styles import Color, PatternFill
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 
 # root window attributes
@@ -287,12 +288,35 @@ def popupWarningWindow(text):
     dialog.addButton(QtWidgets.QMessageBox.Ok)
     dialog.exec() 
 
-def excelBlockPicname(picname, excelFileName):
+def excelLockPicname(picname, excelFileName):
+    # block flat filling with red color the picname cell 
     picname_split = picname.split("-", 1)
-    print(picname_split)
-    print(picname_split[0])                
+    #print(picname_split)
+    #print(picname_split[0])                
     wb = openpyxl.load_workbook(excelFileName, data_only=True)
     ws = wb[picname_split[0]]
+    redFill = PatternFill(start_color='FFFF0000',
+                   end_color='FFFF0000',
+                   fill_type='solid')
     for i in range(WS_ROW_START, ws.max_row + 1):
         if (ws["K" + str(i)].value == picname):
-            print(ws["H" + str(i)].value, ws["K" + str(i)].value)
+            ws["K" + str(i)].fill = redFill
+            #print(ws["K" + str(i)].value)    
+    wb.save(excelFileName)
+
+
+def excelUnlockPicname(picname, excelFileName):
+    # Unblock flat filling with original cell color the picname (white) 
+    picname_split = picname.split("-", 1)
+    #print(picname_split)
+    #print(picname_split[0])                
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)
+    ws = wb[picname_split[0]]
+    whiteFill = PatternFill(start_color='FFFFFFFF',
+                   end_color='FFFFFFFF',
+                   fill_type='solid')          
+    for i in range(WS_ROW_START, ws.max_row + 1):
+        if (ws["K" + str(i)].value == picname):
+            ws["K" + str(i)].fill = whiteFill
+            #print(ws["K" + str(i)].value)    
+    wb.save(excelFileName)
