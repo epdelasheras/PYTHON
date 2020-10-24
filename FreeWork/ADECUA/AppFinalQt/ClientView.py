@@ -356,12 +356,31 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst,
     dbTable2.insert({'Id': ''+str(db_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                      'Coordinates':location})   
     #print(dbTable2.all())     
-    # block or unblock flat from excel file
+    # lock or unlock flat from excel file
     excel_filename = treeWidgetLst[9]
     if excel_lock == True:
         excelLockPicname(picname_text, excel_filename)
     else:
         excelUnlockPicname(picname_text, excel_filename)
+    # lock or unlock flat form the treeview
+    tree_profile = treeWidgetLst[1]
+    tree_struct = treeWidgetLst[0] 
+    tree_floor = treeWidgetLst[2]
+    tree_type = treeWidgetLst[3]
+    qtwidget_struct = treeWidgetLst[4]
+    qtwidget_profile = treeWidgetLst[5]
+    qtwidget_floor = treeWidgetLst[6]
+    qtwidget_type = treeWidgetLst[7]
+    tree_widget = treeWidgetLst[8]           
+    expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type,\
+                   qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                   qtwidget_type, tree_widget, picname_text) 
+    tree_item_sel = tree_widget.selectedItems() 
+    print(tree_item_sel)  
+    if excel_lock == True:
+        treeviewItemLock(tree_item_sel)
+    else:        
+        treeviewItemUnlock(tree_item_sel)
  
 def itemView(window, treeWidgetLst, item_sel):    
     # gettin picname

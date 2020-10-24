@@ -320,3 +320,16 @@ def excelUnlockPicname(picname, excelFileName):
             ws["K" + str(i)].fill = whiteFill
             #print(ws["K" + str(i)].value)    
     wb.save(excelFileName)
+
+def treeviewItemLock(item):    
+    # disable tree item
+    for i in item:
+        i.setDisabled(True)
+        i.setSelected(False)
+
+def treeviewItemUnlock(item):    
+    # enable tree item
+    for i in item: 
+        i.setDisabled(False)
+        i.setSelected(True)
+        

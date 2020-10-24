@@ -239,9 +239,7 @@ class Ui_MainWindow(object):
                                                             'NumRoom':n_room, 'Coordinates': location})
                         print ("Reserva")
                         # disable this item and make it not selectable
-                        for i in item_sel:
-                            i.setDisabled(True)
-                            i.setSelected(False)
+                        treeviewItemLock(item_sel)
                         # open an excel book
                         excelLockPicname(flat_picname, self.excelFileName)   
                     elif self.tree_widget.action == self.tree_widget.buyAction:
@@ -251,9 +249,8 @@ class Ui_MainWindow(object):
                                                             'NumRoom':n_room, 'Coordinates': location})
                         print ("Compra")
                         # disable this item and make it not selectable
-                        for i in item_sel:
-                            i.setDisabled(True)
-                            i.setSelected(False)
+                        treeviewItemLock(item_sel)
+                        # lock item in the excel file
                         excelLockPicname(flat_picname, self.excelFileName)  
                 else:    
                     popupWarningWindow("Error en la seleccion de cliente");               
