@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
         self.excelFileName = "./database.xlsx"
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
-        defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
+        AdecuaDefGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
         MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))           
 
@@ -178,24 +178,53 @@ class Ui_MainWindow(object):
         if dialog.exec_() == QtWidgets.QDialog.Accepted:
             self.excelFileName = str(dialog.selectedFiles()[0])
         else:
-            return None       
-
-        # clean all listbox and tree view
+            return None 
+        # clean all listbox and tree widget
         self.tree_widget.clear()  
         self.lb_room.clear()
         self.lb_roomplace.clear()
-        
-        # load new items into treeview
+        # load new items into tree widget
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
-        defGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
+        AdecuaDefGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
         MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")        
 
     def AdecuaMenuArhiveQuit(self):
         sys.exit()        
 
-    #-- Widget methods --#
+    #-- Widget methods --# 
+
+    def AdecuaListRoomSel(self):
+    # when one item is selected...
+        #item_sel = str(self.lb_room.currentRow() + 1) + "D"
+        #print(item_sel)
+        item_sel = self.lb_room.selectedItems()
+        item = item_sel[0].text()
+        lboxRoomPlaceAddItems(item, self.lb_roomplace, self.excelFileName)
+
+    def AdecuaListRoomPlaceSel(self):
+    # when one item is selected....
+        item_sel = str(self.lb_roomplace.currentItem().text())
+        #print(item_sel)        
+        treeWidgetExpandItem(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
+                             self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
+                             self.qtwidget_type, self.tree_widget, item_sel)
+        self.AdecuaTreeItemSel()
     
+    def AdecuaTreeItemSel(self):
+    # when one item is selected...
+        item_sel = self.tree_widget.selectedItems()        
+        if item_sel:
+            #item_sel_txt = item_sel[0].text(0)
+            #print(item_sel_txt)
+            #print(item_sel[0])
+            treeWidgetLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room,\
+                                         self.qtwidget_type, self.tree_picname,\
+                                         self.excelFileName)        
+        # to set horizontal scrollbar on tree widget
+        self.tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.tree_widget.header().setStretchLastSection(False)
+
     def AdecuaTreeItemRightMenu(self): 
     # when righ click is over tree item...                
         item_sel = self.tree_widget.selectedItems()
@@ -208,51 +237,18 @@ class Ui_MainWindow(object):
                     mouse_pos = True
             # only launch the action when the user makes click over the right item.            
             if mouse_pos == True:
-                treeRightMenuActions(self.statusbar, self.tree_widget, self.excelFileName,
-                                     self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
-                                     self.db_ADECUA_TableFlatBuy, flat_picname)
+                treeWidgetRightMenuActions(self.statusbar, self.tree_widget, self.excelFileName,
+                                           self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
+                                           self.db_ADECUA_TableFlatBuy, flat_picname)
             else:    
-                popupWarningWindow("Error en la seleccion de cliente");               
+                WindowPopUpWarning("Error en la seleccion de cliente");               
         # if the user does not make click over the right item...
         else:  
-            popupWarningWindow("Seleccion incorrecta")
-    
-    def AdecuaTreeItemSel(self):
-    # when one item is selected...
-        item_sel = self.tree_widget.selectedItems()        
-        if item_sel:
-            #item_sel_txt = item_sel[0].text(0)
-            #print(item_sel_txt)
-            #print(item_sel[0])
-            treeViewLoadImageAndLocation(item_sel, self.flat_pic, self.tb_room,\
-                                         self.qtwidget_type, self.tree_picname,\
-                                         self.excelFileName)
-        
-        # to set horizontal scrollbar on tree widget
-        self.tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.tree_widget.header().setStretchLastSection(False)
-
-
-    def AdecuaListRoomSel(self):
-    # when one item is selected...
-        #item_sel = str(self.lb_room.currentRow() + 1) + "D"
-        #print(item_sel)
-        item_sel = self.lb_room.selectedItems()
-        item = item_sel[0].text()
-        lbRoomPlaceAddItems(item, self.lb_roomplace, self.excelFileName)
-
-    def AdecuaListRoomPlaceSel(self):
-    # when one item is selected....
-        item_sel = str(self.lb_roomplace.currentItem().text())
-        #print(item_sel)        
-        expandTreeItem(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
-                       self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
-                       self.qtwidget_type, self.tree_widget, item_sel)
-        self.AdecuaTreeItemSel()
+            WindowPopUpWarning("Seleccion incorrecta")
 
 # Class to handle right click button action over tree widget
 class TreeWidget(QtWidgets.QTreeWidget):          
-    # Handling mouse clicks on treeview
+    # Handling mouse clicks on tree widget
     right_click = QtCore.pyqtSignal()               
 
     def mousePressEvent(self, event):

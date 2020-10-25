@@ -338,9 +338,9 @@ def itemRemove (item_sel, dbTableFlatClientView, listFlat, treeWidgetLst):
     qtwidget_floor = treeWidgetLst[6]
     qtwidget_type = treeWidgetLst[7]
     tree_widget = treeWidgetLst[8]    
-    treeItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                   qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                   qtwidget_type, tree_widget, picname_text)    
+    treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                         qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                         qtwidget_type, tree_widget, picname_text)    
     
 def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst, excel_lock):
     # remove listbox selected item from the list1
@@ -386,11 +386,11 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst,
     qtwidget_type = treeWidgetLst[7]
     tree_widget = treeWidgetLst[8]               
     if excel_lock == True:        
-        treeItemLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                       qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                       qtwidget_type, tree_widget, picname_text)    
+        treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                           qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                           qtwidget_type, tree_widget, picname_text)    
     else:                
-        treeItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
+        treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
                        qtwidget_struct, qtwidget_profile, qtwidget_floor,\
                        qtwidget_type, tree_widget, picname_text)    
  
@@ -417,13 +417,13 @@ def itemView(window, treeWidgetLst, item_sel):
     flat_pic = treeWidgetLst[12]
     #print(picname_text)
     # expanding tree widget        
-    expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type,\
-                   qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                   qtwidget_type, tree_widget, picname_text)
+    treeWidgetExpandItem(tree_struct, tree_profile, tree_floor, tree_type,\
+                         qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                         qtwidget_type, tree_widget, picname_text)
     # load image
     item_sel = tree_widget.selectedItems()
     if item_sel:
-        treeViewLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type,\
+        treeWidgetLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type,\
                                     tree_picname, excel_filename)        
     # to set horizontal scrollbar on tree widget
     tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
