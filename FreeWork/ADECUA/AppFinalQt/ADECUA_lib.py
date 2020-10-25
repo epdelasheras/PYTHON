@@ -115,7 +115,7 @@ def expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_st
             qtwidget_floor[i].setExpanded(True)
 
     for i in range(len(tree_type)):
-        if tree_type[i] == item_type:
+        if tree_type[i] == item_type:            
             qtwidget_type[i].setSelected(True)
 
 def addItemsTreeview(Treeview, excelFileName):
@@ -319,17 +319,88 @@ def excelUnlockPicname(picname, excelFileName):
         if (ws["K" + str(i)].value == picname):
             ws["K" + str(i)].fill = whiteFill
             #print(ws["K" + str(i)].value)    
-    wb.save(excelFileName)
-
-def treeviewItemLock(item):    
-    # disable tree item
-    for i in item:
-        i.setDisabled(True)
-        i.setSelected(False)
-
-def treeviewItemUnlock(item):    
-    # enable tree item
-    for i in item: 
-        i.setDisabled(False)
-        i.setSelected(True)
+    wb.save(excelFileName)       
+         
+def treeItemLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
+                   qtwidget_floor,qtwidget_type, tree_widget, item_sel):
+    #It is used to lock a specific item on the tree_widget.
         
+    item_sel_split = item_sel.split("-")
+    #print(item_sel_split)
+
+    item_struct = NAMESTRUCTURE + item_sel_split[0]
+    item_profile = NAMEPROFILE + item_sel_split[1]
+    item_floor = NAMEFLOOR + item_sel_split[2]
+    item_type = item_sel_split[3]
+
+    #print(item_struct)
+    #print(item_profile)
+    #print(item_floor)
+
+    # collapse the complete tree before expanding a new item
+    tree_widget.collapseAll()
+
+    # un-select all items
+    for i in range(len(tree_type)):
+        qtwidget_type[i].setSelected(False)
+
+    # expanding every item on tree one by one
+    for i in range(len(tree_struct)):
+        if tree_struct[i] == item_struct:
+            qtwidget_struct[i].setExpanded(True)
+
+    for i in range(len(tree_profile)):
+        if tree_profile[i] == item_profile:
+            qtwidget_profile[i].setExpanded(True)
+
+    for i in range(len(tree_floor)):
+        if tree_floor[i] == item_floor:
+            qtwidget_floor[i].setExpanded(True)
+
+    for i in range(len(tree_type)):
+        if tree_type[i] == item_type:            
+            qtwidget_type[i].setDisabled(True)
+            qtwidget_type[i].setSelected(False)
+            print("item locked")                       
+
+def treeItemUnLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
+                   qtwidget_floor,qtwidget_type, tree_widget, item_sel):
+    #It is used to unlock a specific item on the tree_widget.
+
+    item_sel_split = item_sel.split("-")
+    #print(item_sel_split)
+
+    item_struct = NAMESTRUCTURE + item_sel_split[0]
+    item_profile = NAMEPROFILE + item_sel_split[1]
+    item_floor = NAMEFLOOR + item_sel_split[2]
+    item_type = item_sel_split[3]
+
+    #print(item_struct)
+    #print(item_profile)
+    #print(item_floor)
+
+    # collapse the complete tree before expanding a new item
+    tree_widget.collapseAll()
+
+    # un-select all items
+    for i in range(len(tree_type)):
+        qtwidget_type[i].setSelected(False)
+
+    # expanding every item on tree one by one
+    for i in range(len(tree_struct)):
+        if tree_struct[i] == item_struct:
+            qtwidget_struct[i].setExpanded(True)
+
+    for i in range(len(tree_profile)):
+        if tree_profile[i] == item_profile:
+            qtwidget_profile[i].setExpanded(True)
+
+    for i in range(len(tree_floor)):
+        if tree_floor[i] == item_floor:
+            qtwidget_floor[i].setExpanded(True)
+
+    for i in range(len(tree_type)):
+        if tree_type[i] == item_type:            
+            qtwidget_type[i].setSelected(True)
+            qtwidget_type[i].setDisabled(False)
+            print("iem unlocked")      

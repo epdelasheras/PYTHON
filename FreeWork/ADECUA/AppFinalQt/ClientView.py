@@ -328,6 +328,19 @@ def itemRemove (item_sel, dbTableFlatClientView, listFlat, treeWidgetLst):
     # unblock flat from excel file
     excel_filename = treeWidgetLst[9]
     excelUnlockPicname(picname_text, excel_filename)
+    # unlock flat from the treeview    
+    tree_profile = treeWidgetLst[1]
+    tree_struct = treeWidgetLst[0] 
+    tree_floor = treeWidgetLst[2]
+    tree_type = treeWidgetLst[3]
+    qtwidget_struct = treeWidgetLst[4]
+    qtwidget_profile = treeWidgetLst[5]
+    qtwidget_floor = treeWidgetLst[6]
+    qtwidget_type = treeWidgetLst[7]
+    tree_widget = treeWidgetLst[8]    
+    treeItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                   qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                   qtwidget_type, tree_widget, picname_text)    
     
 def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst, excel_lock):
     # remove listbox selected item from the list1
@@ -362,7 +375,7 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst,
         excelLockPicname(picname_text, excel_filename)
     else:
         excelUnlockPicname(picname_text, excel_filename)
-    # lock or unlock flat form the treeview
+    # lock or unlock flat from the treeview
     tree_profile = treeWidgetLst[1]
     tree_struct = treeWidgetLst[0] 
     tree_floor = treeWidgetLst[2]
@@ -371,16 +384,15 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst,
     qtwidget_profile = treeWidgetLst[5]
     qtwidget_floor = treeWidgetLst[6]
     qtwidget_type = treeWidgetLst[7]
-    tree_widget = treeWidgetLst[8]           
-    expandTreeItem(tree_struct, tree_profile, tree_floor, tree_type,\
-                   qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                   qtwidget_type, tree_widget, picname_text) 
-    tree_item_sel = tree_widget.selectedItems() 
-    print(tree_item_sel)  
-    if excel_lock == True:
-        treeviewItemLock(tree_item_sel)
-    else:        
-        treeviewItemUnlock(tree_item_sel)
+    tree_widget = treeWidgetLst[8]               
+    if excel_lock == True:        
+        treeItemLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                       qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                       qtwidget_type, tree_widget, picname_text)    
+    else:                
+        treeItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                       qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                       qtwidget_type, tree_widget, picname_text)    
  
 def itemView(window, treeWidgetLst, item_sel):    
     # gettin picname
