@@ -253,7 +253,7 @@ class Ui_ClientView(object):
         self.ClientViewDb.update({'DNI': self.lineDNIView.text()}, doc_ids = [self.ClientViewSel.doc_id])
         self.ClientViewDb.update({'Phone': self.linePhoneView.text()}, doc_ids = [self.ClientViewSel.doc_id])
         self.ClientViewDb.update({'Email': self.lineEmailView.text()}, doc_ids = [self.ClientViewSel.doc_id])
-        print(self.ClientViewDb.all())
+        #print(self.ClientViewDb.all())
 
     def ClientViewExit(self):
     # when exit button is clicked...
@@ -466,4 +466,4 @@ def add2ListDb(db, doc_id, lst):
         # add to the database   
         db.insert({'Id': ''+str(doc_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                          'Coordinates':location})
-    print(db.all())
+    #print(db.all())

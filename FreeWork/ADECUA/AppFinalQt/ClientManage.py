@@ -33,40 +33,43 @@ class Ui_ClientManage(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.LineDNI = QtWidgets.QLineEdit(self.centralwidget)
-        self.LineDNI.setGeometry(QtCore.QRect(70, 30, 151, 21))
+        self.LineDNI.setGeometry(QtCore.QRect(70, 20, 151, 21))
         self.LineDNI.setObjectName("LineDNI")
         self.LinePhone = QtWidgets.QLineEdit(self.centralwidget)
-        self.LinePhone.setGeometry(QtCore.QRect(70, 60, 151, 21))
+        self.LinePhone.setGeometry(QtCore.QRect(70, 50, 151, 21))
         self.LinePhone.setText("")
         self.LinePhone.setObjectName("LinePhone")
         self.LineEmail = QtWidgets.QLineEdit(self.centralwidget)
-        self.LineEmail.setGeometry(QtCore.QRect(70, 90, 151, 21))
+        self.LineEmail.setGeometry(QtCore.QRect(70, 80, 151, 21))
         self.LineEmail.setText("")
         self.LineEmail.setObjectName("LineEmail")
         self.ButtonSearchDNI = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSearchDNI.setGeometry(QtCore.QRect(260, 30, 141, 23))
+        self.ButtonSearchDNI.setGeometry(QtCore.QRect(260, 20, 141, 23))
         self.ButtonSearchDNI.setObjectName("ButtonSearchDNI")
         self.listClient = QtWidgets.QListWidget(self.centralwidget)
-        self.listClient.setGeometry(QtCore.QRect(20, 130, 441, 251))
+        self.listClient.setGeometry(QtCore.QRect(30, 150, 441, 251))
         self.listClient.setObjectName("listClient")
         self.ButtonSelect = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSelect.setGeometry(QtCore.QRect(20, 410, 101, 23))
+        self.ButtonSelect.setGeometry(QtCore.QRect(30, 430, 101, 23))
         self.ButtonSelect.setObjectName("ButtonSelect")
         self.ButtonView = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonView.setGeometry(QtCore.QRect(130, 410, 101, 23))
+        self.ButtonView.setGeometry(QtCore.QRect(140, 430, 101, 23))
         self.ButtonView.setObjectName("ButtonView")
         self.ButtonSearchPhone = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSearchPhone.setGeometry(QtCore.QRect(260, 60, 141, 23))
+        self.ButtonSearchPhone.setGeometry(QtCore.QRect(260, 50, 141, 23))
         self.ButtonSearchPhone.setObjectName("ButtonSearchPhone")
         self.ButtonSearchEmail = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonSearchEmail.setGeometry(QtCore.QRect(260, 90, 141, 23))
+        self.ButtonSearchEmail.setGeometry(QtCore.QRect(260, 80, 141, 23))
         self.ButtonSearchEmail.setObjectName("ButtonSearchEmail")
         self.ButtonErase = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonErase.setGeometry(QtCore.QRect(240, 410, 101, 23))
+        self.ButtonErase.setGeometry(QtCore.QRect(250, 430, 101, 23))
         self.ButtonErase.setObjectName("ButtonErase")
         self.ButtonExit = QtWidgets.QPushButton(self.centralwidget)
-        self.ButtonExit.setGeometry(QtCore.QRect(350, 410, 91, 23))
+        self.ButtonExit.setGeometry(QtCore.QRect(360, 430, 91, 23))
         self.ButtonExit.setObjectName("ButtonExit")
+        self.ButtonShowAll = QtWidgets.QPushButton(self.centralwidget)
+        self.ButtonShowAll.setGeometry(QtCore.QRect(170, 120, 151, 23))
+        self.ButtonShowAll.setObjectName("ButtonShowAll")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -85,17 +88,20 @@ class Ui_ClientManage(object):
         self.ButtonSearchEmail.setText(_translate("MainWindow", "Buscar por Email"))
         self.ButtonErase.setText(_translate("MainWindow", "Borrar"))
         self.ButtonExit.setText(_translate("MainWindow", "Salir"))
-# mouse click connect functions
+        self.ButtonShowAll.setText(_translate("MainWindow", "Mostrar todos los clientes"))
+
+        # mouse click connect functions
         self.ButtonSearchDNI.clicked.connect(self.ClientMngSearchDNI)
         self.ButtonSearchPhone.clicked.connect(self.ClientMngSearchPhone)
         self.ButtonSearchEmail.clicked.connect(self.ClientMngSearchEmail)
         self.ButtonView.clicked.connect(self.ClientMng2View)        
         self.ButtonExit.clicked.connect(self.ClientMngExit)      
         self.ButtonSelect.clicked.connect(self.ClientMngSelect)      
-        self.ButtonErase.clicked.connect(self.ClientMngErase)      
+        self.ButtonErase.clicked.connect(self.ClientMngErase)
+        self.ButtonShowAll.clicked.connect(self.ClientMngShowAll)
 
-# methods related to the action buttons
-
+# methods related to the action buttons 
+        
     def ClientMngErase(self):
         item_sel = self.listClient.selectedItems()                
         
@@ -107,7 +113,14 @@ class Ui_ClientManage(object):
             # remove item from the database.
             self.ClientMngDb.remove(doc_ids = [int(db_id)])
             # remove item from the listbox.
-            self.listClient.takeItem(self.listClient.currentRow())            
+            self.listClient.takeItem(self.listClient.currentRow())    
+            # drop tables linked to this client
+            if len(self.ClientMngDbTableFlatFav.all()) > 0:
+                self.ClientMngDbTableFlatFav.remove(doc_ids = [int(db_id)])
+            if len(self.ClientMngDbTableFlatBook.all()) > 0:
+                self.ClientMngDbTableFlatBook.remove(doc_ids = [int(db_id)])
+            if len(self.ClientMngDbTableFlatBuy.all()) > 0:
+                self.ClientMngDbTableFlatBuy.remove(doc_ids = [int(db_id)])                                  
         else:
             dialog = QtWidgets.QMessageBox()
             dialog.setWindowTitle(WIN_TITLE)
@@ -170,7 +183,22 @@ class Ui_ClientManage(object):
             dialog.setText("No ha seleccionado ningun cliente")
             dialog.addButton(QtWidgets.QMessageBox.Ok)
             dialog.exec()
-
+    
+    def ClientMngShowAll(self):
+        docs = self.ClientMngDb.all()
+        # create a temp list with the fields to show in the listbox        
+        lClient = []      
+        for doc in docs:
+            clientTemp =  doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
+                          doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
+                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"  
+            lClient.append(clientTemp) 
+            
+        # add items to the listbox
+        self.listClient.clear()
+        for i in range(len(lClient)):    
+            self.listClient.insertItem(i, lClient[i])
+    
     def ClientMngSearchDNI(self):
         # get value from the textbox
         dni2search = self.LineDNI.text()

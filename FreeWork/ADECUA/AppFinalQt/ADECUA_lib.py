@@ -4,6 +4,7 @@ from typing import List
 import openpyxl
 from openpyxl.styles import Color, PatternFill
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
+from tinydb import TinyDB, Query
 
 # root window attributes
 MAINWIN_WIDTH = 1400
@@ -404,3 +405,53 @@ def treeItemUnLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_st
             qtwidget_type[i].setSelected(True)
             qtwidget_type[i].setDisabled(False)
             print("iem unlocked")      
+
+def treeRightMenuActions(statusbar, tree_widget, excelFileName, db_ADECUA_TableFlatFav, 
+                        db_ADECUA_TableFlatBook, db_ADECUA_TableFlatBuy, flat_picname):
+    # read statusbar string
+    statusBarText = statusbar.currentMessage()
+    # filtering the string to get the doc_id of the data base                
+    statusBarText_split = statusBarText.split('[')           
+    # execute code only if a client is selected.
+    if len(statusBarText_split) > 1:                                  
+        # save item selected from tree widget
+        item_sel = tree_widget.selectedItems()        
+        # save db_id
+        db_id = str(statusBarText_split[1][:-1])
+        # Getting info from the selected item
+        #print(flat_picname)
+        flat_picname_split = flat_picname.split("-", 1)
+        location, n_room = givemeNroomLocation(flat_picname_split[0], flat_picname, excelFileName)
+        #print(location)
+        #print(n_room)                   
+        if tree_widget.action == tree_widget.favAction:                        
+            # improve this action doing a click filtering. just in case 
+            # the use makes click several times over the same item                        
+            db_ADECUA_TableFlatFav.insert({'Id': db_id, 'Picname': flat_picname,
+                                            'NumRoom':n_room, 'Coordinates': location})
+            #print ("Favorito")
+            #print(self.db_ADECUA_TableFlatFav.all())                        
+        elif tree_widget.action == tree_widget.bookAction:
+            # improve this action doing a click filtering. just in case 
+            # the use makes click several times over the same item    
+            db_ADECUA_TableFlatBook.insert({'Id': db_id, 'Picname': flat_picname,
+                                            'NumRoom':n_room, 'Coordinates': location})
+            #print ("Reserva")
+            # disable this item and make it not selectable
+            for i in item_sel:
+                i.setDisabled(True)
+                i.setSelected(False)
+            # lock item in the excel file
+            excelLockPicname(flat_picname, excelFileName)   
+        elif tree_widget.action == tree_widget.buyAction:
+            # improve this action doing a click filtering. just in case 
+            # the use makes click several times over the same item    
+            db_ADECUA_TableFlatBuy.insert({'Id': db_id, 'Picname': flat_picname,
+                                            'NumRoom':n_room, 'Coordinates': location})
+            #print ("Compra")
+            # disable this item and make it not selectable
+            for i in item_sel:
+                i.setDisabled(True)
+                i.setSelected(False)
+            # lock item in the excel file
+            excelLockPicname(flat_picname, excelFileName)
