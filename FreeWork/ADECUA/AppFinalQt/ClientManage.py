@@ -16,10 +16,12 @@ from ADECUA_lib import *
 
 class Ui_ClientManage(object):
     def __init__(self, db_ADECUA, db_ADECUA_TableFlatFav, db_ADECUA_TableFlatBook,
-                 db_ADECUA_TableFlatBuy, windowClientManage, MainWindow, tree_widget_list):
+                 db_ADECUA_TableFlatBuy, windowClientManage, status_label,
+                 MainWindow, tree_widget_list):
         self.ClientMngDb = db_ADECUA # copy database to a local variable. 
         self.ClientMngWin = windowClientManage #copy window var to a loca var.
         self.ClientMngAdecuaWin = MainWindow # copy Adecua mainwindow to a local var 
+        self.ClientMngAdecuaStatusLabel = status_label # copy status label to a local var
         self.ClientMngAdecuaTreeWidLst = tree_widget_list # copy widget to local var
         # copy database tables to local variables
         self.ClientMngDbTableFlatFav = db_ADECUA_TableFlatFav
@@ -115,11 +117,14 @@ class Ui_ClientManage(object):
             # remove item from the listbox.
             self.listClient.takeItem(self.listClient.currentRow())    
             # drop tables linked to this client
+            #print (len(self.ClientMngDbTableFlatFav.all()))
+            #print (len(self.ClientMngDbTableFlatBook.all()))
+            #print (len(self.ClientMngDbTableFlatBuy.all()))
             if len(self.ClientMngDbTableFlatFav.all()) > 0:
                 self.ClientMngDbTableFlatFav.remove(doc_ids = [int(db_id)])
-            if len(self.ClientMngDbTableFlatBook.all()) > 0:
+            if len(self.ClientMngDbTableFlatBook.all()) > 1:
                 self.ClientMngDbTableFlatBook.remove(doc_ids = [int(db_id)])
-            if len(self.ClientMngDbTableFlatBuy.all()) > 0:
+            if len(self.ClientMngDbTableFlatBuy.all()) > 1:
                 self.ClientMngDbTableFlatBuy.remove(doc_ids = [int(db_id)])                                  
         else:
             dialog = QtWidgets.QMessageBox()
@@ -142,9 +147,8 @@ class Ui_ClientManage(object):
             clientTemp =  "Cliente: " +\
                           doc['Surname1'] + ", " + doc['Surname2'] + ", " +\
                           doc['Name'] + " | " + doc['DNI'] + " | " + doc['Phone'] + " | "+\
-                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"   
-            self.ClientMngAdecuaWin.statusBar().showMessage(clientTemp)
-
+                          doc['Email'] + " | " + " [" + str(doc.doc_id) + "]"                           
+            self.ClientMngAdecuaStatusLabel.setText(clientTemp)
         else:
             dialog = QtWidgets.QMessageBox()
             dialog.setWindowTitle(WIN_TITLE)
@@ -171,7 +175,7 @@ class Ui_ClientManage(object):
             self.windowClientView=QtWidgets.QMainWindow()
             self.ui=Ui_ClientView(clientSel, self.ClientMngDb, self.ClientMngDbTableFlatFav,
                                   self.ClientMngDbTableFlatBook, self.ClientMngDbTableFlatBuy,
-                                  self.windowClientView, self.ClientMngAdecuaWin, 
+                                  self.windowClientView, self.ClientMngAdecuaWin,  
                                   self.ClientMngAdecuaTreeWidLst)        
             self.ui.setup(self.windowClientView)
             self.windowClientView.show()        

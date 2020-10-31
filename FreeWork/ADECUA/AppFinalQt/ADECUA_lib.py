@@ -26,6 +26,8 @@ NAMESTRUCTURE = "Estructura "
 NAMEPROFILE = "Perfil "
 NAMEFLOOR = "Planta "
 
+# Excel
+CELL_RED_COLOR = "FFFF0000"
 
 def AdecuaDefGuiConfig(tb_room, flat_pic, tree_widget, lb_room, excelFileName):
 # method to load the default configuration in ADECUA main window
@@ -127,7 +129,7 @@ def excelLockPicname(picname, excelFileName):
     for i in range(WS_ROW_START, ws.max_row + 1):
         if (ws["K" + str(i)].value == picname):
             ws["K" + str(i)].fill = redFill
-            #print(ws["K" + str(i)].value)    
+            #print(ws["K" + str(i)].value)
     wb.save(excelFileName)
 
 def excelUnlockPicname(picname, excelFileName):
@@ -178,10 +180,14 @@ def treewidgetAddItems(Treewidget, excelFileName):
         lst_fplace = []
         lst_ftipo = []
         for i in range(WS_ROW_START, ws.max_row + 1):
-            if (ws["K" + str(i)].value != None):  # skip empty rows
-                lst_fname.append(str(ws["K" + str(i)].value)) # list with file names
+            if (ws["K" + str(i)].value != None):  # skip empty rows                
                 lst_fplace.append(str(ws["H" + str(i)].value)) # list with coordinates
-                lst_ftipo.append(str(ws["F" + str(i)].value)) # list with tiplogies
+                lst_ftipo.append(str(ws["F" + str(i)].value)) # list with typologies
+                # list with file names
+                if ws["K" + str(i)].fill.start_color.index == CELL_RED_COLOR:
+                    lst_fname.append(str(ws["K" + str(i)].value)+"*") # mark lock items
+                else:
+                    lst_fname.append(str(ws["K" + str(i)].value))
         # Split every file name string to do an analysis later
         lst_fname_split = []
         for i in range(len(lst_fname)):
@@ -217,14 +223,19 @@ def treewidgetAddItems(Treewidget, excelFileName):
                     lst_floor_widget.append(tree_floors)  # add item widget to tupla
                     lst_floor_txt.append(NAMEFLOOR + floor_split[2])  # add widget text to tupla
                     for k in range(len(lst_struct_prof_floor)):
-                        type = lst_fname[k]
-                        type_split = type.split("-")
+                        types = lst_fname[k]
+                        type_split = types.split("-")
                         if re.fullmatch(floor, lst_struct_prof_floor[k]) != None:
                             #print(type_split)
-                            tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3]])
-                            lst_type_widget.append(tree_type) # add item widget to tupla
+                            if type_split[3][-1] == "*": # lock item!                                
+                                tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3][:-1]])
+                                tree_type.setDisabled(True)
+                                tree_type.setSelected(False)                            
+                            else: # no locked item
+                                tree_type = Qt.QTreeWidgetItem(tree_floors, [type_split[3]])                        
+                            lst_type_widget.append(tree_type) # add item widget to tupla                            
                             lst_type_txt.append(type_split[3])  # add widget text to tupla
-                            lst_picname.append(type)   
+                            lst_picname.append(types)   
     # return variables
     return lst_struct_widget, lst_profile_widget, lst_floor_widget, lst_type_widget, \
            lst_struct_txt, lst_profile_txt, lst_floor_txt, lst_type_txt, lst_picname
@@ -278,11 +289,11 @@ def treeWidgetLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, t
             tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")                  
 
 
-def treeWidgetRightMenuActions(statusbar, tree_widget, excelFileName, db_ADECUA_TableFlatFav, 
+def treeWidgetRightMenuActions(status_label, tree_widget, excelFileName, db_ADECUA_TableFlatFav, 
                                db_ADECUA_TableFlatBook, db_ADECUA_TableFlatBuy, flat_picname):
 # actions to execute when right click is made on tree widget item of ADECUA main window.
     # read statusbar string
-    statusBarText = statusbar.currentMessage()
+    statusBarText = status_label.text()
     # filtering the string to get the doc_id of the data base                
     statusBarText_split = statusBarText.split('[')           
     # execute code only if a client is selected.

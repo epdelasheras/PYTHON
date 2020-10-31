@@ -125,9 +125,13 @@ class Ui_MainWindow(object):
         self.excelFileName = "./database.xlsx"
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
-        AdecuaDefGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
-        MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")
+        AdecuaDefGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)        
         MainWindow.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))           
+
+        # load fix message in status bar
+        self.status_label = QtWidgets.QLabel()
+        MainWindow.statusBar().addPermanentWidget(self.status_label, 100)
+        self.status_label.setText((" Se han cargado " +  str(len(self.tree_picname)) + " viviendas"))             
 
         # mouse click connect functions         
         self.tree_widget.right_click.connect(self.AdecuaTreeItemRightMenu)
@@ -150,7 +154,7 @@ class Ui_MainWindow(object):
         self.tree_widget_list = [self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
                                  self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
                                  self.qtwidget_type, self.tree_widget, self.excelFileName, \
-                                 self.tree_picname, self.tb_room, self.flat_pic]     
+                                 self.tree_picname, self.tb_room, self.flat_pic]                                 
 
     #-- Menu methods --#
     
@@ -163,8 +167,8 @@ class Ui_MainWindow(object):
     def AdecuaMenuClientManage(self):        
         self.windowClientManage=QtWidgets.QMainWindow()
         self.ui=Ui_ClientManage(self.db_ADECUA, self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
-                                self.db_ADECUA_TableFlatBuy, self.windowClientManage, MainWindow,
-                                self.tree_widget_list)
+                                self.db_ADECUA_TableFlatBuy, self.windowClientManage, self.status_label                                ,
+                                MainWindow ,self.tree_widget_list)
         self.ui.setup(self.windowClientManage)
         self.windowClientManage.show()
     
@@ -187,7 +191,7 @@ class Ui_MainWindow(object):
         self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type, \
         self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type, self.tree_picname = \
         AdecuaDefGuiConfig(self.tb_room, self.flat_pic, self.tree_widget, self.lb_room, self.excelFileName)
-        MainWindow.statusBar().showMessage(" Se han cargado " +  str(len(self.tree_picname)) + " viviendas")        
+        self.status_label.setText((" Se han cargado " +  str(len(self.tree_picname)) + " viviendas"))             
 
     def AdecuaMenuArhiveQuit(self):
         sys.exit()        
@@ -237,7 +241,7 @@ class Ui_MainWindow(object):
                     mouse_pos = True
             # only launch the action when the user makes click over the right item.            
             if mouse_pos == True:
-                treeWidgetRightMenuActions(self.statusbar, self.tree_widget, self.excelFileName,
+                treeWidgetRightMenuActions(self.status_label, self.tree_widget, self.excelFileName,
                                            self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
                                            self.db_ADECUA_TableFlatBuy, flat_picname)
             else:    

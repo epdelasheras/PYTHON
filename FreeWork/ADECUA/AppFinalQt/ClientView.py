@@ -163,7 +163,8 @@ class Ui_ClientView(object):
         if item_sel: 
             if self.listFlatFav.action == self.listFlatFav.viewAction:                        
                 print ("Ver piso")                
-                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
+                menuFav = True # This is the Favourite menu!
+                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel, menuFav)
             elif self.listFlatFav.action == self.listFlatFav.moveToBookAction:
                 print ("Mover a lista de reservas")
                 excel_lock = True
@@ -187,7 +188,8 @@ class Ui_ClientView(object):
         if item_sel: 
             if self.listFlatBook.action == self.listFlatBook.viewAction:                        
                 print ("Ver piso")                
-                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
+                menuFav = False # This is the book menu
+                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel, menuFav)                
             elif self.listFlatBook.action == self.listFlatBook.moveToFavAction:
                 print ("Mover a lista de Favoritos")
                 excel_lock = False
@@ -211,7 +213,8 @@ class Ui_ClientView(object):
         if item_sel: 
             if self.listFlatBuy.action == self.listFlatBuy.viewAction:                        
                 print ("Ver piso")                
-                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel)
+                menuFav = False # This is the buy menu!
+                itemView(self.ClientViewAdecuaWin, self.ClientViewAdecuaTreeWidLst, item_sel, menuFav)
             elif self.listFlatBuy.action == self.listFlatBuy.moveToFavAction:
                 print ("Mover a lista de Favoritos")
                 excel_lock = False
@@ -329,18 +332,8 @@ def itemRemove (item_sel, dbTableFlatClientView, listFlat, treeWidgetLst):
     excel_filename = treeWidgetLst[9]
     excelUnlockPicname(picname_text, excel_filename)
     # unlock flat from the treeview    
-    tree_profile = treeWidgetLst[1]
-    tree_struct = treeWidgetLst[0] 
-    tree_floor = treeWidgetLst[2]
-    tree_type = treeWidgetLst[3]
-    qtwidget_struct = treeWidgetLst[4]
-    qtwidget_profile = treeWidgetLst[5]
-    qtwidget_floor = treeWidgetLst[6]
-    qtwidget_type = treeWidgetLst[7]
-    tree_widget = treeWidgetLst[8]    
-    treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                         qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                         qtwidget_type, tree_widget, picname_text)    
+    excel_lock = False
+    treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)
     
 def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst, excel_lock):
     # remove listbox selected item from the list1
@@ -375,32 +368,17 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst,
         excelLockPicname(picname_text, excel_filename)
     else:
         excelUnlockPicname(picname_text, excel_filename)
-    # lock or unlock flat from the treeview
-    tree_profile = treeWidgetLst[1]
-    tree_struct = treeWidgetLst[0] 
-    tree_floor = treeWidgetLst[2]
-    tree_type = treeWidgetLst[3]
-    qtwidget_struct = treeWidgetLst[4]
-    qtwidget_profile = treeWidgetLst[5]
-    qtwidget_floor = treeWidgetLst[6]
-    qtwidget_type = treeWidgetLst[7]
-    tree_widget = treeWidgetLst[8]               
-    if excel_lock == True:        
-        treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                           qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                           qtwidget_type, tree_widget, picname_text)    
-    else:                
-        treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                       qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                       qtwidget_type, tree_widget, picname_text)    
+    # lock or unlock flat from the treeview    
+    treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)
  
-def itemView(window, treeWidgetLst, item_sel):    
-    # gettin picname
+def itemView(window, treeWidgetLst, item_sel, menuFav):        
+    # getting picname
+    #print(item_sel[0].text())
     item_text = item_sel[0].text()
     item_text_split = item_text.split('|')
     item_flat = item_text_split[0]
     item_flat_split = item_flat.split(':')
-    picname_text = item_flat_split[1][1:-1]    
+    picname_text = item_flat_split[1][1:-1]     
     # extracting lists....
     tree_profile = treeWidgetLst[1]
     tree_struct = treeWidgetLst[0] 
@@ -416,15 +394,33 @@ def itemView(window, treeWidgetLst, item_sel):
     tb_room = treeWidgetLst[11]
     flat_pic = treeWidgetLst[12]
     #print(picname_text)
-    # expanding tree widget        
-    treeWidgetExpandItem(tree_struct, tree_profile, tree_floor, tree_type,\
-                         qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                         qtwidget_type, tree_widget, picname_text)
-    # load image
-    item_sel = tree_widget.selectedItems()
-    if item_sel:
-        treeWidgetLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type,\
-                                    tree_picname, excel_filename)        
+    if menuFav == False: # it necessary to unlock the item to load the image                               
+        #unlock tree item:
+        excel_lock = False
+        treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)    
+        # expanding tree widget            
+        treeWidgetExpandItem(tree_struct, tree_profile, tree_floor, tree_type,\
+                             qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                             qtwidget_type, tree_widget, picname_text)
+        # load image
+        item_sel = tree_widget.selectedItems()
+        if item_sel:
+            treeWidgetLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type,\
+                                        tree_picname, excel_filename)        
+        #lock item
+        excel_lock = True
+        treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)                        
+    else:
+        # expanding tree widget            
+        treeWidgetExpandItem(tree_struct, tree_profile, tree_floor, tree_type,\
+                             qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                             qtwidget_type, tree_widget, picname_text)
+        # load image
+        item_sel = tree_widget.selectedItems()
+        if item_sel:
+            treeWidgetLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type,\
+                                        tree_picname, excel_filename)        
+
     # to set horizontal scrollbar on tree widget
     tree_widget.header().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
     tree_widget.header().setStretchLastSection(False)
@@ -467,3 +463,24 @@ def add2ListDb(db, doc_id, lst):
         db.insert({'Id': ''+str(doc_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                          'Coordinates':location})
     #print(db.all())
+
+
+def treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst):
+# method used to unlock/lock flat on the treeview    
+    tree_profile = treeWidgetLst[1]
+    tree_struct = treeWidgetLst[0] 
+    tree_floor = treeWidgetLst[2]
+    tree_type = treeWidgetLst[3]
+    qtwidget_struct = treeWidgetLst[4]
+    qtwidget_profile = treeWidgetLst[5]
+    qtwidget_floor = treeWidgetLst[6]
+    qtwidget_type = treeWidgetLst[7]
+    tree_widget = treeWidgetLst[8]
+    if  excel_lock == False: # unlock item
+        treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                             qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                             qtwidget_type, tree_widget, picname_text)    
+    else: # lock item
+        treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type,\
+                            qtwidget_struct, qtwidget_profile, qtwidget_floor,\
+                            qtwidget_type, tree_widget, picname_text)    
