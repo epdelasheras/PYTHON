@@ -52,14 +52,24 @@ def AdecuaDefGuiConfig(tb_room, flat_pic, tree_widget, lb_room, excelFileName):
            tree_profile, tree_floor, tree_type, tree_picname 
 
 def WindowPopUpWarning(text):
-# shoe dialog pop up warning window 
+# show dialog pop up warning window 
     dialog = QtWidgets.QMessageBox()
     dialog.setWindowTitle(WIN_TITLE)
     dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
     dialog.setIcon(QtWidgets.QMessageBox.Warning)
     dialog.setText(text)
     dialog.addButton(QtWidgets.QMessageBox.Ok)
-    dialog.exec() 
+    dialog.exec()     
+
+def WindowPopUpInfo(text):
+# show dialog pop up warning window 
+    dialog = QtWidgets.QMessageBox()
+    dialog.setWindowTitle(WIN_TITLE)
+    dialog.setWindowIcon(QtGui.QIcon(PIC_PATH+WIN_TITLE+PIC_EXTENSION))
+    dialog.setIcon(QtWidgets.QMessageBox.Information)
+    dialog.setText(text)
+    dialog.addButton(QtWidgets.QMessageBox.Ok)
+    dialog.exec()     
 
 def lboxRoomAddItems(Listbox, excelFileName):
 # Adding items to the listbox

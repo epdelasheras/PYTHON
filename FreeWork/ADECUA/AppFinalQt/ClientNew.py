@@ -18,6 +18,7 @@ into the main window:
 ''' 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from ADECUA_lib import WindowPopUpInfo
 
 class Ui_ClientNew(object): 
     def __init__(self, db_ADECUA, windowClientNew):
@@ -116,7 +117,8 @@ class Ui_ClientNew(object):
         self.dbClientNew.insert({'Name': name, 'Surname1': surname1, 'Surname2': surname2, 
                                  'DNI': dni, 'Phone': phone, 'Email': email})
         #get all documents stored in the database
-        print (self.dbClientNew.all())
+        #print (self.dbClientNew.all())
+        WindowPopUpInfo("Cliente guardado correctamente")
 
     def ClientNewClear(self):
         self.LineName.clear()
