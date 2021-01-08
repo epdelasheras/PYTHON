@@ -1,26 +1,54 @@
-from instabot import Bot 
 import os
-from my_lib import *
+import time
+#from my_lib import *
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
-bot = Bot() 
-bot.login(username = "portatest", password = "kikazo") 
+site = "https://www.instagram.com/accounts/login/"
 
+driver = webdriver.Chrome("chromedriver.exe")
+driver.get(site)
 
-picname1 = "PortadaMarca"
-image_resize(picname1)
+# wait some time until load page
+time.sleep(1)
 
-picname2 = "PortadaAs"
-image_resize(picname2)
+# Press button to accept cookies
+driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div[2]/button[1]').click()
 
-# Recommended to put the photo 
-# you want to upload in the same 
-# directory where this Python code 
-# is located else you will have 
-# to provide full path for the photo 
-bot.upload_photo(picname1 + "_resize.jpg", 
-				caption = picname1)
+# wait some time until load page
+time.sleep(1)
 
+user = driver.find_element_by_name('username')
+user.send_keys('portatest')
 
-#os.remove(picname + "_resize.jpg.REMOVE_ME")
+passw = driver.find_element_by_name('password')
+passw.send_keys('kikazo')
 
-print("fin") 
+# Press login button
+driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div[1]/div/form/div/div[3]/button/div').click()
+
+time.sleep(5)
+
+# Press "Ahora no" button for not saving session info
+driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').click()
+
+time.sleep(1)
+
+# Press "Ahora no" for not enabling notifications
+driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[3]/button[2]').click()
+
+'''
+user.send_keys('portatest')
+
+passw = driver.find_element_by_xpath('/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div/div[2]/div/label/input')
+passw.send_keys('kikazo')
+
+driver.find_element_by_xpath('/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div/div[3]').click()
+
+#picname = "PortadaMarca"
+#image_resize(picname)
+'''
+print("fin")
