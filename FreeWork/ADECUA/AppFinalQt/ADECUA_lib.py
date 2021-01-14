@@ -305,7 +305,7 @@ def treeWidgetRightMenuActions(status_label, tree_widget, excelFileName, db_ADEC
     # read statusbar string
     statusBarText = status_label.text()
     # filtering the string to get the doc_id of the data base                
-    statusBarText_split = statusBarText.split('[')           
+    statusBarText_split = statusBarText.split('[')
     # execute code only if a client is selected.
     if len(statusBarText_split) > 1:                                  
         # save item selected from tree widget
@@ -349,6 +349,8 @@ def treeWidgetRightMenuActions(status_label, tree_widget, excelFileName, db_ADEC
                 i.setSelected(False)
             # lock item in the excel file
             excelLockPicname(flat_picname, excelFileName)
+    else:
+        WindowPopUpWarning("No se ha seleccionado ningún cliente");
 
 def TreeWidgetGivemeNroomLocation(worksheet, tree_item, excelFileName):
 # It is used in "loadPic" method to search the coordinates of the flat.
