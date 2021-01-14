@@ -153,7 +153,7 @@ class Ui_MainWindow(object):
         # list to share between different windows
         self.tree_widget_list = [self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
                                  self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor,\
-                                 self.qtwidget_type, self.tree_widget, self.excelFileName, \
+                                 self.qtwidget_type, self.tree_widget, self.excelFileName,\
                                  self.tree_picname, self.tb_room, self.flat_pic]                                 
 
     #-- Menu methods --#
@@ -241,9 +241,10 @@ class Ui_MainWindow(object):
                     mouse_pos = True
             # only launch the action when the user makes click over the right item.            
             if mouse_pos == True:
-                treeWidgetRightMenuActions(self.status_label, self.tree_widget, self.excelFileName,
-                                           self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook,
-                                           self.db_ADECUA_TableFlatBuy, flat_picname)
+                treeWidgetRightMenuActions(self.tree_struct, self.tree_profile, self.tree_floor, self.tree_type,\
+                                           self.qtwidget_struct, self.qtwidget_profile, self.qtwidget_floor, self.qtwidget_type,\
+                                           self.db_ADECUA_TableFlatFav, self.db_ADECUA_TableFlatBook, self.db_ADECUA_TableFlatBuy,\
+                                           self.status_label, self.tree_widget, self.excelFileName, flat_picname)
             else:    
                 WindowPopUpWarning("Error en la seleccion de cliente");               
         # if the user does not make click over the right item...

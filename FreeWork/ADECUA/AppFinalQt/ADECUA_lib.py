@@ -299,8 +299,10 @@ def treeWidgetLoadImageAndLocation(item_sel, flat_pic, tb_room, qtwidget_type, t
             tb_room.setText(str(location) + " | " + str(n_room) + " dormitorio/s")                  
 
 
-def treeWidgetRightMenuActions(status_label, tree_widget, excelFileName, db_ADECUA_TableFlatFav, 
-                               db_ADECUA_TableFlatBook, db_ADECUA_TableFlatBuy, flat_picname):
+def treeWidgetRightMenuActions(tree_struct, tree_profile, tree_floor, tree_type,
+                               qtwidget_struct, qtwidget_profile, qtwidget_floor,qtwidget_type,
+                               db_ADECUA_TableFlatFav, db_ADECUA_TableFlatBook, db_ADECUA_TableFlatBuy,
+                               status_label, tree_widget, excelFileName, flat_picname):
 # actions to execute when right click is made on tree widget item of ADECUA main window.
     # read statusbar string
     statusBarText = status_label.text()
@@ -329,28 +331,25 @@ def treeWidgetRightMenuActions(status_label, tree_widget, excelFileName, db_ADEC
             # improve this action doing a click filtering. just in case 
             # the use makes click several times over the same item    
             db_ADECUA_TableFlatBook.insert({'Id': db_id, 'Picname': flat_picname,
-                                            'NumRoom':n_room, 'Coordinates': location})
-            #print ("Reserva")
-            # disable this item and make it not selectable
-            for i in item_sel:
-                i.setDisabled(True)
-                i.setSelected(False)
-            # lock item in the excel file
-            excelLockPicname(flat_picname, excelFileName)   
+                                            'NumRoom':n_room, 'Coordinates': location})                                    
+
+            # lock the selected item and the items with the same coord in treewidget and excelfile.
+            padLockItems(flat_picname, excelFileName, tree_struct, tree_profile, tree_floor, tree_widget,
+                         tree_type, qtwidget_struct, qtwidget_profile, qtwidget_floor,qtwidget_type)
+            WindowPopUpInfo("La reserva se ha realizado correctamente")
         elif tree_widget.action == tree_widget.buyAction:
             # improve this action doing a click filtering. just in case 
             # the use makes click several times over the same item    
             db_ADECUA_TableFlatBuy.insert({'Id': db_id, 'Picname': flat_picname,
                                             'NumRoom':n_room, 'Coordinates': location})
             #print ("Compra")
-            # disable this item and make it not selectable
-            for i in item_sel:
-                i.setDisabled(True)
-                i.setSelected(False)
-            # lock item in the excel file
-            excelLockPicname(flat_picname, excelFileName)
+            # lock the selected item and the items with the same coord in treewidget and excelfile.
+            padLockItems(flat_picname, excelFileName, tree_struct, tree_profile, tree_floor, tree_widget,
+                         tree_type, qtwidget_struct, qtwidget_profile, qtwidget_floor,qtwidget_type)
+            WindowPopUpInfo("La compra se ha realizado correctamente")
+            
     else:
-        WindowPopUpWarning("No se ha seleccionado ningún cliente");
+        WindowPopUpWarning("No se ha seleccionado ningún cliente")
 
 def TreeWidgetGivemeNroomLocation(worksheet, tree_item, excelFileName):
 # It is used in "loadPic" method to search the coordinates of the flat.
@@ -360,9 +359,9 @@ def TreeWidgetGivemeNroomLocation(worksheet, tree_item, excelFileName):
         if (ws["K" + str(i)].value == tree_item):
             return ws["H" + str(i)].value, ws["I" + str(i)].value
 
-def treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, qtwidget_profile,
-                      qtwidget_floor,qtwidget_type, tree_widget, item_sel):
-#It is used to lock a specific item on the tree_widget.        
+def treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, 
+                      qtwidget_profile, qtwidget_floor,qtwidget_type, tree_widget, item_sel):
+#It is used to lock a specific item on the tree_widget.            
     item_sel_split = item_sel.split("-")
     #print(item_sel_split)
     item_struct = NAMESTRUCTURE + item_sel_split[0]
@@ -395,7 +394,7 @@ def treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidge
                    
 def treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type, qtwidget_struct, 
                          qtwidget_profile, qtwidget_floor,qtwidget_type, tree_widget, item_sel):
-#It is used to unlock a specific item on the tree_widget.
+#It is used to unlock a specific item on the tree_widget.    
     item_sel_split = item_sel.split("-")
     #print(item_sel_split)
     item_struct = NAMESTRUCTURE + item_sel_split[0]
@@ -425,3 +424,46 @@ def treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type, qtwid
             qtwidget_type[i].setSelected(True)
             qtwidget_type[i].setDisabled(False)
             #print("iem unlocked")
+
+def padLockItems(picname_text, excelFileName, tree_struct, tree_profile, tree_floor, tree_widget,
+                 tree_type, qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type):
+# locking the selected item and the items with the same cords (Execel file and tree widget)
+    picname_text_split = picname_text.split("-", 1)            
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)
+    ws = wb[picname_text_split[0]]
+    # Get the cord
+    for i in range(WS_ROW_START, ws.max_row + 1):
+        if (ws["K" + str(i)].value == picname_text):
+            location = ws["H" + str(i)].value            
+    # lock items with the same cord
+    for i in range(WS_ROW_START, ws.max_row + 1):
+        if (ws["H" + str(i)].value == location):
+            #print(ws["K" + str(i)].value)
+            #print(ws["H" + str(i)].value)
+            treeWidgetItemLock(tree_struct, tree_profile, tree_floor, 
+                                tree_type, qtwidget_struct, qtwidget_profile,
+                                qtwidget_floor,qtwidget_type, tree_widget,
+                                ws["K" + str(i)].value)
+            excelLockPicname(ws["K" + str(i)].value, excelFileName)                   
+
+def padUnlockItems(picname_text, excelFileName, tree_struct, tree_profile, tree_floor, tree_widget,
+                   tree_type, qtwidget_struct, qtwidget_profile, qtwidget_floor, qtwidget_type):
+# Unlocking the selected item and the items with the same cords (Execel file and tree widget)
+    picname_text_split = picname_text.split("-", 1)            
+    wb = openpyxl.load_workbook(excelFileName, data_only=True)
+    ws = wb[picname_text_split[0]]
+    # Get the cord
+    for i in range(WS_ROW_START, ws.max_row + 1):
+        if (ws["K" + str(i)].value == picname_text):
+            location = ws["H" + str(i)].value            
+    # lock items with the same cord
+    for i in range(WS_ROW_START, ws.max_row + 1):
+        if (ws["H" + str(i)].value == location):
+            #print(ws["K" + str(i)].value)
+            #print(ws["H" + str(i)].value)
+            treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, 
+                                tree_type, qtwidget_struct, qtwidget_profile,
+                                qtwidget_floor,qtwidget_type, tree_widget,
+                                ws["K" + str(i)].value)
+            excelUnlockPicname(ws["K" + str(i)].value, excelFileName)                   
+

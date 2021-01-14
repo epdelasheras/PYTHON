@@ -327,13 +327,12 @@ def itemRemove (item_sel, dbTableFlatClientView, listFlat, treeWidgetLst):
     picname_query = Query()
     docs = dbTableFlatClientView.search(picname_query.Picname == picname_text)    
     for doc in docs:        
-        dbTableFlatClientView.remove(doc_ids = [doc.doc_id])
-    # unblock flat from excel file
+        dbTableFlatClientView.remove(doc_ids = [doc.doc_id])    
+    # unlock flat from the treeview  and the excel file   
     excel_filename = treeWidgetLst[9]
-    excelUnlockPicname(picname_text, excel_filename)
-    # unlock flat from the treeview    
-    excel_lock = False
-    treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)
+    #excelUnlockPicname(picname_text, excel_filename)
+    excel_lock = False    
+    itemLockUnlock(picname_text, excel_lock, excel_filename, treeWidgetLst)
     
 def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst, excel_lock):
     # remove listbox selected item from the list1
@@ -362,14 +361,9 @@ def item2Move (item_sel, db_id, dbTable1, dbTable2, list1, list2, treeWidgetLst,
     dbTable2.insert({'Id': ''+str(db_id)+'', 'Picname':flat_picname, 'NumRoom':n_room,\
                      'Coordinates':location})   
     #print(dbTable2.all())     
-    # lock or unlock flat from excel file
+    # lock or unlock flat from excel file and treeview
     excel_filename = treeWidgetLst[9]
-    if excel_lock == True:
-        excelLockPicname(picname_text, excel_filename)
-    else:
-        excelUnlockPicname(picname_text, excel_filename)
-    # lock or unlock flat from the treeview    
-    treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)
+    itemLockUnlock(picname_text, excel_lock, excel_filename, treeWidgetLst)    
  
 def itemView(window, treeWidgetLst, item_sel, menuFav):        
     # getting picname
@@ -397,7 +391,7 @@ def itemView(window, treeWidgetLst, item_sel, menuFav):
     if menuFav == False: # it necessary to unlock the item to load the image                               
         #unlock tree item:
         excel_lock = False
-        treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)    
+        itemLockUnlock(picname_text, excel_lock, excel_filename,treeWidgetLst)    
         # expanding tree widget            
         treeWidgetExpandItem(tree_struct, tree_profile, tree_floor, tree_type,\
                              qtwidget_struct, qtwidget_profile, qtwidget_floor,\
@@ -409,7 +403,7 @@ def itemView(window, treeWidgetLst, item_sel, menuFav):
                                         tree_picname, excel_filename)        
         #lock item
         excel_lock = True
-        treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst)                        
+        itemLockUnlock(picname_text, excel_lock, excel_filename,treeWidgetLst)                        
     else:
         # expanding tree widget            
         treeWidgetExpandItem(tree_struct, tree_profile, tree_floor, tree_type,\
@@ -465,8 +459,8 @@ def add2ListDb(db, doc_id, lst):
     #print(db.all())
 
 
-def treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst):
-# method used to unlock/lock flat on the treeview    
+def itemLockUnlock(picname_text, excel_lock, excelFileName ,treeWidgetLst):
+# method used to unlock/lock flat on the treeview and excelfile    
     tree_profile = treeWidgetLst[1]
     tree_struct = treeWidgetLst[0] 
     tree_floor = treeWidgetLst[2]
@@ -477,10 +471,13 @@ def treeItemLockUnlock(picname_text, excel_lock, treeWidgetLst):
     qtwidget_type = treeWidgetLst[7]
     tree_widget = treeWidgetLst[8]
     if  excel_lock == False: # unlock item
-        treeWidgetItemUnLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                             qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                             qtwidget_type, tree_widget, picname_text)    
+        # lock the selected item and the items with the same coord in treewidget and excelfile.
+        padUnlockItems(picname_text, excelFileName, tree_struct, tree_profile, tree_floor, tree_widget,
+                    tree_type, qtwidget_struct, qtwidget_profile, qtwidget_floor,qtwidget_type)
+        WindowPopUpInfo("Debloqueo de coordenadas realizado")
+
     else: # lock item
-        treeWidgetItemLock(tree_struct, tree_profile, tree_floor, tree_type,\
-                            qtwidget_struct, qtwidget_profile, qtwidget_floor,\
-                            qtwidget_type, tree_widget, picname_text)    
+        # lock the selected item and the items with the same coord in treewidget and excelfile.
+        padLockItems(picname_text, excelFileName, tree_struct, tree_profile, tree_floor, tree_widget,
+                    tree_type, qtwidget_struct, qtwidget_profile, qtwidget_floor,qtwidget_type)
+        WindowPopUpInfo("Bloqueo de coordenadas realizado")
