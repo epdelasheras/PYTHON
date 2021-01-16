@@ -8,8 +8,14 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import os
-from selenium import webdriver
 import urllib.request
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import *
+
 
 FOLDER = './pics'
 URL_MARCA = 'https://es.kiosko.net/es/np/marca.html'
@@ -21,7 +27,43 @@ KEY_MUNDO = 'mundodeportivo.750'
 URL_SPORT = 'https://es.kiosko.net/es/np/sport.html'
 KEY_SPORT = 'sport.750'
 
-def pic_download(driver, site, pathToStore, wordToFind, picname):
+#----------------------- OTHER METHODs-------------------------------
+def chromeOptions():
+# Load chrome profile cfg when the chrome driver is loaded.
+    options = Options()
+    options.add_argument("--log-level=3")
+    options.add_argument("--silent")
+    # options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-logging")
+    options.add_argument("--mute-audio")
+    #options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
+    options.add_argument('--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36')    
+    options.add_argument("user-data-dir=ChromeCfg")
+    return options
+
+def createFolderPics():
+# Methos used to create the pics directory    
+    if path.exists("pics") == True:
+        shutil.rmtree(FOLDER, ignore_errors=True)
+        print ("Successfully removed the directory %s " % FOLDER)                               
+        try:                            
+            os.mkdir(FOLDER)      
+        except OSError:
+            print ("Creation of the directory %s failed" % FOLDER)
+        else:
+            print ("Successfully created the directory %s " % FOLDER)                       
+    else:        
+        try:                            
+            os.mkdir(FOLDER)      
+        except OSError:
+            print ("Creation of the directory %s failed" % FOLDER)
+        else:
+            print ("Successfully created the directory %s " % FOLDER)                                   
+
+#----------------------- DOWNLOAD PICs METHODs-----------------------
+
+def downloadPic(driver, site, pathToStore, wordToFind, picname):
     driver.get(site)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     img_tags = soup.find_all('img')
@@ -40,26 +82,6 @@ def pic_download(driver, site, pathToStore, wordToFind, picname):
                 urllib.request.urlretrieve("http:"+url, imagename)
         else:
             pass
-
-def init_app():
-
-    # creating the pics directory    
-    if path.exists("pics") == True:
-        shutil.rmtree(FOLDER, ignore_errors=True)
-        print ("Successfully removed the directory %s " % FOLDER)                               
-        try:                            
-            os.mkdir(FOLDER)      
-        except OSError:
-            print ("Creation of the directory %s failed" % FOLDER)
-        else:
-            print ("Successfully created the directory %s " % FOLDER)                       
-    else:        
-        try:                            
-            os.mkdir(FOLDER)      
-        except OSError:
-            print ("Creation of the directory %s failed" % FOLDER)
-        else:
-            print ("Successfully created the directory %s " % FOLDER)                                   
 
 
 def InstaPicResize(im, min_size=1080, fill_color=(255, 255, 255)):

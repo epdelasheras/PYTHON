@@ -162,15 +162,75 @@ class Ui_MainWindow(object):
         self.label_Title.setText(_translate("MainWindow", "FRONT PAGE SPORT NEWSPAPERS INSTAGRAM UPLOADER"))
         self.label_Author.setText(_translate("MainWindow", "Powered by Flote (All rights reserved)"))
 
-        # initializing the app.    
-        init_app()
-        self.bot = Bot()                      
-
         # mouse click connect functions
         self.pushButton_GetPics.clicked.connect(self.GetLinksAndPics)
         self.pushButton_Login.clicked.connect(self.InstaLogin)
         self.pushButton_Upload.clicked.connect(self.InstaUpload)
 
+    
+    def GetLinksAndPics(self): 
+    # Method used to dwonload pics from the website
+        # launch chrome
+        driver = webdriver.Chrome("chromedriver.exe")
+        driver.implicitly_wait(2)
+        # create folder to save the pics
+        createFolderPics()
+
+        #------Marca------#
+        # download the Frontpage.
+        url = URL_MARCA       
+        pathToStore = str(FOLDER) + "/marca/"
+        wordToFind = KEY_MARCA
+        picname = "PortadaMarca"
+        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        # set link in qline
+        self.line_url_marca.setText(URL_MARCA)
+        # set pic in qlabel
+        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
+        self.label_pic_marca.setPixmap(load_pic)
+
+        #------AS------#
+        # download the Frontpage.
+        url = URL_AS       
+        pathToStore = str(FOLDER) + "/as/"
+        wordToFind = KEY_AS
+        picname = "PortadaAS"
+        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        # set link in qline
+        self.line_url_as.setText(URL_AS)
+        # set pic in qlabel
+        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
+        self.label_pic_as.setPixmap(load_pic)
+
+        #------MUNDO------#
+        # download the Frontpage.
+        url = URL_MUNDO       
+        pathToStore = str(FOLDER) + "/mundo/"
+        wordToFind = KEY_MUNDO
+        picname = "PortadaMundo"
+        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        # set link in qline
+        self.line_url_mundo.setText(URL_MUNDO)
+        # set pic in qlabel
+        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
+        self.label_pic_mundo.setPixmap(load_pic)
+
+        #------SPORT------#
+        # download the Frontpage.
+        url = URL_SPORT
+        pathToStore = str(FOLDER) + "/sport/"
+        wordToFind = KEY_SPORT
+        picname = "PortadaSport"
+        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        # set link in qline
+        self.line_url_sport.setText(URL_SPORT)
+        # set pic in qlabel
+        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
+        self.label_pic_sport.setPixmap(load_pic)
+
+        # Close the window website
+        driver.close()          
+    
     def InstaUpload(self): 
         # Marca
         FrontPageName = "PortadaMarca.jpg"
@@ -220,62 +280,6 @@ class Ui_MainWindow(object):
         print(password)        
         self.bot.login(username = user, password = password) 
 
-    def GetLinksAndPics(self): 
-
-        # launcho chrome
-        driver = webdriver.Chrome("chromedriver.exe")
-
-        #------Marca------#
-        # download the Frontpage.
-        url = URL_MARCA       
-        pathToStore = str(FOLDER) + "/marca/"
-        wordToFind = KEY_MARCA
-        picname = "PortadaMarca"
-        pic_download(driver, url, pathToStore, wordToFind, picname)        
-        # set link in qline
-        self.line_url_marca.setText(URL_MARCA)
-        # set pic in qlabel
-        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
-        self.label_pic_marca.setPixmap(load_pic)
-
-        #------AS------#
-        # download the Frontpage.
-        url = URL_AS       
-        pathToStore = str(FOLDER) + "/as/"
-        wordToFind = KEY_AS
-        picname = "PortadaAS"
-        pic_download(driver, url, pathToStore, wordToFind, picname)        
-        # set link in qline
-        self.line_url_as.setText(URL_AS)
-        # set pic in qlabel
-        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
-        self.label_pic_as.setPixmap(load_pic)
-
-        #------MUNDO------#
-        # download the Frontpage.
-        url = URL_MUNDO       
-        pathToStore = str(FOLDER) + "/mundo/"
-        wordToFind = KEY_MUNDO
-        picname = "PortadaMundo"
-        pic_download(driver, url, pathToStore, wordToFind, picname)        
-        # set link in qline
-        self.line_url_mundo.setText(URL_MUNDO)
-        # set pic in qlabel
-        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
-        self.label_pic_mundo.setPixmap(load_pic)
-
-        #------SPORT------#
-        # download the Frontpage.
-        url = URL_SPORT
-        pathToStore = str(FOLDER) + "/sport/"
-        wordToFind = KEY_SPORT
-        picname = "PortadaSport"
-        pic_download(driver, url, pathToStore, wordToFind, picname)        
-        # set link in qline
-        self.line_url_sport.setText(URL_SPORT)
-        # set pic in qlabel
-        load_pic = QtGui.QPixmap(pathToStore + picname + ".jpg")
-        self.label_pic_sport.setPixmap(load_pic)      
         
 if __name__ == "__main__":
     import sys
