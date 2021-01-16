@@ -10,9 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from my_lib import *
 from selenium import webdriver
-from instabot import Bot 
-from PIL import Image
-import os
+import time
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -163,16 +161,48 @@ class Ui_MainWindow(object):
         self.label_Author.setText(_translate("MainWindow", "Powered by Flote (All rights reserved)"))
 
         # mouse click connect functions
-        self.pushButton_GetPics.clicked.connect(self.GetLinksAndPics)
-        self.pushButton_Login.clicked.connect(self.InstaLogin)
-        self.pushButton_Upload.clicked.connect(self.InstaUpload)
+        self.pushButton_GetPics.clicked.connect(self.getLinksAndPics)
+        self.pushButton_Login.clicked.connect(self.loginWebsites)
+        self.pushButton_Upload.clicked.connect(self.uploadPics)
+
+        # load fix message in status bar
+        self.status_label = QtWidgets.QLabel()
+        MainWindow.statusBar().addPermanentWidget(self.status_label, 100)
+        self.status_label.setText(("Aqui te iré dando las instrucciones..."))             
+
 
     
-    def GetLinksAndPics(self): 
+    def uploadPics(self): 
+        self.status_label.setText(("Subiendo imágenes, espere..."))
+        studioCreatorUpload(self.driver)
+        time.sleep(5)
+        instagramLogout(self.driver)         
+        self.status_label.setText(("Imagenes subidas de forma satisfactoria, proceso terminado"))
+
+    def loginWebsites(self): 
+    # Method used to login into the websited
+        self.status_label.setText(("Haciendo el login, espere"))
+        # load studio creator webpage
+        window_before, self.driver = studioCreatorLogin()              
+        # Get user/pass from the GUI cells.
+        username = self.line_insta_user.text()
+        password = self.line_insta_pass.text()
+        print(username)
+        print(password)  
+        instagramLogin(self.driver, username, password)
+        # Wait 3sec until the old windows is loaded
+        time.sleep(3)
+        # Switch to the old window
+        self.driver.switch_to_window(window_before)
+        self.status_label.setText(("Login hecho de forma satisfactoria, puede pasar al siguente paso"))
+
+
+    def getLinksAndPics(self): 
     # Method used to dwonload pics from the website
+        self.status_label.setText(("descargando imágenes, espere"))
         # launch chrome
-        driver = webdriver.Chrome("chromedriver.exe")
-        driver.implicitly_wait(2)
+        driver_webpic = webdriver.Chrome("chromedriver.exe", options=chromeOptions())
+        driver_webpic.implicitly_wait(2)
         # create folder to save the pics
         createFolderPics()
 
@@ -182,7 +212,7 @@ class Ui_MainWindow(object):
         pathToStore = str(FOLDER) + "/marca/"
         wordToFind = KEY_MARCA
         picname = "PortadaMarca"
-        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        downloadPic(driver_webpic, url, pathToStore, wordToFind, picname)        
         # set link in qline
         self.line_url_marca.setText(URL_MARCA)
         # set pic in qlabel
@@ -195,7 +225,7 @@ class Ui_MainWindow(object):
         pathToStore = str(FOLDER) + "/as/"
         wordToFind = KEY_AS
         picname = "PortadaAS"
-        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        downloadPic(driver_webpic, url, pathToStore, wordToFind, picname)        
         # set link in qline
         self.line_url_as.setText(URL_AS)
         # set pic in qlabel
@@ -208,7 +238,7 @@ class Ui_MainWindow(object):
         pathToStore = str(FOLDER) + "/mundo/"
         wordToFind = KEY_MUNDO
         picname = "PortadaMundo"
-        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        downloadPic(driver_webpic, url, pathToStore, wordToFind, picname)        
         # set link in qline
         self.line_url_mundo.setText(URL_MUNDO)
         # set pic in qlabel
@@ -221,7 +251,7 @@ class Ui_MainWindow(object):
         pathToStore = str(FOLDER) + "/sport/"
         wordToFind = KEY_SPORT
         picname = "PortadaSport"
-        downloadPic(driver, url, pathToStore, wordToFind, picname)        
+        downloadPic(driver_webpic, url, pathToStore, wordToFind, picname)        
         # set link in qline
         self.line_url_sport.setText(URL_SPORT)
         # set pic in qlabel
@@ -229,57 +259,9 @@ class Ui_MainWindow(object):
         self.label_pic_sport.setPixmap(load_pic)
 
         # Close the window website
-        driver.close()          
-    
-    def InstaUpload(self): 
-        # Marca
-        FrontPageName = "PortadaMarca.jpg"
-        FrontPageNameResize = "PortadaMarca_resize.jpg"
-        picPath = str(FOLDER) + "/marca/" + FrontPageName
-        img_pil = Image.open(picPath)
-        img_resize = InstaPicResize(img_pil, 1080, (255, 255, 255))
-        img_resize.save(FrontPageNameResize)
-        self.bot.upload_photo(FrontPageNameResize, caption =FrontPageName)
-        os.remove(FrontPageNameResize + ".REMOVE_ME")        
+        driver_webpic.close()  
 
-        # As
-        FrontPageName = "PortadaAs.jpg"
-        FrontPageNameResize = "PortadaAs_resize.jpg"
-        picPath = str(FOLDER) + "/as/" + FrontPageName
-        img_pil = Image.open(picPath)
-        img_resize = InstaPicResize(img_pil, 1080, (255, 255, 255))
-        img_resize.save(FrontPageNameResize)
-        self.bot.upload_photo(FrontPageNameResize, caption =FrontPageName)
-        os.remove(FrontPageNameResize + ".REMOVE_ME")        
-
-        # Mundo
-        FrontPageName = "PortadaMundo.jpg"
-        FrontPageNameResize = "PortadaMundo_resize.jpg"
-        picPath = str(FOLDER) + "/mundo/" + FrontPageName
-        img_pil = Image.open(picPath)
-        img_resize = InstaPicResize(img_pil, 1080, (255, 255, 255))
-        img_resize.save(FrontPageNameResize)
-        self.bot.upload_photo(FrontPageNameResize, caption =FrontPageName)
-        os.remove(FrontPageNameResize + ".REMOVE_ME")        
-
-        # Sport
-        FrontPageName = "PortadaSport.jpg"
-        FrontPageNameResize = "PortadaSport_resize.jpg"
-        picPath = str(FOLDER) + "/sport/" + FrontPageName
-        img_pil = Image.open(picPath)
-        img_resize = InstaPicResize(img_pil, 1080, (255, 255, 255))
-        img_resize.save(FrontPageNameResize)
-        self.bot.upload_photo(FrontPageNameResize, caption =FrontPageName)
-        os.remove(FrontPageNameResize + ".REMOVE_ME")        
-
-
-    def InstaLogin(self): 
-        user = self.line_insta_user.text()
-        password = self.line_insta_pass.text()
-        print(user)
-        print(password)        
-        self.bot.login(username = user, password = password) 
-
+        self.status_label.setText(("Imágenes descargadas de forma satisfactoria, puede pasar al siguente paso"))
         
 if __name__ == "__main__":
     import sys
