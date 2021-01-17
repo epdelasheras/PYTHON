@@ -125,9 +125,9 @@ def studioCreatorLogin():
     driver.implicitly_wait(2)
     window_before = driver.window_handles[0] # Save the current window    
     driver.get(site)
-    # Press Instagram button
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div/div[1]/div[1]/div/div[1]/div[2]/div'))).click()
-    # Press "Inicio de sesion" button
+    # Press Instagram button    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div/div[1]/div[1]/div/div[1]/div[2]/div'))).click()    
+    # Press "Inicio de sesion" button    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div/div[1]/div[2]/div/div[2]/div/div/div/div[2]/div/div'))).click()
     # Wait 3sec until the new windows is loaded
     time.sleep(3)
@@ -144,31 +144,32 @@ def instagramLogin(driver, username, passwd):
     user.send_keys(username)
     passw = driver.find_element_by_name('password')
     passw.send_keys(passwd)
-    # Press login button
+    # Press login button    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div[1]/div/div/div/form/div[1]/div[6]/button'))).click()
-    # Press "Ahora no" button
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div/div/div/button'))).click()
+    # Press "Ahora no" button    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div/div/div/button'))).click()   
 
-def studioCreatorUpload(driver):
-    # Press button "Crear publicacion"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/div[1]/div/div[2]/div/div/div[2]/div[1]/div/div[1]/div/span/div/div/div[2]'))).click()
-    # Press button "Seccion Noticias Instagram"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[3]/div[1]/div[1]/div/div/div[1]/div[2]/div/div[1]/div/div/div/div/div[2]/div'))).click()
-    # Press link "Añadir contenido"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[5]/div/div/div/span'))).click()
-    # Press link "Subir archivos"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[5]/div/div/div/div/div[1]/a'))).click()
+def studioCreatorUpload(driver, text_post, text_hashtag):
+    # Press button "Crear publicacion"            
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/div[1]/div/div[2]/div/div/div[2]/div[1]/div/div[1]/div/span/div/div/div[2]'))).click()    
+    # Press button "Seccion Noticias Instagram"        
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[3]/div[1]/div[1]/div/div/div[1]/div[2]/div/div[1]/div/div/div/div/div[2]/div'))).click()      
+    # Press link "Añadir contenido"            
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[5]/div/div/div/span'))).click()      
+    # Press link "Subir archivos"        
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[5]/div/div/div/div/div[1]/a'))).click()    
+    
     time.sleep(3)
     # Add 1st pic
-    picname = 'PortadaMarca'
-    foldername = 'marca'
+    picname = 'PortadaAs'
+    foldername = 'as'
     StudioCreatorAddPic(foldername, picname)
-    # Add 2nd pic
+    # Add 2nd pic    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[1]/div/div/div/span'))).click()
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[7]/div/div/div/div/div[1]/a'))).click()
     time.sleep(3)
-    picname = 'PortadaAs'
-    foldername = 'as'
+    picname = 'PortadaMarca'
+    foldername = 'marca'
     StudioCreatorAddPic(foldername, picname)
     # Add 3rd pic
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[1]/div/div/div/span'))).click()
@@ -183,9 +184,17 @@ def studioCreatorUpload(driver):
     time.sleep(3)
     picname = 'PortadaSport'
     foldername = 'sport'
-    StudioCreatorAddPic(foldername, picname)
-    # Press "Publicar" Button
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[3]/div[2]/button'))).click()
+    StudioCreatorAddPic(foldername, picname)    
+
+    # Add post & hastag to the pics
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[2]/div[1]'))).click()    
+    post = text_post.toPlainText()
+    hashtags = text_hashtag.toPlainText()    
+    textbox_post = driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[2]/div[1]/div')
+    textbox_post.send_keys(post + "\n" + "\n" + hashtags)
+
+    # Press "Publicar" Button        
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[3]/div[2]/button'))).click()    
 
 def instagramLogout(driver):
     # Load Instagram website

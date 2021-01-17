@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>909</width>
-    <height>895</height>
+    <width>1006</width>
+    <height>967</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="line_url_marca">
+   <widget class="QLineEdit" name="line_url_as">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -50,7 +50,7 @@
      <string>STEP 1: GET PIC LINKS</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_url_marca">
+   <widget class="QLabel" name="label_url_as">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -60,10 +60,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>Marca</string>
+     <string>As</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_url_as">
+   <widget class="QLabel" name="label_url_marca">
     <property name="geometry">
      <rect>
       <x>450</x>
@@ -73,7 +73,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>AS</string>
+     <string>Marca</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_url_mundo">
@@ -102,7 +102,7 @@
      <string>Sport</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_pic_marca">
+   <widget class="QLabel" name="label_pic_as">
     <property name="geometry">
      <rect>
       <x>140</x>
@@ -139,7 +139,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_pic_as">
+   <widget class="QLabel" name="label_pic_marca">
     <property name="geometry">
      <rect>
       <x>540</x>
@@ -176,7 +176,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="line_url_as">
+   <widget class="QLineEdit" name="line_url_marca">
     <property name="geometry">
      <rect>
       <x>500</x>
@@ -283,8 +283,8 @@
    <widget class="QLabel" name="label_insta_user">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>810</y>
+      <x>20</x>
+      <y>840</y>
       <width>31</width>
       <height>16</height>
      </rect>
@@ -296,8 +296,8 @@
    <widget class="QLabel" name="label_insta_pass">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>840</y>
+      <x>20</x>
+      <y>870</y>
       <width>31</width>
       <height>16</height>
      </rect>
@@ -309,8 +309,8 @@
    <widget class="QLineEdit" name="line_insta_user">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>810</y>
+      <x>60</x>
+      <y>840</y>
       <width>141</width>
       <height>20</height>
      </rect>
@@ -319,8 +319,8 @@
    <widget class="QLineEdit" name="line_insta_pass">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>840</y>
+      <x>60</x>
+      <y>870</y>
       <width>141</width>
       <height>20</height>
      </rect>
@@ -342,8 +342,8 @@
    <widget class="QPushButton" name="pushButton_Login">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>830</y>
+      <x>220</x>
+      <y>860</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -355,20 +355,20 @@
    <widget class="QLabel" name="label_step3">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>370</x>
       <y>780</y>
-      <width>101</width>
+      <width>111</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>STEP3: Upload Pics</string>
+     <string>STEP3: UPLOAD PICS</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_Upload">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>510</x>
       <y>780</y>
       <width>75</width>
       <height>23</height>
@@ -383,25 +383,83 @@
      <rect>
       <x>310</x>
       <y>10</y>
-      <width>301</width>
-      <height>16</height>
+      <width>511</width>
+      <height>31</height>
      </rect>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
     <property name="text">
-     <string>FRONT PAGE SPORT NEWSPAPERS INSTAGRAM UPLOADER</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;FRONT PAGE SPORT NEWSPAPERS INSTAGRAM UPLOADER&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
     </property>
    </widget>
    <widget class="QLabel" name="label_Author">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>860</y>
-      <width>181</width>
+      <x>800</x>
+      <y>920</y>
+      <width>191</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Powered by Flote (flote21@gmail.com)</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_post">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>810</y>
+      <width>41</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Powered by Flote (All rights reserved)</string>
+     <string>Post</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_hashtag">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>780</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string># hashtags</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="text_post">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>830</y>
+      <width>271</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="text_hashtag">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>800</y>
+      <width>341</width>
+      <height>111</height>
+     </rect>
     </property>
    </widget>
   </widget>
