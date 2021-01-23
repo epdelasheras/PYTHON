@@ -199,7 +199,6 @@ class Ui_MainWindow(object):
                     #neymar #atleticodemadrid #simeone #marcosllorente\
                     #oblak #jaofelix #luissuarez #hazard"
         self.text_hashtag.setPlainText(hashtags)
-
         # mouse click connect functions
         self.pushButton_GetPics.clicked.connect(self.getLinksAndPics)
         self.pushButton_Login.clicked.connect(self.loginWebsites)
@@ -290,8 +289,10 @@ class Ui_MainWindow(object):
     def uploadPics(self):         
         studioCreatorUpload(self.driver, self.text_post, self.text_hashtag)
         time.sleep(5)
-        instagramLogout(self.driver, self.username)         
+        #instagramLogout(self.driver, self.username)         
+        self.driver.close()
         self.status_label.setText(("Pics upload successfully!"))
+
         
 if __name__ == "__main__":
     import sys
