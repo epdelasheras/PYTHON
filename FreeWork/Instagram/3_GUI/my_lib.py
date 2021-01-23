@@ -1,4 +1,3 @@
-
 import shutil
 from bs4 import BeautifulSoup
 import re
@@ -27,22 +26,8 @@ URL_SPORT = 'https://es.kiosko.net/es/np/sport.html'
 KEY_SPORT = 'sport.750'
 
 #----------------------- OTHER METHODs-------------------------------
-def chromeOptions():
-# Load chrome profile cfg when the chrome driver is loaded.
-    options = Options()
-    options.add_argument("--log-level=3")
-    options.add_argument("--silent")
-    # options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-logging")
-    options.add_argument("--mute-audio")
-    #options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
-    options.add_argument('--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36')    
-    options.add_argument("user-data-dir=ChromeCfg")
-    return options
-
 def createFolderPics():
-# Methos used to create the pics directory    
+# Method used to create/delete pics folder
     if path.exists("pics") == True:
         shutil.rmtree(FOLDER, ignore_errors=True)
         print ("Successfully removed the directory %s " % FOLDER)                               
@@ -59,6 +44,22 @@ def createFolderPics():
             print ("Creation of the directory %s failed" % FOLDER)
         else:
             print ("Successfully created the directory %s " % FOLDER)   
+
+
+
+def chromeOptions():
+# Load chrome profile cfg when the chrome driver is loaded.
+    options = Options()
+    options.add_argument("--log-level=3")
+    options.add_argument("--silent")
+    # options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-logging")
+    options.add_argument("--mute-audio")
+    #options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
+    options.add_argument('--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36')    
+    #options.add_argument("user-data-dir=ChromeCfg")
+    return options
 
 def StudioCreatorAddPic(foldername, picname):
 # Method used to add pics into the studio creator website
@@ -124,11 +125,16 @@ def studioCreatorLogin():
     driver = webdriver.Chrome("chromedriver.exe", options=chromeOptions())
     driver.implicitly_wait(2)
     window_before = driver.window_handles[0] # Save the current window    
-    driver.get(site)
+    driver.get(site)    
+    #Press Cookies button                    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//*[@id='u_0_b']"))).click()        
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//*[@id='u_0_f']"))).click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//*[@id='u_0_6']"))).click()
     # Press Instagram button    
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div/div[1]/div[1]/div/div[1]/div[2]/div'))).click()    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID,'media_manager_chrome_bar_instagram_icon'))).click()    
+    #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div/div[1]/div[1]/div/div[1]/div[2]/div'))).click()    
     # Press "Inicio de sesion" button    
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div/div[1]/div[2]/div/div[2]/div/div/div/div[2]/div/div'))).click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 svz86pwt ippphs35 a53abz89 tds9wb2m']"))).click()        
     # Wait 3sec until the new windows is loaded
     time.sleep(3)
     # Save the new window
@@ -136,76 +142,99 @@ def studioCreatorLogin():
     # Switch to the new window
     driver.switch_to_window(window_after)
     driver.implicitly_wait(2)
-    return window_before, driver
+    #Press Cookies button            
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='aOOlW   HoLwm ']"))).click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='aOOlW  bIiDR  ']"))).click()
+    return window_before, driver    
 
 def instagramLogin(driver, username, passwd):
-    # fill user / pass cells
+    # fill user / pass cells    
     user = driver.find_element_by_name('username')
-    user.send_keys(username)
+    user.send_keys(username)        
     passw = driver.find_element_by_name('password')
     passw.send_keys(passwd)
-    # Press login button    
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div[1]/div/div/div/form/div[1]/div[6]/button'))).click()
+    # Press login button        
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div/div/div/div/form/div[1]/div[6]/button'))).click()
     # Press "Ahora no" button    
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div/div/div/button'))).click()   
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/main/div/div/div/button'))).click()       
 
 def studioCreatorUpload(driver, text_post, text_hashtag):
-    # Press button "Crear publicacion"            
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/div[1]/div/div[2]/div/div/div[2]/div[1]/div/div[1]/div/span/div/div/div[2]'))).click()    
+    # Press button "Crear publicacion"                
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 kiex77na lgsfgr3h mcogi7i5 ih1xi9zn ippphs35 a53abz89 yukb02kx']"))).click()        
+    time.sleep(1)
     # Press button "Seccion Noticias Instagram"        
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[3]/div[1]/div[1]/div/div/div[1]/div[2]/div/div[1]/div/div/div/div/div[2]/div'))).click()      
-    # Press link "Añadir contenido"            
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[5]/div/div/div/span'))).click()      
-    # Press link "Subir archivos"        
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[5]/div/div/div/div/div[1]/a'))).click()    
-    
     time.sleep(3)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt te7ihjl9 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89']"))).click()        
+    #driver.find_element_by_xpath("//div[@class='l61y9joe j8otv06s a1itoznt te7ihjl9 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89']").click()        
+    time.sleep(3)
+
+    # Press link "Añadir contenido"            
+    time.sleep(1)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()        
+    #driver.find_element_by_xpath("//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']").click()              
+    time.sleep(1)
+    # Press link "Subir archivos"        
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()    
+
+    time.sleep(5)    
     # Add 1st pic
     picname = 'PortadaAs'
     foldername = 'as'
     StudioCreatorAddPic(foldername, picname)
-    # Add 2nd pic    
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[1]/div/div/div/span'))).click()
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[7]/div/div/div/div/div[1]/a'))).click()
+    # Add 2nd pic   
+    time.sleep(2) 
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()    
     time.sleep(3)
     picname = 'PortadaMarca'
     foldername = 'marca'
     StudioCreatorAddPic(foldername, picname)
     # Add 3rd pic
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[1]/div/div/div/span'))).click()
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[7]/div/div/div/div/div[1]/a'))).click()
+    time.sleep(2)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()    
     time.sleep(3)
     picname = 'PortadaMundo'
     foldername = 'mundo'
     StudioCreatorAddPic(foldername, picname)
     # Add 4th pic
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[1]/div/div/div/span'))).click()
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[7]/div/div/div/div/div[1]/a'))).click()
+    time.sleep(2) 
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()    
     time.sleep(3)
     picname = 'PortadaSport'
     foldername = 'sport'
     StudioCreatorAddPic(foldername, picname)    
 
-    # Add post & hastag to the pics
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[2]/div[1]'))).click()    
+    # Add post & hastag to the pics     
+    time.sleep(2)
+    #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/div[1]/div'))).click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']"))).click()
     post = text_post.toPlainText()
     hashtags = text_hashtag.toPlainText()    
-    textbox_post = driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[2]/div[1]/div')
+    #textbox_post = driver.find_element_by_xpath('/html/body/div[4]/div/div/div/div[2]/div[1]/div/div[2]/div[1]/div')
+    textbox_post = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']")))
     textbox_post.send_keys(post + "\n" + "\n" + hashtags)
 
     # Press "Publicar" Button        
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[3]/div[2]/button'))).click()    
+    #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[3]/div[2]/button'))).click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='_271k _271m _1qjd']"))).click()    
 
-def instagramLogout(driver):
-    # Load Instagram website
-    site = 'https://www.instagram.com/portatest'
+def instagramLogout(driver, username):
+    # Load Instagram website    
+    site = 'https://www.instagram.com/' + username
+    print(site)
     driver.get(site)
-    time.sleep(5)
+    time.sleep(3)
     # Click the Gear
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/nav[1]/div/header/div/div[1]/button'))).click()
+    time.sleep(2)
     # Click over close session
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/nav[1]/div/section/div[3]/div/div[4]/div/div/a/div[1]'))).click()
+    time.sleep(2)
     # Click "Salir" option
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/button[1]'))).click()
+    time.sleep(2)
     # Close the window website
     driver.close()        
+

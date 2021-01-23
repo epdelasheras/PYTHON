@@ -178,15 +178,10 @@ class Ui_MainWindow(object):
         self.label_post.setText(_translate("MainWindow", "Post"))
         self.label_hashtag.setText(_translate("MainWindow", "# hashtags"))
 
-        # mouse click connect functions
-        self.pushButton_GetPics.clicked.connect(self.getLinksAndPics)
-        self.pushButton_Login.clicked.connect(self.loginWebsites)
-        self.pushButton_Upload.clicked.connect(self.uploadPics)
-
         # load fix message in status bar
         self.status_label = QtWidgets.QLabel()
         MainWindow.statusBar().addPermanentWidget(self.status_label, 100)
-        self.status_label.setText(("Here are the instructions..."))
+        self.status_label.setText(("Here is to show the evolution of every step..."))
 
         # Set default username & pass
         self.line_insta_user.setText("portatest")
@@ -205,36 +200,14 @@ class Ui_MainWindow(object):
                     #oblak #jaofelix #luissuarez #hazard"
         self.text_hashtag.setPlainText(hashtags)
 
-        kk = self.text_hashtag.toPlainText()
-        print(kk)
-    
-    def uploadPics(self): 
-        self.status_label.setText(("Pics uploading, wait..."))
-        studioCreatorUpload(self.driver, self.text_post, self.text_hashtag)
-        time.sleep(5)
-        instagramLogout(self.driver)         
-        self.status_label.setText(("Pics upload successfully!"))
-
-    def loginWebsites(self): 
-    # Method used to login into the websited
-        self.status_label.setText(("Login into the website, wait"))
-        # load studio creator webpage
-        window_before, self.driver = studioCreatorLogin()                      
-        # Get user/pass from the GUI cells.
-        username = self.line_insta_user.text()
-        password = self.line_insta_pass.text()
-        print(username)
-        print(password)  
-        instagramLogin(self.driver, username, password)
-        # Wait 3sec until the old windows is loaded
-        time.sleep(3)
-        # Switch to the old window
-        self.driver.switch_to_window(window_before)
-        self.status_label.setText(("Login successfully, go to next step"))  
+        # mouse click connect functions
+        self.pushButton_GetPics.clicked.connect(self.getLinksAndPics)
+        self.pushButton_Login.clicked.connect(self.loginWebsites)
+        self.pushButton_Upload.clicked.connect(self.uploadPics)    
+        
 
     def getLinksAndPics(self): 
-    # Method used to dwonload pics from the website
-        self.status_label.setText(("Downloading pics, wait"))
+    # Method used to dwonload pics from the website        
         # launch chrome
         driver_webpic = webdriver.Chrome("chromedriver.exe", options=chromeOptions())
         driver_webpic.implicitly_wait(2)
@@ -297,6 +270,28 @@ class Ui_MainWindow(object):
         driver_webpic.close()  
 
         self.status_label.setText(("Pics downloaded successfully, go to next step"))
+
+    def loginWebsites(self): 
+    # Method used to login into the websited       
+        # load studio creator webpage
+        window_before, self.driver = studioCreatorLogin()                      
+        # Get user/pass from the GUI cells.
+        self.username = self.line_insta_user.text()
+        password = self.line_insta_pass.text()
+        print(self.username)
+        print(password)          
+        instagramLogin(self.driver, self.username, password)
+        # Wait 3sec until the old windows is loaded
+        time.sleep(3)
+        # Switch to the old window
+        self.driver.switch_to_window(window_before)
+        self.status_label.setText(("Login successfully, go to next step"))          
+
+    def uploadPics(self):         
+        studioCreatorUpload(self.driver, self.text_post, self.text_hashtag)
+        time.sleep(5)
+        instagramLogout(self.driver, self.username)         
+        self.status_label.setText(("Pics upload successfully!"))
         
 if __name__ == "__main__":
     import sys
