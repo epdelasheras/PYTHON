@@ -220,6 +220,9 @@ def studioCreatorUpload(driver, text_post, text_hashtag):
     textbox_post.send_keys(post + "\n" + "\n" + hashtags)
     # Press "Publicar" Button            
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='_271k _271m _1qjd']"))).click()    
+    # Wait until all the pics are fully load:
+    keyElement = "//span[@class='l61y9joe j8otv06s a1itoznt rnz22s23 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89 tnlcj30g o27k9hdg kkzhtrjg okqr6zti' and contains(.,'Tu contenido se ha publicado en Instagram.')]"
+    WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))
 
 def instagramLogout(driver, username):
     # Load Instagram website    

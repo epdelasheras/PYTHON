@@ -297,7 +297,8 @@ class Ui_MainWindow(object):
         self.driver.switch_to_window(window_before)        
         time.sleep(3)
         studioCreatorUpload(self.driver, self.text_post, self.text_hashtag)        
-        #instagramLogout(self.driver, self.username)         
+        #instagramLogout(self.driver, self.username)  
+        #time.sleep(10)
         self.driver.close()
         self.status_label.setText(("Pics upload successfully!, to save current user&pass&post&#hastags press 'save' button..."))
 
