@@ -17,7 +17,8 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import *
 
 FOLDER = './pics'
-BROWSER = "chromedriver.exe"
+BROWSER = "chromedriver.exe" #To work in windows
+#BROWSER = "/usr/lib/chromium-browser/chromedriver" #To work in raspbian
 URL_MARCA = 'https://es.kiosko.net/es/np/marca.html'
 KEY_MARCA = 'marca.750'
 URL_AS = 'https://es.kiosko.net/es/np/as.html'
@@ -192,22 +193,27 @@ def studioCreatorUpload(driver):
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()                
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()            
     StudioCreatorAddPic('PortadaAs')
-    time.sleep(3)
+    #time.sleep(3)
+    #WebDriverWait(driver, 10).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
+    WebDriverWait(driver, 10).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "kk"))    
     # Add 2nd pic       
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
     StudioCreatorAddPic('PortadaMarca')
-    time.sleep(3)
+    #time.sleep(3)
+    WebDriverWait(driver, 10).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
     # Add 3rd pic    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
     StudioCreatorAddPic('PortadaMundo')
-    time.sleep(3)
+    #time.sleep(3)
+    WebDriverWait(driver, 10).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
     # Add 4th pic    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
     StudioCreatorAddPic('PortadaSport')    
-    time.sleep(3)    
+    #time.sleep(3)    
+    WebDriverWait(driver, 10).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
     # Add post & hastag to the pics     
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']"))).click()
     textbox_post = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']")))
