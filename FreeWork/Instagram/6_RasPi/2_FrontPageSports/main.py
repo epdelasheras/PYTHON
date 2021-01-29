@@ -1,6 +1,5 @@
 from my_lib import *
 
-'''
 print("##########Downloading pics...##########")
 # launch chrome
 driver = webdriver.Chrome(BROWSER, options=browserOptions())
@@ -14,12 +13,11 @@ downloadPic(driver, URL_SPORT, KEY_SPORT, "PortadaSport")
 # Close the window website
 driver.close()  
 print("##########Pics downloaded successfully##########")
-'''
 
+print("##########Login Instagram wait...##########")
 # load studio creator webpage
 driver = webdriver.Chrome(BROWSER, options=browserOptions())
 driver.implicitly_wait(2)
-print("##########Login Instagram wait...##########")
 window_before, driver = studioCreatorLogin(driver, URL_STUDIO_CREATOR)                      
 # Get user/pass from the GUI cells.
 instagramLogin(driver, LOGIN_USERNAME, LOGIN_PASSWORD)
