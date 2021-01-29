@@ -1,5 +1,6 @@
 from my_lib import *
 
+
 # create/remove pic folder
 createFolderPics()
 print("##########Folder pics created successfully##########")

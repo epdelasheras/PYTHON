@@ -6,7 +6,6 @@ from PIL import Image
 import math
 import os
 from os import path
-import autoit # pip install -U pyautoit
 import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -71,7 +70,7 @@ def browserOptions():
     #options.add_argument("user-data-dir=ChromeCfg")
     return options
 
-def StudioCreatorAddPic(picname):
+def StudioCreatorAddPic(driver, picname):
 # Method used to add pics into the studio creator website
     # adjust pic size    
     file_path = picResize(picname)    
@@ -88,11 +87,8 @@ def StudioCreatorAddPic(picname):
             pathPics = path1
             break    
     # load pic       
-    autoit.win_active("Open")    
-    #autoit.control_send("Abrir", "Edit1", os.path.normpath(os.getcwd() + '/' + file_path))
-    autoit.control_set_text("Abrir", "Edit1", pathPics)
-    #autoit.control_send("Abrir", "Edit1", pathPics)
-    autoit.control_send("Abrir", "Edit1", "{ENTER}")
+    driver.find_element_by_xpath("//input[@type='file']").clear()
+    driver.find_element_by_xpath("//input[@type='file']").send_keys(pathPics)    
 
 def picResize (picname):
 # Method used to resize the pic to fit into the instagram standards
@@ -191,27 +187,26 @@ def studioCreatorUpload(driver):
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt te7ihjl9 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89']"))).click()            
     time.sleep(3)    
     # Add 1st pic    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()                
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()            
-    StudioCreatorAddPic('PortadaAs')
+    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()                    
+#    driver.find_element_by_xpath("//input[@type='file']").clear()
+#    driver.find_element_by_xpath("//input[@type='file']").send_keys(os.path.normpath(os.getcwd() + '/' + "/pics/PortadaAs_resize.jpg"))    
+    StudioCreatorAddPic(driver, 'PortadaAs')
+    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))        
     #time.sleep(3)    
-    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
+    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))
     # Add 2nd pic       
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
-    StudioCreatorAddPic('PortadaMarca')
+    StudioCreatorAddPic(driver, 'PortadaMarca')
     #time.sleep(3)
     WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
     # Add 3rd pic    
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
-    StudioCreatorAddPic('PortadaMundo')
+    StudioCreatorAddPic(driver, 'PortadaMundo')
     #time.sleep(3)
     WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
     # Add 4th pic    
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
-    StudioCreatorAddPic('PortadaSport')    
+    StudioCreatorAddPic(driver, 'PortadaSport')    
     #time.sleep(3)    
     WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
     # Add post & hastag to the pics     
@@ -226,7 +221,7 @@ def studioCreatorUpload(driver):
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='_271k _271m _1qjd']"))).click()    
     # Wait until all the pics are fully load:
     keyElement = "//span[@class='l61y9joe j8otv06s a1itoznt rnz22s23 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89 tnlcj30g o27k9hdg kkzhtrjg okqr6zti' and contains(.,'Tu contenido se ha publicado en Instagram.')]"
-    WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))    
+    WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))        
 
 def instagramLogout(driver, username):
     # Load Instagram website    
