@@ -20,7 +20,6 @@ import time
 
 
 TIME2WAIT = 20
-FOLDER = './pics'
 BROWSER = "/usr/lib/chromium-browser/chromedriver" #To work in raspbian
 URL_MARCA = 'https://es.kiosko.net/es/np/marca.html'
 KEY_MARCA = 'marca.750'
@@ -38,25 +37,6 @@ TAG_POST = "Portadas de hoy " + str(time.strftime("%d/%m/%y"))
 TAG_HASTAGS = "#portadas#portad_as_ymas#diarioas#diariomarca#diariosport#mundodeportivo#deporte#futbol#laligasantander#uefachampionsleague#championsleague#realmadridcf#zidane#sergioramos#benzema#modric#cristianoronaldo#fcbarcelona#koeman#messi#pedri#neymar#atleticodemadrid#simeone#marcosllorente#oblak#jaofelix#luissuarez#hazard"          
 
 #----------------------- OTHER METHODs-------------------------------
-def createFolderPics():
-# Method used to create/delete pics folder
-    if path.exists("pics") == True:
-        shutil.rmtree(FOLDER, ignore_errors=True)
-        print ("Successfully removed the directory %s " % FOLDER)                               
-        try:                            
-            os.mkdir(FOLDER)      
-        except OSError:
-            print ("Creation of the directory %s failed" % FOLDER)
-        else:
-            print ("Successfully created the directory %s " % FOLDER)                       
-    else:        
-        try:                            
-            os.mkdir(FOLDER)      
-        except OSError:
-            print ("Creation of the directory %s failed" % FOLDER)
-        else:
-            print ("Successfully created the directory %s " % FOLDER)   
-
 def browserOptions():
 # Load chrome profile cfg when the chrome driver is loaded.
     options = Options()
@@ -65,8 +45,9 @@ def browserOptions():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-logging")
     options.add_argument("--mute-audio")    
-    #options.add_argument("--headless") #comment to see the explorer running
-    #options.add_argument('--disable-dev-shm-usage') #comment to see the explorer running
+    options.add_argument("--headless") #comment to see the explorer running
+    options.add_argument('--disable-dev-shm-usage') #comment to see the explorer running
+    options.add_argument('window-size=1280x1024')
     #options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
     options.add_argument('--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36')    
     #options.add_argument("user-data-dir=ChromeCfg")
@@ -75,7 +56,9 @@ def browserOptions():
 def StudioCreatorAddPic(picname):
 # Method used to add pics into the studio creator website
     # adjust pic size    
-    file_path = picResize(picname)    
+    file_path = picResize(picname)
+    pathPics = os.path.normpath(os.getcwd() + '/' + file_path)
+    '''
     # check the path
     while True:
         path1 =  os.path.normpath(os.getcwd() + '/' + file_path)
@@ -87,7 +70,8 @@ def StudioCreatorAddPic(picname):
         time.sleep(2)
         if (path1 == path2 and path1 == path3):
             pathPics = path1
-            break    
+            break
+    '''
     pyautogui.hotkey('ctrl','l')
     #pyautogui.typewrite(pathPics)
     pyautogui.write(pathPics)
@@ -95,10 +79,10 @@ def StudioCreatorAddPic(picname):
 
 def picResize (picname):
 # Method used to resize the pic to fit into the instagram standards
-    img_pil = Image.open(str(FOLDER) + '/' + picname + ".jpg")
+    img_pil = Image.open(picname + ".jpg")
     img_resize = picAdjust(img_pil, 1080, (255, 255, 255))    
-    img_resize = img_resize.save(str(FOLDER) + '/' + picname + "_resize.jpg")    
-    return str(FOLDER) + '/' + picname + "_resize.jpg"
+    img_resize = img_resize.save(picname + "_resize.jpg")    
+    return picname + "_resize.jpg"
 
 def picAdjust(im, min_size=1080, fill_color=(255, 255, 255)):
 # Method called from picResize method. Adjust the size of the pic
@@ -127,7 +111,7 @@ def downloadPic(driver, site, wordToFind, picname):
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     img_tags = soup.find_all('img')
     urls = [img['src'] for img in img_tags]    
-    directory = os.path.dirname(os.path.realpath(__file__)) + FOLDER[1:]
+    directory = os.path.dirname(os.path.realpath(__file__))
     print(directory)
     if not os.path.exists(directory):
         os.makedirs(directory)

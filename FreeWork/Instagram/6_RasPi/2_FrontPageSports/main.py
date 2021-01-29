@@ -1,9 +1,7 @@
 from my_lib import *
 
-# create/remove pic folder
-createFolderPics()
-print("##########Folder pics created successfully##########")
-
+'''
+print("##########Downloading pics...##########")
 # launch chrome
 driver = webdriver.Chrome(BROWSER, options=browserOptions())
 driver.implicitly_wait(2)
@@ -16,6 +14,7 @@ downloadPic(driver, URL_SPORT, KEY_SPORT, "PortadaSport")
 # Close the window website
 driver.close()  
 print("##########Pics downloaded successfully##########")
+'''
 
 # load studio creator webpage
 driver = webdriver.Chrome(BROWSER, options=browserOptions())
