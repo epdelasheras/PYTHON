@@ -1,10 +1,10 @@
 from my_lib import *
 
 print("##########Downloading pics...##########")
+deletePicFiles()
 # launch chrome
 driver = webdriver.Chrome(BROWSER, options=browserOptions())
 driver.implicitly_wait(2)
-
 # download pics
 downloadPic(driver, URL_AS, KEY_AS, "PortadaAS")
 downloadPic(driver, URL_MARCA, KEY_MARCA, "PortadaMarca")
