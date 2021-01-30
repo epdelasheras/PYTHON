@@ -180,7 +180,7 @@ def instagramLogin(driver, username, passwd):
     # Press "Ahora no" button  
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='sqdOP yWX7d    y3zKF     ']"))).click()         
 
-def studioCreatorUpload(driver):
+def studioCreatorUpload(driver):    
     # Press button "Crear publicacion"                
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 kiex77na lgsfgr3h mcogi7i5 ih1xi9zn ippphs35 a53abz89 yukb02kx']"))).click()            
     # Press button "Seccion Noticias Instagram"            
@@ -193,7 +193,7 @@ def studioCreatorUpload(driver):
     StudioCreatorAddPic(driver, 'PortadaAs')
     WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))        
     #time.sleep(3)    
-    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))
+    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))       
     # Add 2nd pic       
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
     StudioCreatorAddPic(driver, 'PortadaMarca')
@@ -217,11 +217,13 @@ def studioCreatorUpload(driver):
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']"))).click()
     textbox_location = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']")))
     textbox_location.send_keys(TAG_LOCATION)
+    time.sleep(3)        
+    textbox_location.send_keys(Keys.RETURN)
     # Press "Publicar" Button            
     WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='_271k _271m _1qjd']"))).click()    
     # Wait until all the pics are fully load:
     keyElement = "//span[@class='l61y9joe j8otv06s a1itoznt rnz22s23 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89 tnlcj30g o27k9hdg kkzhtrjg okqr6zti' and contains(.,'Tu contenido se ha publicado en Instagram.')]"
-    WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))        
+    WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))            
 
 def instagramLogout(driver, username):
     # Load Instagram website    

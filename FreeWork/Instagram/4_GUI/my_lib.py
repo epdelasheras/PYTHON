@@ -6,7 +6,6 @@ from PIL import Image
 import math
 import os
 from os import path
-import autoit # pip install -U pyautoit
 import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -64,28 +63,14 @@ def chromeOptions():
     #options.add_argument("user-data-dir=ChromeCfg")
     return options
 
-def StudioCreatorAddPic(foldername, picname):
+def StudioCreatorAddPic(driver, foldername, picname):
 # Method used to add pics into the studio creator website
     # adjust pic size    
     file_path = picResize(foldername, picname)    
-    # check the path
-    while True:
-        path1 =  os.path.normpath(os.getcwd() + '/' + file_path)
-        path2 =  os.path.normpath(os.getcwd() + '/' + file_path)
-        path3 =  os.path.normpath(os.getcwd() + '/' + file_path)     
-        print(path1)
-        print(path2)
-        print(path3)
-        time.sleep(2)
-        if (path1 == path2 and path1 == path3):
-            pathPics = path1
-            break    
     # load pic       
-    autoit.win_active("Open")    
-    #autoit.control_send("Abrir", "Edit1", os.path.normpath(os.getcwd() + '/' + file_path))
-    autoit.control_set_text("Abrir", "Edit1", pathPics)
-    #autoit.control_send("Abrir", "Edit1", pathPics)
-    autoit.control_send("Abrir", "Edit1", "{ENTER}")
+    pathPics =  os.path.normpath(os.getcwd() + '/' + file_path)
+    driver.find_element_by_xpath("//input[@type='file']").clear()
+    driver.find_element_by_xpath("//input[@type='file']").send_keys(pathPics)    
 
 def picResize (foldername, picname):
 # Method used to resize the pic to fit into the instagram standards
@@ -138,36 +123,40 @@ def downloadPic(driver, site, pathToStore, wordToFind, picname):
 #----------------------- INSTAGRAM + STUDIO CREATOR METHODs-----------------------
 
 def studioCreatorLogin():
-    site = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
-    driver = webdriver.Chrome("chromedriver.exe", options=chromeOptions())
-    driver.implicitly_wait(2)
-    window_before = driver.window_handles[0] # Save the current window    
-    driver.get(site)    
-    #Press Cookies button    
-    keyElement = "//button[contains(@id, 'u_0_') and @class='_42ft _4jy0 _9fix _4jy3 _517h _51sy']"    
-    element = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,keyElement)))    
-    driver.execute_script("arguments[0].click();", element)
-    keyElement = "//button[contains(@id, 'u_0_') and @class='_42ft _4jy0 _9gti _4jy3 _4jy1 selected _51sy']"    
-    element = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,keyElement)))    
-    driver.execute_script("arguments[0].click();", element)
-    keyElement = "//button[contains(@id, 'u_0_') and @class='_42ft _4jy0 _9fws _4jy3 _4jy1 selected _51sy']"    
-    element = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,keyElement)))    
-    driver.execute_script("arguments[0].click();", element)
-    # Press Instagram button    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.ID,'media_manager_chrome_bar_instagram_icon'))).click()        
-    # Press "Inicio de sesion" button    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 svz86pwt ippphs35 a53abz89 tds9wb2m']"))).click()        
-    # Wait until the new windows is loaded    
-    WebDriverWait(driver, 20).until(EC.number_of_windows_to_be(2))
-    # Save the new window
-    window_after = driver.window_handles[1]
-    # Switch to the new window
-    driver.switch_to_window(window_after)
-    #driver.implicitly_wait(2)
-    #Press Cookies button            
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='aOOlW   HoLwm ']"))).click()
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='aOOlW  bIiDR  ']"))).click()
-    return window_before, driver    
+    try:
+        site = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
+        driver = webdriver.Chrome("chromedriver.exe", options=chromeOptions())
+        driver.implicitly_wait(2)
+        window_before = driver.window_handles[0] # Save the current window    
+        driver.get(site)    
+        #Press Cookies button    
+        keyElement = "//button[contains(@id, 'u_0_') and @class='_42ft _4jy0 _9fix _4jy3 _517h _51sy']"    
+        element = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,keyElement)))    
+        driver.execute_script("arguments[0].click();", element)
+        keyElement = "//button[contains(@id, 'u_0_') and @class='_42ft _4jy0 _9gti _4jy3 _4jy1 selected _51sy']"    
+        element = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,keyElement)))    
+        driver.execute_script("arguments[0].click();", element)
+        keyElement = "//button[contains(@id, 'u_0_') and @class='_42ft _4jy0 _9fws _4jy3 _4jy1 selected _51sy']"    
+        element = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,keyElement)))    
+        driver.execute_script("arguments[0].click();", element)
+        # Press Instagram button    
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.ID,'media_manager_chrome_bar_instagram_icon'))).click()        
+        # Press "Inicio de sesion" button    
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 svz86pwt ippphs35 a53abz89 tds9wb2m']"))).click()        
+        # Wait until the new windows is loaded    
+        WebDriverWait(driver, 20).until(EC.number_of_windows_to_be(2))
+        # Save the new window
+        window_after = driver.window_handles[1]
+        # Switch to the new window
+        driver.switch_to_window(window_after)
+        #driver.implicitly_wait(2)
+        #Press Cookies button            
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='aOOlW   HoLwm ']"))).click()
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='aOOlW  bIiDR  ']"))).click()
+        return window_before, driver
+    except TimeoutException:
+        print("Timeout exception error :-(")
+        driver.close()
 
 def instagramLogin(driver, username, passwd):
     # fill user / pass cells         
@@ -175,64 +164,67 @@ def instagramLogin(driver, username, passwd):
     user.send_keys(username)        
     passw = driver.find_element_by_name('password')
     passw.send_keys(passwd)
-    # Press login button                         
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//form[@id='loginForm']/div[1]/div[6]/button/div"))).click()
-    # Press "Ahora no" button  
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='sqdOP yWX7d    y3zKF     ']"))).click()         
+    try:
+        # Press login button                         
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//form[@id='loginForm']/div[1]/div[6]/button/div"))).click()
+        # Press "Ahora no" button  
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='sqdOP yWX7d    y3zKF     ']"))).click()         
+    except TimeoutException:
+        print("Timeout exception error :-(")
+        driver.close()    
 
 def studioCreatorUpload(driver, text_post, text_hashtag):
-    # Press button "Crear publicacion"                
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 kiex77na lgsfgr3h mcogi7i5 ih1xi9zn ippphs35 a53abz89 yukb02kx']"))).click()            
-    # Press button "Seccion Noticias Instagram"            
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt te7ihjl9 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89']"))).click()            
-    time.sleep(3)    
-    # Add 1st pic    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()                
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()            
-    picname = 'PortadaAs'
-    foldername = 'as'
-    StudioCreatorAddPic(foldername, picname)
-    #time.sleep(3)
-    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
-    # Add 2nd pic       
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
-    picname = 'PortadaMarca'
-    foldername = 'marca'
-    StudioCreatorAddPic(foldername, picname)
-    #time.sleep(3)
-    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
-    # Add 3rd pic    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
-    picname = 'PortadaMundo'
-    foldername = 'mundo'
-    StudioCreatorAddPic(foldername, picname)
-    #time.sleep(3)
-    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
-    # Add 4th pic    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()    
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_3jk']"))).click()        
-    picname = 'PortadaSport'
-    foldername = 'sport'
-    StudioCreatorAddPic(foldername, picname)    
-    #time.sleep(3)    
-    WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
-    # Add post & hastag to the pics     
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']"))).click()
-    post = text_post.toPlainText()
-    hashtags = text_hashtag.toPlainText()    
-    textbox_post = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']")))
-    textbox_post.send_keys(post + "\n" + "\n" + hashtags)
-    # Fill location
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']"))).click()
-    textbox_location = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']")))
-    textbox_location.send_keys(TAG_LOCATION)
-    # Press "Publicar" Button            
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='_271k _271m _1qjd']"))).click()    
-    # Wait until all the pics are fully load:
-    keyElement = "//span[@class='l61y9joe j8otv06s a1itoznt rnz22s23 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89 tnlcj30g o27k9hdg kkzhtrjg okqr6zti' and contains(.,'Tu contenido se ha publicado en Instagram.')]"
-    WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))    
+    try:
+        # Press button "Crear publicacion"                
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt qwtvmjv2 kiex77na lgsfgr3h mcogi7i5 ih1xi9zn ippphs35 a53abz89 yukb02kx']"))).click()            
+        # Press button "Seccion Noticias Instagram"            
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='l61y9joe j8otv06s a1itoznt te7ihjl9 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89']"))).click()            
+        time.sleep(3)    
+        # Add 1st pic    
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()                        
+        picname = 'PortadaAs'
+        foldername = 'as'
+        StudioCreatorAddPic(driver, foldername, picname)    
+        WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
+        # Add 2nd pic       
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()            
+        picname = 'PortadaMarca'
+        foldername = 'marca'
+        StudioCreatorAddPic(driver, foldername, picname)    
+        WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
+        # Add 3rd pic    
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()            
+        picname = 'PortadaMundo'
+        foldername = 'mundo'
+        StudioCreatorAddPic(driver, foldername, picname)    
+        WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
+        # Add 4th pic    
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()            
+        picname = 'PortadaSport'
+        foldername = 'sport'
+        StudioCreatorAddPic(driver, foldername, picname)    
+        WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))    
+        # Add post & hastag to the pics     
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']"))).click()
+        post = text_post.toPlainText()
+        hashtags = text_hashtag.toPlainText()    
+        textbox_post = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']")))
+        textbox_post.send_keys(post + "\n" + "\n" + hashtags)
+        # Fill location
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']"))).click()
+        textbox_location = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']")))
+        textbox_location.send_keys(TAG_LOCATION)
+        time.sleep(3)    
+        textbox_location.send_keys(Keys.RETURN)
+        # Press "Publicar" Button            
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//button[@class='_271k _271m _1qjd']"))).click()    
+        # Wait until all the pics are fully load:
+        keyElement = "//span[@class='l61y9joe j8otv06s a1itoznt rnz22s23 svz86pwt q3s3exew d8d6zf0d p66o6c86 jrvjs1jy a53abz89 tnlcj30g o27k9hdg kkzhtrjg okqr6zti' and contains(.,'Tu contenido se ha publicado en Instagram.')]"
+        WebDriverWait(driver, 100).until(EC.visibility_of_element_located((By.XPATH,keyElement)))    
+    except TimeoutException:
+        print("Timeout exception error :-(")
+        driver.close()
+
 
 def instagramLogout(driver, username):
     # Load Instagram website    
@@ -240,15 +232,20 @@ def instagramLogout(driver, username):
     print(site)
     driver.get(site)
     time.sleep(3)
-    # Click the Gear
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/nav[1]/div/header/div/div[1]/button'))).click()
-    time.sleep(2)
-    # Click over close session
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/nav[1]/div/section/div[3]/div/div[4]/div/div/a/div[1]'))).click()
-    time.sleep(2)
-    # Click "Salir" option
-    WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/button[1]'))).click()
-    time.sleep(2)
-    # Close the window website
-    driver.close()        
+    try:
+        # Click the Gear
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/nav[1]/div/header/div/div[1]/button'))).click()
+        time.sleep(2)
+        # Click over close session
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/section/nav[1]/div/section/div[3]/div/div[4]/div/div/a/div[1]'))).click()
+        time.sleep(2)
+        # Click "Salir" option
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[4]/div/div/div/div[2]/button[1]'))).click()
+        time.sleep(2)
+        # Close the window website
+        driver.close()        
+    except TimeoutException:
+        print("Timeout exception error :-(")
+        driver.close()
+
 
