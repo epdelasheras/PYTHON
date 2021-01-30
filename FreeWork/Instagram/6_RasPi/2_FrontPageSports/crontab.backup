@@ -22,6 +22,16 @@
 # 
 # m h  dom mon dow   command
 
-22 16 * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt  2>&1)
-#*/5 * * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt  2>&1)
+# Run the script at specific time every day
+00 09 * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
+# Run the script every 15 min
+#*/15 * * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
+# When reboot...
+@reboot (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
+
+
+
+
+
+
 
