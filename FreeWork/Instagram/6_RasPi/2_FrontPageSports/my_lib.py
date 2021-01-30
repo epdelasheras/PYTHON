@@ -4,7 +4,6 @@ import shutil
 from bs4 import BeautifulSoup
 import re
 import urllib.request
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,14 +11,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import *
-
 from PIL import Image
 import math
 import time
 
-
 TIME2WAIT = 20
-#BROWSER = "/usr/lib/chromium-browser/chromedriver" #To work in raspbian
 BROWSER = "/usr/lib/chromium-browser/chromedriver" #To work in raspbian
 URL_MARCA = 'https://es.kiosko.net/es/np/marca.html'
 KEY_MARCA = 'marca.750'
@@ -29,7 +25,7 @@ URL_MUNDO = 'https://es.kiosko.net/es/np/mundodeportivo.html'
 KEY_MUNDO = 'mundodeportivo.750'
 URL_SPORT = 'https://es.kiosko.net/es/np/sport.html'
 KEY_SPORT = 'sport.750'
-LOGIN_USERNAME = "portatest"
+LOGIN_USERNAME = "prensatest"
 LOGIN_PASSWORD = "kikazo"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "España"
@@ -37,6 +33,16 @@ TAG_POST = "Portadas de hoy " + str(time.strftime("%d/%m/%y"))
 TAG_HASTAGS = "#portadas#portad_as_ymas#diarioas#diariomarca#diariosport#mundodeportivo#deporte#futbol#laligasantander#uefachampionsleague#championsleague#realmadridcf#zidane#sergioramos#benzema#modric#cristianoronaldo#fcbarcelona#koeman#messi#pedri#neymar#atleticodemadrid#simeone#marcosllorente#oblak#jaofelix#luissuarez#hazard"          
 
 #----------------------- OTHER METHODs-------------------------------
+
+def deletePicFiles():
+    dir_name  = os.path.normpath(os.getcwd())
+    print(dir_name)
+    test = os.listdir(dir_name)
+
+    for item in test:
+        if item.endswith(".jpg"):
+            os.remove(os.path.join(dir_name, item))                                
+
 def browserOptions():
 # Load chrome profile cfg when the chrome driver is loaded.
     options = Options()
@@ -47,7 +53,7 @@ def browserOptions():
     options.add_argument("--mute-audio")    
     options.add_argument("--headless") #This line is mandatory when the script/crontab is executed. Comment to see the explorer running.
     options.add_argument('--disable-dev-shm-usage') #This line is mandatory when the script/crontab is executed. Comment to see the explorer running.
-    #options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
+    options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
     options.add_argument('--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36')    
     #options.add_argument("user-data-dir=ChromeCfg")
     return options
@@ -62,7 +68,10 @@ def StudioCreatorAddPic(driver, picname):
 
 def picResize (picname):
 # Method used to resize the pic to fit into the instagram standards
-    img_pil = Image.open(picname + ".jpg")
+    picnameAndExtension = picname + ".jpg"
+    pathPics = os.path.normpath(os.getcwd() + '/' + picnameAndExtension)
+    print(pathPics)
+    img_pil = Image.open(pathPics)
     img_resize = picAdjust(img_pil, 1080, (255, 255, 255))    
     img_resize = img_resize.save(picname + "_resize.jpg")    
     return picname + "_resize.jpg"
@@ -180,7 +189,8 @@ def studioCreatorUpload(driver):
         print("News section Studio Creator loaded ok!")
         time.sleep(3)    
         # Add 1st pic    
-        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()                        
+        WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//span[@class='l61y9joe j8otv06s a1itoznt fvlrrmdj svz86pwt jrvjs1jy a53abz89 jvnjaidj']"))).click()
+        print("Add pic button ok!")
         StudioCreatorAddPic(driver, 'PortadaAS')   
         WebDriverWait(driver, TIME2WAIT).until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='_6eqx _6a']"), "100%"))
         print("Pic1 added ok")
