@@ -25,12 +25,15 @@ URL_MUNDO = 'https://es.kiosko.net/es/np/mundodeportivo.html'
 KEY_MUNDO = 'mundodeportivo.750'
 URL_SPORT = 'https://es.kiosko.net/es/np/sport.html'
 KEY_SPORT = 'sport.750'
-LOGIN_USERNAME = "prensatest"
-LOGIN_PASSWORD = "kikazo"
+LOGIN_USERNAME = "portad_as_ymas"
+LOGIN_PASSWORD = "portada$83"
+#LOGIN_USERNAME = "prensatest"
+#LOGIN_PASSWORD = "kikazo"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "España"
 TAG_POST = "Portadas de hoy " + str(time.strftime("%d/%m/%y"))
-TAG_HASTAGS = "#portadas#portad_as_ymas#diarioas#diariomarca#diariosport#mundodeportivo#deporte#futbol#laligasantander#uefachampionsleague#championsleague#realmadridcf#zidane#sergioramos#benzema#modric#cristianoronaldo#fcbarcelona#koeman#messi#pedri#neymar#atleticodemadrid#simeone#marcosllorente#oblak#jaofelix#luissuarez#hazard"          
+TAG_HASTAGS = "#portadas#portad_as_ymas#diarioas#diariomarca#diariosport#mundodeportivo#deporte#futbol#laligasantander#uefachampionsleague#championsleague#realmadridcf#zidane#sergioramos#benzema#modric#cristianoronaldo#fcbarcelona#koeman#messi#pedri#neymar#atleticodemadrid#simeone#marcosllorente#oblak#jaofelix#luissuarez#hazard\
+       	       \n\n\n@diarioas@marca@mundodeportivo@diariosport"
 
 #----------------------- OTHER METHODs-------------------------------
 

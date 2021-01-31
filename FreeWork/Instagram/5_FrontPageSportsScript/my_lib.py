@@ -27,6 +27,8 @@ URL_MUNDO = 'https://es.kiosko.net/es/np/mundodeportivo.html'
 KEY_MUNDO = 'mundodeportivo.750'
 URL_SPORT = 'https://es.kiosko.net/es/np/sport.html'
 KEY_SPORT = 'sport.750'
+#LOGIN_USERNAME = "portad_as_ymas"
+#LOGIN_PASSWORD = "portada$83"
 LOGIN_USERNAME = "prensatest"
 LOGIN_PASSWORD = "kikazo"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
