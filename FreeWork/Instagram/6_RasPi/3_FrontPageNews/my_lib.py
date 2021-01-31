@@ -27,6 +27,8 @@ URL_LARAZON = 'https://es.kiosko.net/es/np/larazon.html'
 KEY_LARAZON = 'larazon.750'
 URL_LAVANGUARDIA = 'https://es.kiosko.net/es/np/lavanguardia.html'
 KEY_LAVANGUARDIA = 'lavanguardia.750'
+#LOGIN_USERNAME = "prensatest"
+#LOGIN_PASSWORD = "kikazo"
 LOGIN_USERNAME = "elkiosco_es"
 LOGIN_PASSWORD = "molly2021"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
