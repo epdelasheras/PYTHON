@@ -30,7 +30,7 @@ LOGIN_PASSWORD = "kikazo"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "México"
 TAG_POST = "Portadas periódicos deportivos de " + TAG_LOCATION +  " a " + str(time.strftime("%d/%m/%y"))
-TAG_HASTAGS = "#Noticas #deportes #México #Diario #Portadas #record #esto #reforma #cancha #diario #deportivo\
+TAG_HASTAGS = "#prensa #prensadeportiva #noticias #noticiasdefutbol #futbol #covid #vacunas #mascarilla #buenosdiasmexico #presidente #ultimahora #ligadefutbol #heraldodemexico #excelsior #milenio #eluniversal #portadas #portadasdeperiodico #laverdadnoticias #elfinanciero #reforma #lbm #ligamx #balompie #laliga #premierleague #elecciones #news #noticiasdemexico #mexico\
                \n\n@record_mexico"          
 
 #----------------------- OTHER METHODs-------------------------------

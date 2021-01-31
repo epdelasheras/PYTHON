@@ -21,17 +21,24 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
+
 ##############################################EVERY DAY#############################################
+#Portada_AS_ymas
 00 08 * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
+#ElKiosco_es
 05 08 * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/3_FrontPageNews/script.sh >> /home/pi/crontabLog.txt 2>&1)
-# Run the script every 15 min
-#*/15 * * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
+#ElKiosco.mx => News
+00 14 * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/4_ElkisocoMx/scriptNews.sh >> /home/pi/crontabLog.txt 2>&1)
+#ElKiosco.mx => Sports
+30 14 * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/4_ElkisocoMx/scriptSports.sh >> /home/pi/crontabLog.txt 2>&1)
+
 
 
 ##############################################AT REBOOT#############################################
-@reboot (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
-@reboot sleep 300 && (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/3_FrontPageNews/script.sh >> /home/pi/crontabLog.txt 2>&1)
-
+#@reboot (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
+#@reboot sleep 300 && (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/3_FrontPageNews/script.sh >> /home/pi/crontabLog.txt 2>&1)
+# Run the script every 15 min
+#*/15 * * * * (/home/pi/Documents/SoftwareProjects/PYTHON/FreeWork/Instagram/6_RasPi/2_FrontPageSports/script.sh >> /home/pi/crontabLog.txt 2>&1)
 
 
 

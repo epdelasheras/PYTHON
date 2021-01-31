@@ -34,7 +34,7 @@ LOGIN_PASSWORD = "molly2021"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "España"
 TAG_POST = "Portadas periódicos de " + TAG_LOCATION +  " a " + str(time.strftime("%d/%m/%y"))
-TAG_HASTAGS = "#portadas#periodicos#España#Prensa#Diario#ElMundo#LaRazon#ABC#LaVanguardia#COVID#FernandoSimon#Politica#empleo#economia#PedroSanchez#Ministros#Crisis#Finanzas#Mascarillas#Vacuna#Independentismo#casta#PSOE#PP#VOX#UNIDOS#PODEMOS#CIUDADANOS\
+TAG_HASTAGS = "#portadas #periodicos #España #Prensa #Diario #ElMundo #LaRazon #ABC #LaVanguardia #COVID #FernandoSimon #Politica #empleo #economia #PedroSanchez #Ministros #Crisis #Finanzas #Mascarillas #Vacuna #Independentismo #PSOE #PP #vox #podemos #ciudadanos #noticias #noticiasdeldia #coronavirus #elecciones #breakingnews #politica #astrazeneca #pfizer #vacunadelcovid #buenosdiasespaña #elkiosco\
                \n\n@elmundo_es @abc_diario @lavanguardia @larazon.es @el_pais"
           
 
