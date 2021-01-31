@@ -23,10 +23,10 @@ URL_ESTO = 'https://es.kiosko.net/mx/np/mx_esto.html'
 KEY_ESTO = 'mx_esto.750'
 URL_RECORD = 'https://es.kiosko.net/mx/np/mx_record.html'
 KEY_RECORD = 'mx_record.750'
-LOGIN_USERNAME = "prensatest"
-LOGIN_PASSWORD = "kikazo"
-#LOGIN_USERNAME = "elkiosco.mx"
-#LOGIN_PASSWORD = "molly2021"
+#LOGIN_USERNAME = "prensatest"
+#LOGIN_PASSWORD = "kikazo"
+LOGIN_USERNAME = "elkiosco.mx"
+LOGIN_PASSWORD = "molly2021"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "México"
 TAG_POST = "Portadas periódicos deportivos de " + TAG_LOCATION +  " a " + str(time.strftime("%d/%m/%y"))

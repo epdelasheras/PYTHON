@@ -27,10 +27,10 @@ URL_JORNADA = 'https://es.kiosko.net/mx/np/mx_jornada.html'
 KEY_JORNADA = 'mx_jornada.750'
 URL_SOL = 'https://es.kiosko.net/mx/np/mx_sol_mexico.html'
 KEY_SOL = 'mx_sol_mexico.750'
-LOGIN_USERNAME = "prensatest"
-LOGIN_PASSWORD = "kikazo"
-#LOGIN_USERNAME = "elkiosco.mx"
-#LOGIN_PASSWORD = "molly2021"
+#LOGIN_USERNAME = "prensatest"
+#LOGIN_PASSWORD = "kikazo"
+LOGIN_USERNAME = "elkiosco.mx"
+LOGIN_PASSWORD = "molly2021"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "México"
 TAG_POST = "Portadas periódicos de " + TAG_LOCATION +  " a " + str(time.strftime("%d/%m/%y"))
