@@ -32,8 +32,8 @@ LOGIN_PASSWORD = "portada$83"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "España"
 TAG_POST = "Portadas de hoy " + str(time.strftime("%d/%m/%y"))
-TAG_HASTAGS = "#portadas#portad_as_ymas#diarioas#diariomarca#diariosport#mundodeportivo#deporte#futbol#laligasantander#uefachampionsleague#championsleague#realmadridcf#zidane#sergioramos#benzema#modric#cristianoronaldo#fcbarcelona#koeman#messi#pedri#neymar#atleticodemadrid#simeone#marcosllorente#oblak#jaofelix#luissuarez#hazard\
-       	       \n\n\n@diarioas@marca@mundodeportivo@diariosport"
+TAG_HASTAGS = "#portadas#portad_as_ymas#diarioas#diariomarca#diariosport#mundodeportivo#deporte#futbol#laligasantander#uefachampionsleague#championsleague#realmadridcf#zidane#sergioramos#benzema#modric#cristianoronaldo#fcbarcelona#koeman#messi#pedri#neymar#atleticodemadrid#simeone#marcosllorente#oblak#jaofelix#luissuarez#hazardrioas"
+TAG_REFERS = "@marca @mundodeportivo @diariosport"
 
 #----------------------- OTHER METHODs-------------------------------
 
@@ -215,7 +215,7 @@ def studioCreatorUpload(driver):
         # Add post & hastag to the pics     
         WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']"))).click()
         textbox_post = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']")))
-        textbox_post.send_keys(TAG_POST + "\n" + "\n" + TAG_HASTAGS)
+        textbox_post.send_keys(TAG_POST + "\n" + "\n" + TAG_HASTAGS + "\n" + "\n" + TAG_REFERS)
         print("Post and hashtags added ok")
         # Fill location
         WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']"))).click()
