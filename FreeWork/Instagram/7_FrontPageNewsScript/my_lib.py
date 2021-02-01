@@ -33,9 +33,8 @@ LOGIN_PASSWORD = "kikazo"
 URL_STUDIO_CREATOR = 'https://business.facebook.com/creatorstudio/?tab=instagram_content_posts'
 TAG_LOCATION = "España"
 TAG_POST = "Portadas periódicos de " + TAG_LOCATION +  " a " + str(time.strftime("%d/%m/%y"))
-TAG_HASTAGS = "#portadas#periodicos#España#Prensa#Diario#ElMundo#LaRazon#ABC#LaVanguardia#COVID#FernandoSimon#Politica#empleo#economia#PedroSanchez#Ministros#Crisis#Finanzas#Mascarillas#Vacuna#Independentismo#casta#PSOE#PP#VOX#UNIDOS#PODEMOS#CIUDADANOS\
-               \n\n@elmundo_es @abc_diario @lavanguardia @larazon.es @el_pais"
-               
+TAG_HASTAGS = "#portadas #periodicos #España #Prensa #Diario #COVID #politica #empleo #economia #Ministros #Crisis #Finanzas #Mascarillas #Vacuna #Independentismo #PSOE #PP #vox #podemos #ciudadanos #noticias #noticiasdeldia #coronavirus #elecciones #breakingnews #politica #astrazeneca #pfizer #vacunadelcovid #buenosdiasespaña"
+TAG_REFERS = "@elmundo_es @abc_diario @lavanguardia @larazon.es @el_pais"
 
 #----------------------- OTHER METHODs-------------------------------
 def createFolderPics():
@@ -230,7 +229,7 @@ def studioCreatorUpload(driver):
         # Add post & hastag to the pics     
         WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']"))).click()
         textbox_post = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//div[@class='_5yk2']")))
-        textbox_post.send_keys(TAG_POST + "\n" + "\n" + TAG_HASTAGS)
+        textbox_post.send_keys(TAG_POST + "\n" + "\n" + TAG_HASTAGS + "\n" + "\n" + TAG_REFERS)
         # Fill location
         WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']"))).click()
         textbox_location = WebDriverWait(driver, TIME2WAIT).until(EC.element_to_be_clickable((By.XPATH,"//input[@class='_58al']")))

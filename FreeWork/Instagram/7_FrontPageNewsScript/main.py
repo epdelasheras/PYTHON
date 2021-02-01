@@ -7,6 +7,7 @@ print("##########Folder pics created successfully##########")
 # launch chrome
 driver = webdriver.Chrome(BROWSER, options=browserOptions())
 driver.implicitly_wait(2)       
+
 # download pics
 downloadPic(driver, URL_ELPAIS, KEY_ELPAIS, "PortadaElPais")
 downloadPic(driver, URL_ELMUNDO, KEY_ELMUNDO, "PortadaElMundo")
